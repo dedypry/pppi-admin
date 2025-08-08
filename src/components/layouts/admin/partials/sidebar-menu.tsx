@@ -1,0 +1,52 @@
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+
+import MenuItem from "./menu-item";
+
+import { navigate } from "@/navigate/navigations";
+import { apps } from "@/config/app";
+
+export default function SidebarMenu() {
+  const [selected, setSelected] = useState<string>(window.location.pathname);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    setSelected(pathname);
+  }, [pathname]);
+
+  return (
+    <div className="flex max-h-screen flex-col">
+      <Link className="my-5 ml-5 flex items-center gap-2" to="/">
+        <img
+          alt="logo"
+          className="h-[60px] object-cover"
+          src={apps?.logo || "/logo.png"}
+        />
+        <h1 className="text-[35px] font-bold text-white">
+          {apps?.short_name?.toUpperCase()}
+        </h1>
+      </Link>
+
+      <ul className="scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary-200 scrollbar-track-transparent flex-1 overflow-y-auto pb-10 pr-1">
+        {navigate.map((item, i) => {
+          const IconParent: any = item.icon;
+
+          return (
+            <div key={i}>
+              {item.header ? (
+                <MenuItem item={item as any} selected={selected} />
+              ) : (
+                <Link
+                  className={`sidebar-item ${selected === item.href ? "bg-white text-gray-800" : "text-white"}`}
+                  to={item.href || ""}
+                >
+                  <IconParent /> {item.title}
+                </Link>
+              )}
+            </div>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}

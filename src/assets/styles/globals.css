@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@config "../../../tailwind.config.js";
+
+
+
+.link-anim {
+    @apply relative inline-block before:absolute before:bottom-0 before:left-1/2 before:h-[2px] before:w-0 before:-translate-x-1/2 before:bg-white before:transition-all before:duration-300 hover:before:w-full;
+}
+
+.link-member{
+    @apply py-2 hover:bg-primary-50 px-3 flex gap-2 items-center rounded-sm
+}
+
+.bg-primary {
+    @apply bg-gradient-to-tr from-primary-700 to-primary-400 text-white;
+}
+.bg-danger {
+    @apply bg-gradient-to-tr from-danger-700 to-danger-400 text-white;
+}
+.bg-warning {
+    @apply bg-gradient-to-tr from-warning-700 to-warning-300 text-white;
+}
+.bg-secondary {
+    @apply bg-gradient-to-tr from-secondary-600 to-secondary-500 text-white;
+}
+.bg-default {
+    @apply bg-gradient-to-tr from-secondary-700 to-secondary-300 text-white;
+}
+.bg-info {
+    @apply bg-gradient-to-tr from-cyan-800 to-cyan-500 text-white;
+}
+
+.sidebar-item {
+    @apply flex gap-4 rounded-sm px-2 py-2 hover:bg-gray-100/30 hover:text-white;
+}
+
+.MuiAvatar-root {
+    @apply bg-primary-100;
+}
+
+.gjxMoC {
+    @apply text-primary-300;
+}
+
+.section-home{
+    @apply container mx-auto mt-10 grid grid-cols-1 items-center gap-10 px-5 md:grid-cols-12 md:px-10
+}
+
+.text-header{
+    @apply text-[20px] md:text-[25px] font-bold text-gray-800
+}
+
+.text-sub{
+    @apply text-[14px] md:text-[16px] text-gray-600
+}
