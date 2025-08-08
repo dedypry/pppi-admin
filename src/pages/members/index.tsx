@@ -106,7 +106,7 @@ export default function MemberPage() {
             variant="shadow"
             onPress={() => route("/member/create")}
           >
-            Tambah Anggota
+            Tambah Anggota Test Ini
           </Button>
         </CardHeader>
         <CardBody>
