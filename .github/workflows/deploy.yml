@@ -35,3 +35,4 @@ jobs:
           port: ${{ secrets.REMOTE_PORT }}
           source: "dist/*"
           target: "/www/wwwroot/admin.dpn-pppi.org"
+          debug: true
