@@ -33,5 +33,5 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.REMOTE_PORT }}
-          source: "dist"
+          source: "dist/*"
           target: "/www/wwwroot/admin.dpn-pppi.org"
