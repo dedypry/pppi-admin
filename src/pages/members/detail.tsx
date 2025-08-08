@@ -8,23 +8,51 @@ import {
   CardHeader,
 } from "@heroui/react";
 import { DownloadIcon } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { saveAs } from "file-saver";
 
 import Gender from "@/components/gender";
 import TextHeader from "@/components/text-header";
 import { dateFormat } from "@/utils/helpers/formater";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { getUserDetail, handleApprove } from "@/stores/features/user/action";
+import { http } from "@/config/axios";
 
 export default function MemberDetail() {
   const { detail: user } = useAppSelector((state) => state.user);
   const { id } = useParams();
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     dispatch(getUserDetail({ id: id as any }));
   }, []);
+
+  async function downloadKta() {
+    setLoading(true);
+    try {
+      const response = await http.get(`/members/download/${id}`, {
+        responseType: "blob",
+      });
+
+      const contentDisposition = response.headers["content-disposition"];
+      let filename = `kta-${user?.name}.pdf`; // fallback
+
+      if (contentDisposition) {
+        const match = contentDisposition.match(/filename="?(.+)"?/);
+
+        if (match && match[1]) {
+          filename = decodeURIComponent(match[1]);
+        }
+      }
+      saveAs(response.data, filename);
+    } catch (error) {
+      console.error("Gagal mengunduh file:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="grid grid-cols-12 gap-5">
@@ -75,11 +103,11 @@ export default function MemberDetail() {
           {user?.approved_at && user?.status !== "rejected" ? (
             <Button
               fullWidth
-              as="a"
-              className="bg-primary"
-              href="/"
+              color="primary"
+              isLoading={loading}
               startContent={<DownloadIcon />}
               variant="shadow"
+              onPress={downloadKta}
             >
               Download E-KTA
             </Button>
