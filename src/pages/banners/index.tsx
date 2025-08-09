@@ -86,7 +86,7 @@ export default function BannerPage() {
         </BreadcrumbItem>
       </Breadcrumbs>
 
-      <Card className="bg-gray-800">
+      <Card className="bg-gray-800 h-[500px]">
         <Carousel autoPlay={true}>
           {banners
             .filter((e) => e.is_active)
