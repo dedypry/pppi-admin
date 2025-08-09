@@ -6,7 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@heroui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import DropZone from "@/components/drop-zone";
 import { uploadMultipleFile } from "@/utils/helpers/upload-file";
@@ -23,6 +23,12 @@ export default function AddBanner() {
 
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    if (isOpen) {
+      setFiles([]);
+    }
+  }, [isOpen]);
+
   async function handleSubmit() {
     setLoading(true);
 
@@ -32,6 +38,7 @@ export default function AddBanner() {
 
       dispatch(getBanner());
       notify(data.message);
+      setIsOpen(false);
     } catch (error) {
       notifyError(error as any);
     } finally {

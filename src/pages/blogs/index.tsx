@@ -204,7 +204,13 @@ export default function BlogPage() {
               initialPage={blogs?.current_page}
               radius="full"
               total={blogs?.last_page}
-              onChange={(page) => {}}
+              onChange={(page) =>
+                dispatch(
+                  getBlogs({
+                    page,
+                  }),
+                )
+              }
             />
           </CardFooter>
         )}

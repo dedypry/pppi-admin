@@ -58,7 +58,16 @@ export default function BannerPage() {
     handleDelete(ids);
   }
 
-  function handleUpdate(id: number, val: boolean) {}
+  function handleUpdate(id: number, val: boolean) {
+    http
+      .patch(`/banners/${id}`, {
+        status: val,
+      })
+      .then(() => {
+        dispatch(getBanner());
+      })
+      .catch((err) => notifyError(err));
+  }
 
   return (
     <>
@@ -135,8 +144,8 @@ export default function BannerPage() {
                       src={item.url}
                     />
                   </TableCell>
-                  <TableCell>{formatBytes(item.size)}</TableCell>
-                  <TableCell>{item.type}</TableCell>
+                  <TableCell>{formatBytes(item.file.size)}</TableCell>
+                  <TableCell>{item.file.mime_type}</TableCell>
                   <TableCell>
                     <Switch
                       isSelected={item.is_active}
@@ -150,7 +159,9 @@ export default function BannerPage() {
                       isIconOnly
                       radius="full"
                       variant="light"
-                      onPress={() => confirmSweet(() => handleDelete(item.id))}
+                      onPress={() =>
+                        confirmSweet(() => handleDelete([item.id]))
+                      }
                     >
                       <Trash2 className="text-danger" size={20} />
                     </Button>
