@@ -53,20 +53,6 @@ export default function AgendaPage() {
       </div>
     );
   };
-  // Saat klik tanggal
-  const handleDateClick = (info: any) => {
-    const title = prompt("Masukkan judul event:");
-
-    if (title) {
-      const newEvent = {
-        id: String(events.length + 1),
-        title,
-        start: dayjs(info.date).format("YYYY-MM-DD"),
-      };
-
-      setEvents([...events, newEvent]);
-    }
-  };
 
   const handleEventDrop = (info: any) => {
     const updatedEvents = events.map((event) =>
@@ -79,7 +65,7 @@ export default function AgendaPage() {
         : event,
     );
 
-    setEvents(updatedEvents);
+    setEvents(updatedEvents as any);
   };
   const handleEventResize = (info: any) => {
     console.log("resize", info);
