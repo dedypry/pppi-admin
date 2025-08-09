@@ -41,7 +41,7 @@ export default function AddCategory({
         isRequired
         errorMessage={errorMessage}
         inputValue={
-          (categories?.data.find((e: any) => e.id == value) as any)?.name
+          ((categories?.data || []).find((e: any) => e.id == value) as any)?.name
         }
         isInvalid={isInvalid}
         items={[

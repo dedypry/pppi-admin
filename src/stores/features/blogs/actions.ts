@@ -8,7 +8,7 @@ export const getBlogs = createAsyncThunk(
   async ({ page = 1, pageSize = 10 }: IQueryPagination) => {
     try {
       const { data } = await http.get(
-        `/blogs?page=${page}&pageSize=${pageSize}`
+        `/blogs?page=${page}&pageSize=${pageSize}`,
       );
 
       return data;
@@ -17,7 +17,7 @@ export const getBlogs = createAsyncThunk(
 
       return null;
     }
-  }
+  },
 );
 export const getBlogDetail = createAsyncThunk(
   "get-blogs/detail",
@@ -31,5 +31,5 @@ export const getBlogDetail = createAsyncThunk(
 
       return null;
     }
-  }
+  },
 );
