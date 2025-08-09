@@ -13,12 +13,12 @@ import QuillJS from "@/components/quill-js";
 import CustomDateRangePicker from "@/components/custom-date-range-picker";
 import AttachmentSingleFile from "@/components/attacment-singgle-file";
 
-interface IForm {
-  title?: string;
-  subtitle?: string;
-  id?: any;
-  description?: string;
-}
+// interface IForm {
+//   title?: string;
+//   subtitle?: string;
+//   id?: any;
+//   description?: string;
+// }
 interface Props {
   isOpen: boolean;
   setOpen: CallableFunction;
