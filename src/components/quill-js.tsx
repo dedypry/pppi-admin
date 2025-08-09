@@ -1,116 +1,74 @@
-import MagicUrl from "quill-magic-url";
-import QuillResizeImage from "quill-resize-image";
-import "quill/dist/quill.snow.css";
-import { useEffect, useRef } from "react";
-import { useQuill } from "react-quilljs";
-import QuillTableUI from "quill-table-ui";
+import "@wangeditor/editor/dist/css/style.css";
+import { Editor, Toolbar } from "@wangeditor/editor-for-react";
+import {
+  IDomEditor,
+  IEditorConfig,
+  IToolbarConfig,
+  i18nChangeLanguage,
+} from "@wangeditor/editor";
+import { useEffect, useState } from "react";
 
-import "quill-table-ui/dist/index.css";
 import { uploadFile } from "@/utils/helpers/upload-file";
+
+i18nChangeLanguage("en");
 interface Props {
   value: string;
   onContent: (val: any) => void;
   label?: string;
   isInvalid?: boolean;
 }
-export default function QuillJS({ value, onContent, label, isInvalid }: Props) {
-  const isRegistered = useRef(false);
-  const { quill, quillRef, Quill } = useQuill({
-    modules: {
-      table: true,
-      tableUI: true,
-      toolbar: [
-        [{ header: [1, 2, 3, 4, 5, false] }],
-        ["bold", "italic", "underline", "strike"],
-        [{ align: [] }],
-        [{ list: "ordered" }, { list: "bullet" }],
-        [{ indent: "-1" }, { indent: "+1" }],
-        ["link", "image", "video"],
-        ["clean"],
-        ["blockquote", "code-block"],
-        [{ color: [] }, { background: [] }],
-        ["table"],
-      ],
-      resize: {
-        locale: {},
+export default function QuillJS({ value, onContent, isInvalid }: Props) {
+  const [editor, setEditor] = useState<IDomEditor | null>(null);
+  const [html, setHtml] = useState(value);
+
+  const toolbarConfig: Partial<IToolbarConfig> = {
+    excludeKeys: ["fullScreen"],
+  };
+
+  const editorConfig: Partial<IEditorConfig> = {
+    placeholder: "Tulis konten di sini...",
+    MENU_CONF: {
+      uploadImage: {
+        async customUpload(file: File, insertFn: (url: string) => void) {
+          const { url } = await uploadFile(file);
+
+          insertFn(url);
+        },
       },
-      magicUrl: true,
     },
-    formats: [
-      "header",
-      "bold",
-      "italic",
-      "underline",
-      "strike",
-      "align",
-      "list",
-      "bullet",
-      "indent",
-      "link",
-      "image",
-      "video",
-      "clean",
-      "blockquote",
-      "color",
-      "background",
-      "table",
-      "code-block",
-    ],
-  });
-
-  if (Quill && !isRegistered.current) {
-    Quill.register("modules/resize", QuillResizeImage);
-    Quill.register("modules/magicUrl", MagicUrl);
-    Quill.register("modules/tableUI", QuillTableUI);
-    isRegistered.current = true;
-  }
-
-  const insertToEditor = (url: string) => {
-    const range = quill!.getSelection();
-
-    quill!.insertEmbed(range!.index, "image", url);
-  };
-
-  const saveToServer = async (file: File) => {
-    const { url } = await uploadFile(file);
-
-    insertToEditor(url);
-  };
-
-  // Open Dialog to select Image File
-  const selectLocalImage = () => {
-    const input = document.createElement("input");
-
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
-    input.click();
-
-    input.onchange = () => {
-      const file = input.files![0];
-
-      saveToServer(file);
-    };
   };
 
   useEffect(() => {
-    if (quill) {
-      (quill.getModule("toolbar") as any).addHandler("image", selectLocalImage);
+    setHtml(value);
+  }, [value]);
 
-      quill.on("text-change", () => {
-        onContent(quill.root.innerHTML);
-      });
-      quill.clipboard.dangerouslyPasteHTML(value);
-    }
-  }, [quill]);
+  useEffect(() => {
+    return () => {
+      if (editor) editor.destroy();
+    };
+  }, [editor]);
 
   return (
-    <div className="w-full min-h-[400px]">
-      {label && (
-        <p className={`text-sm mb-1 ${isInvalid ? "text-red-500" : ""}`}>
-          {label}
-        </p>
-      )}
-      <div ref={quillRef} />
+    <div
+      className={`w-full min-h-[400px] border ${isInvalid ? "border-danger" : "border-secondary-200"} `}
+    >
+      {/* {label && (
+          <p className={`text-sm mb-1 ${isInvalid ? "text-red-500" : ""}`}>
+            {label}
+          </p>
+        )} */}
+      <Toolbar defaultConfig={toolbarConfig} editor={editor} mode="default" />
+      <Editor
+        defaultConfig={editorConfig}
+        mode="default"
+        style={{ height: "400px", overflowY: "auto" }}
+        value={html}
+        onChange={(editor: any) => {
+          setHtml(editor.getHtml());
+          onContent(editor.getHtml());
+        }}
+        onCreated={setEditor}
+      />
     </div>
   );
 }
