@@ -13,6 +13,9 @@ import storage from "redux-persist/lib/storage";
 
 import auth from "./features/auth/authSlice";
 import user from "./features/user/userSlice";
+import categories from "./features/categories/categorySlice";
+import blogs from "./features/blogs/blogSlice";
+import banners from "./features/banners/bannerSlice";
 
 const persistedAuth = persistReducer({ key: "auth", storage }, auth);
 
@@ -20,6 +23,9 @@ export const store = configureStore({
   reducer: {
     auth: persistedAuth,
     user,
+    categories,
+    blogs,
+    banners,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -42,7 +42,6 @@ export default function RegisterMember({
   isAdmin = true,
   user,
 }: Props) {
-  console.log("user", user);
   const {
     control,
     reset,
@@ -130,8 +129,6 @@ export default function RegisterMember({
       debounceCheckEmail(email);
     }
   }, [watch("email")]);
-
-  console.log("CI", watch("citizenship"));
 
   const debounceCheckEmail = debounce((email: string) => {
     http

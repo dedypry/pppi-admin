@@ -1,7 +1,7 @@
 import MagicUrl from "quill-magic-url";
 import QuillResizeImage from "quill-resize-image";
 import "quill/dist/quill.snow.css";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useQuill } from "react-quilljs";
 import QuillTableUI from "quill-table-ui";
 
@@ -11,14 +11,16 @@ interface Props {
   value: string;
   onContent: (val: any) => void;
   label?: string;
+  isInvalid?: boolean;
 }
-export default function QuillJS({ value, onContent, label }: Props) {
+export default function QuillJS({ value, onContent, label, isInvalid }: Props) {
+  const isRegistered = useRef(false);
   const { quill, quillRef, Quill } = useQuill({
     modules: {
       table: true,
       tableUI: true,
       toolbar: [
-        [{ header: [1, 2, 3, false] }],
+        [{ header: [1, 2, 3, 4, 5, false] }],
         ["bold", "italic", "underline", "strike"],
         [{ align: [] }],
         [{ list: "ordered" }, { list: "bullet" }],
@@ -56,10 +58,11 @@ export default function QuillJS({ value, onContent, label }: Props) {
     ],
   });
 
-  if (Quill) {
+  if (Quill && !isRegistered.current) {
     Quill.register("modules/resize", QuillResizeImage);
     Quill.register("modules/magicUrl", MagicUrl);
     Quill.register("modules/tableUI", QuillTableUI);
+    isRegistered.current = true;
   }
 
   const insertToEditor = (url: string) => {
@@ -102,7 +105,11 @@ export default function QuillJS({ value, onContent, label }: Props) {
 
   return (
     <div className="w-full min-h-[400px]">
-      {label && <p className="text-sm mb-1">{label}</p>}
+      {label && (
+        <p className={`text-sm mb-1 ${isInvalid ? "text-red-500" : ""}`}>
+          {label}
+        </p>
+      )}
       <div ref={quillRef} />
     </div>
   );

@@ -5,3 +5,8 @@ export interface IPagination<T> {
   per_page: number;
   last_page: number;
 }
+
+export interface IQueryPagination {
+  page?: number;
+  pageSize?: number;
+}

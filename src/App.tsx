@@ -10,8 +10,10 @@ import AgendaPage from "./pages/agenda";
 import OrganizationPage from "./pages/organization";
 import BlogPage from "./pages/blogs";
 import BlogCreate from "./pages/blogs/create";
-import BlogCategories from "./pages/blogs/categories";
 import MemberDetail from "./pages/members/detail";
+import BlogCategoryPage from "./pages/blog-category";
+import DepartmentPage from "./pages/department";
+import BannerPage from "./pages/banners";
 
 function App() {
   return (
@@ -19,24 +21,30 @@ function App() {
       <Route element={<AdminLayout />} path="/">
         <Route element={<Dashboard />} path="/" />
 
-        <Route element={<MemberPage />} path="/member" />
-        <Route element={<MemberCreate />} path="/member/create" />
-        <Route element={<MemberDetail />} path="/member/:id" />
-        <Route element={<MemberCreate />} path="/member/:id/edit" />
+        <Route path="/member">
+          <Route element={<MemberPage />} path="" />
+          <Route element={<MemberCreate />} path="create" />
+          <Route element={<MemberDetail />} path=":id" />
+          <Route element={<MemberCreate />} path=":id/edit" />
+        </Route>
 
         <Route element={<AgendaPage />} path="/agenda" />
         <Route element={<OrganizationPage />} path="/organization" />
-        <Route element={<BlogPage />} path="/blogs" />
-        <Route element={<BlogCreate />} path="/blogs/create" />
-        <Route element={<BlogCategories />} path="/blogs/category" />
+
+        <Route path="/blogs">
+          <Route element={<BlogPage />} path="" />
+          <Route element={<BlogCreate />} path="create" />
+          <Route element={<BlogCreate />} path=":id/edit" />
+          <Route element={<BlogCategoryPage />} path="category" />
+        </Route>
 
         <Route path="/settings">
-          <Route element={<BlogCategories />} path="department" />
-          <Route element={<BlogCategories />} path="user-management" />
-          <Route element={<BlogCategories />} path="roles" />
-          <Route element={<BlogCategories />} path="apps" />
-          <Route element={<BlogCategories />} path="banners" />
-          <Route element={<BlogCategories />} path="regions" />
+          <Route element={<DepartmentPage />} path="department" />
+          <Route element={<DepartmentPage />} path="user-management" />
+          <Route element={<DepartmentPage />} path="roles" />
+          <Route element={<DepartmentPage />} path="apps" />
+          <Route element={<BannerPage />} path="banners" />
+          <Route element={<DepartmentPage />} path="regions" />
         </Route>
       </Route>
 
