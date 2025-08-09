@@ -3,7 +3,7 @@ name: Build on Server
 on:
   push:
     branches:
-      - website
+      - admin
 
 jobs:
   build-and-deploy:
@@ -34,5 +34,5 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.REMOTE_PORT }}
           source: "dist/*"
-          target: "/www/wwwroot/demo.dpn-pppi.org"
+          target: "/www/wwwroot/admin.dpn-pppi.org"
           debug: true
