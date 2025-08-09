@@ -14,6 +14,7 @@ import { Calendar1Icon } from "lucide-react";
 
 import CustomInput from "./custom-input";
 import dayjs from "dayjs";
+import id from "date-fns/locale/id";
 
 interface Props {
   maxDate?: Date;
@@ -44,6 +45,7 @@ function CustomDatePicker(
               <Calendar
                 color="#15980d"
                 date={dayjs(props.value || new Date()).toDate()}
+                locale={id}
                 maxDate={maxDate}
                 minDate={minDate}
                 onChange={(e) => onChageValue(dayjs(e).format("DD MMMM YYYY"))}

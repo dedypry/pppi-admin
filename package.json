@@ -20,6 +20,7 @@
     "@wangeditor/editor-for-react": "^1.0.6",
     "axios": "^1.11.0",
     "clsx": "2.1.1",
+    "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "file-saver": "^2.0.5",
     "framer-motion": "11.18.2",
