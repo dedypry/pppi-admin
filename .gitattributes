@@ -1,0 +1,3 @@
+pages/** merge=ours
+App.tsx merge=ours
+.github/** merge=ours
