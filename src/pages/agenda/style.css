@@ -1,0 +1,26 @@
+/* Styling tombol umum */
+.fc-button {
+  background-color: #32c41f !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: none !important;
+  font-weight: 600 !important;
+}
+
+/* Styling tombol dengan class fc-button-primary */
+.fc-button.fc-button-primary {
+  background-color: #b6b4b9 !important;
+  color: white !important;
+}
+
+/* Styling tombol aktif */
+.fc-button.fc-button-active {
+  background-color: #15980d !important;
+  color: white !important;
+}
+
+/* Hover tombol */
+.fc-button:hover {
+  background-color: #3eaa37 !important;
+  color: white !important;
+}

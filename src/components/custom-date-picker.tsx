@@ -48,7 +48,9 @@ function CustomDatePicker(
                 locale={id}
                 maxDate={maxDate}
                 minDate={minDate}
-                onChange={(e) => onChageValue(dayjs(e).format("DD MMMM YYYY"))}
+                onChange={(e) => {
+                  onChageValue(dayjs(e).format("DD MMMM YYYY"));
+                }}
               />
             </div>
           </PopoverContent>
