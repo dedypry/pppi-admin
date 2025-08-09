@@ -3,7 +3,7 @@ name: Build on Server
 on:
   push:
     branches:
-      - main
+      - admin
 
 jobs:
   build-and-deploy:
