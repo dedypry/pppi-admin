@@ -42,6 +42,7 @@ export interface IBlog {
   updated_at: string;
   publish_at: string;
   schedule: string;
+  slug: string;
   category: ICategory;
   comments: IComment[];
 }

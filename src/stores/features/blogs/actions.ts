@@ -21,9 +21,9 @@ export const getBlogs = createAsyncThunk(
 );
 export const getBlogDetail = createAsyncThunk(
   "get-blogs/detail",
-  async ({ id }: { id: number }) => {
+  async ({ slug }: { slug: number }) => {
     try {
-      const { data } = await http.get(`/blogs/${id}`);
+      const { data } = await http.get(`/blogs/${slug}`);
 
       return data;
     } catch (error) {

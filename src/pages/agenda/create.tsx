@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   Modal,
   ModalBody,
   ModalContent,
@@ -36,6 +37,8 @@ interface IForm {
   end_at: string;
   cover: string;
   color: string;
+  price: string;
+  is_show_web: boolean;
 }
 interface Props {
   isOpen: boolean;
@@ -55,6 +58,7 @@ export default function CreateAgenda({
   data,
 }: Props) {
   const [loading, setLoading] = useState(false);
+  const [isFree, setIsFree] = useState(false);
   const [date, setDate] = useState({
     startDate: startDate,
     endDate: endDate,
@@ -78,6 +82,8 @@ export default function CreateAgenda({
       start_at: "",
       end_at: "",
       cover: "",
+      price: "",
+      is_show_web: true,
       color: getRandomSafeColor(),
     },
   });
@@ -90,14 +96,14 @@ export default function CreateAgenda({
 
   useEffect(() => {
     if (data) {
-      setValue("id", data.id);
-      setValue("title", data.title);
-      setValue("subtitle", data.subtitle);
+      reset(data);
+      setTimeout(() => {
+        setValue("description", data.description);
+      }, 100);
+    }
+
+    if (data?.description) {
       setValue("description", data.description);
-      setValue("start_at", data.start_at);
-      setValue("end_at", data.end_at);
-      setValue("cover", data.cover);
-      setValue("color", data.color);
     }
   }, [data]);
 
@@ -132,7 +138,17 @@ export default function CreateAgenda({
       .finally(() => setLoading(false));
   }
 
-  console.log(watch("color"));
+  function handleFree(free: boolean) {
+    if (free) {
+      setValue("price", "0");
+    }
+  }
+
+  useEffect(() => {
+    const price = watch("price");
+
+    setIsFree(+price === 0);
+  }, [watch("price")]);
 
   return (
     <Modal
@@ -176,12 +192,27 @@ export default function CreateAgenda({
             />
 
             <p />
-            <CustomDateRangePicker
-              endDate={date.endDate}
-              label="Tanggal Event"
-              startDate={date.startDate}
-              onChageValue={setDate}
-            />
+            <div className="flex gap-2 ">
+              <CustomDateRangePicker
+                endDate={date.endDate}
+                label="Tanggal Event"
+                startDate={date.startDate}
+                onChageValue={setDate}
+              />
+              <Controller
+                control={control}
+                name="is_show_web"
+                render={({ field }) => (
+                  <Checkbox
+                    className="w-full mt-3"
+                    isSelected={field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  >
+                    Tapilkan di WEB
+                  </Checkbox>
+                )}
+              />
+            </div>
 
             <Controller
               control={control}
@@ -216,16 +247,49 @@ export default function CreateAgenda({
               rules={{ required: true }}
             />
 
+            <Controller
+              control={control}
+              name="price"
+              render={({ field }) => (
+                <CustomInput
+                  endContent={
+                    <Checkbox
+                      isSelected={isFree}
+                      onChange={(e) => handleFree(e.target.checked)}
+                    >
+                      Gratis
+                    </Checkbox>
+                  }
+                  errorMessage={
+                    errors.price?.message || "price tidak boleh kosong"
+                  }
+                  isInvalid={!!errors.price}
+                  label="Price"
+                  placeholder="Masukan Harga"
+                  startContent={
+                    <div className="pointer-events-none flex items-center">
+                      <span className="text-secondary-600 text-small">Rp</span>
+                    </div>
+                  }
+                  type="number"
+                  {...field}
+                />
+              )}
+              rules={{ required: true }}
+            />
+
             <p className="text-sm text-secondary-900 p-0 m-0 pt-2">Deskripsi</p>
             <Controller
               control={control}
               name="description"
-              render={({ field }) => (
-                <QuillJS
-                  value={field.value || ""}
-                  onContent={(val) => field.onChange(val)}
-                />
-              )}
+              render={({ field }) => {
+                return (
+                  <QuillJS
+                    value={field.value!}
+                    onContent={(val) => field.onChange(val)}
+                  />
+                );
+              }}
             />
           </ModalBody>
           <ModalFooter>

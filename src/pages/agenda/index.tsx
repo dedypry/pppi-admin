@@ -75,6 +75,8 @@ export default function AgendaPage() {
       ...info.event.extendedProps,
     };
 
+    console.log(payload)
+
     setData(payload);
     setDateStart(payload.start_at);
     setDateEnd(payload.end_at);

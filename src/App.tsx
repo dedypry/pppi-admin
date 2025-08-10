@@ -34,7 +34,7 @@ function App() {
         <Route path="/blogs">
           <Route element={<BlogPage />} path="" />
           <Route element={<BlogCreate />} path="create" />
-          <Route element={<BlogCreate />} path=":id/edit" />
+          <Route element={<BlogCreate />} path=":slug/edit" />
           <Route element={<BlogCategoryPage />} path="category" />
         </Route>
 

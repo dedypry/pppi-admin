@@ -36,13 +36,3 @@ jobs:
           port: ${{ secrets.REMOTE_PORT }}
           source: "dist/*"
           target: "/www/wwwroot/admin.dpn-pppi.org"
-
-      - name: Commit lint fixes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "chore: apply lint fixes" || echo "No changes to commit"
-          git push
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -40,15 +40,15 @@ export default function BlogCreate() {
   const { blog } = useAppSelector((state) => state.blogs);
   const [loading, setLoading] = useState(false);
   const route = useNavigate();
-  const { id } = useParams();
+  const { slug } = useParams();
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (id) {
-      dispatch(getBlogDetail({ id: id as any }));
+    if (slug) {
+      dispatch(getBlogDetail({ slug: slug as any }));
     }
-  }, [id]);
+  }, [slug]);
 
   const {
     control,
@@ -72,7 +72,7 @@ export default function BlogCreate() {
   });
 
   useEffect(() => {
-    if (id && blog) {
+    if (slug && blog) {
       setValue("id", blog.id);
       setValue("cover", blog.cover);
       setValue("title", blog.title);

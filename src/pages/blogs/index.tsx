@@ -176,7 +176,7 @@ export default function BlogPage() {
                           key="edit"
                           color="warning"
                           startContent={<EditIcon size={18} />}
-                          onClick={() => route(`/blogs/${item.id}/edit`)}
+                          onClick={() => route(`/blogs/${item.slug}/edit`)}
                         >
                           Edit
                         </DropdownItem>
