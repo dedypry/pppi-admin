@@ -12,6 +12,7 @@ import {
   TableCell,
   Switch,
   Table,
+  Image,
 } from "@heroui/react";
 import { LayoutDashboard, Settings, ImageDownIcon, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -86,13 +87,13 @@ export default function BannerPage() {
         </BreadcrumbItem>
       </Breadcrumbs>
 
-      <Card className="bg-gray-800 h-[500px]">
+      <Card className="bg-gray-800">
         <Carousel autoPlay={true}>
           {banners
             .filter((e) => e.is_active)
             .map((item) => (
               <div key={item.id}>
-                <img
+                <Image
                   alt="banner"
                   className="object-cover"
                   height={500}

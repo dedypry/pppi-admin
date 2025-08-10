@@ -9,6 +9,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Image,
   Input,
   Pagination,
   Table,
@@ -115,7 +116,7 @@ export default function BlogPage() {
                   }}
                 >
                   <TableCell>
-                    <img alt="cover" height={50} src={item.cover} />
+                    <Image alt="cover" height={50} src={item.cover} />
                   </TableCell>
                   <TableCell>
                     <p>{item.title}</p>
