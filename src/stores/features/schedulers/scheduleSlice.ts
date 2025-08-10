@@ -4,6 +4,7 @@ import { getScheduler } from "./action";
 
 import { IPagination } from "@/interface/IPagination";
 import { IScheduler } from "@/interface/ISchedule";
+import dayjs from "dayjs";
 
 export const scheduleSlice = createSlice({
   name: "schedulers",
@@ -16,7 +17,7 @@ export const scheduleSlice = createSlice({
       getScheduler.fulfilled,
       (state, action: PayloadAction<IPagination<IScheduler[]>>) => {
         state.schedulers = action.payload;
-      },
+      }
     ),
 });
 
