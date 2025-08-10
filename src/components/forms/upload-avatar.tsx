@@ -19,7 +19,7 @@ export default function UploadAvatar({
 }: Props) {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const { url } = await uploadFile(e.target.files[0]);
+      const { url } = await uploadFile(e.target.files[0], "avatar");
 
       setFile(url);
     }

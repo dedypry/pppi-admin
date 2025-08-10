@@ -25,7 +25,7 @@ export default function InputPhotoProfile({
   }, [file]);
 
   async function upload(file: File) {
-    const { url } = await uploadFile(file);
+    const { url } = await uploadFile(file, "profiles");
 
     setPhoto(url);
   }

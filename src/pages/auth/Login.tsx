@@ -13,8 +13,8 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useState } from "react";
 
 import { apps } from "@/config/app";
-import CustomInput from "@/components/custom-input";
-import InputPassword from "@/components/input-password";
+import CustomInput from "@/components/forms/custom-input";
+import InputPassword from "@/components/forms/input-password";
 import { http } from "@/config/axios";
 import { useAppDispatch } from "@/stores/hooks";
 import { setToken } from "@/stores/features/auth/authSlice";

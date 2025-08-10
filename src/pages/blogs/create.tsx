@@ -12,12 +12,12 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import AddCategory from "./add-category";
 
-import AttachmentSingleFile from "@/components/attacment-singgle-file";
-import CustomDatePicker from "@/components/custom-date-picker";
-import CustomInput from "@/components/custom-input";
-import QuillJS from "@/components/quill-js";
+import AttachmentSingleFile from "@/components/forms/attacment-singgle-file";
+import CustomDatePicker from "@/components/forms/custom-date-picker";
+import CustomInput from "@/components/forms/custom-input";
+import QuillJS from "@/components/forms/quill-js";
 import { dateFormat } from "@/utils/helpers/formater";
-import InputTags from "@/components/input-tags";
+import InputTags from "@/components/forms/input-tags";
 import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";

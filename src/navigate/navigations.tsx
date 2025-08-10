@@ -7,6 +7,7 @@ import {
   LayoutListIcon,
   MapPinHouse,
   OrigamiIcon,
+  PackageCheckIcon,
   RssIcon,
   ShieldCheckIcon,
   ShieldEllipsis,
@@ -43,6 +44,16 @@ export const navigate = [
         title: "Tambah Anggota",
         icon: UserPlus2,
         href: "/member/create",
+      },
+    ],
+  },
+  {
+    header: "Partner",
+    children: [
+      {
+        title: "List Paket",
+        icon: PackageCheckIcon,
+        href: "/partners/packages",
       },
     ],
   },

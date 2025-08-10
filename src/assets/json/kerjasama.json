@@ -1,0 +1,110 @@
+{
+    "packages": [
+        {
+            "no": 1,
+            "name": "Peningkatan Kompetensi",
+            "types": [
+                "Webinar",
+                "Seminar",
+                "Workshop",
+                "Symposium",
+                "MOOC"
+            ],
+            "package": "Paket 1",
+            "description": "Rp.3.500-/peserta + Institutional Fee : 10%",
+            "benefit": [
+                "Promosi di sosmed dan komunitas LPK PPPI",
+                "Link Mitigasi Permasalahan Peserta",
+                "Team Mitigasi Peserta",
+                "Sertifikat Kerjasama Lembaga Kegiatan"
+            ]
+        },
+        {
+            "no": 2,
+            "name": "Peningkatan Kompetensi",
+            "types": [
+                "Webinar",
+                "Seminar",
+                "Workshop",
+                "Symposium",
+                "MOOC"
+            ],
+            "package": "Paket 2",
+            "description": "Rp.4.000-/peserta + Institutional Fee : 10%",
+            "benefit": [
+                "Promosi di sosmed dan komunitas LPK PPPI",
+                "Link Mitigasi Permasalahan Peserta",
+                "Team Mitigasi Peserta",
+                "Sertifikat Kerjasama Lembaga Kegiatan",
+                "Bumper Kegiatan"
+            ]
+        },
+        {
+            "no": 3,
+            "name": "Peningkatan Kompetensi",
+            "types": [
+                "Webinar",
+                "Seminar",
+                "Workshop",
+                "Symposium",
+                "MOOC"
+            ],
+            "package": "Paket 3",
+            "description": "Rp.4.500-/peserta + Institutional Fee : 20%",
+            "benefit": [
+                "Promosi di sosmed dan komunitas LPK PPPI",
+                "Link Mitigasi Permasalahan Peserta",
+                "Team Mitigasi Peserta",
+                "Sertifikat Kerjasama Lembaga Kegiatan",
+                "Bumper Kegiatan",
+                "Link Pendaftaran peserta",
+                "Link Absensi Peserta"
+            ]
+        },
+        {
+            "no": 4,
+            "name": "Peningkatan Kompetensi",
+            "types": [
+                "Webinar",
+                "Seminar",
+                "Workshop",
+                "Symposium",
+                "MOOC"
+            ],
+            "package": "Paket 4",
+            "description": "20% dari Harga Pendaftaran peserta",
+            "benefit": [
+                "Promosi di sosmed dan komunitas LPK PPPI",
+                "Link Mitigasi Permasalahan Peserta",
+                "Team Mitigasi Peserta",
+                "Sertifikat Kerjasama Lembaga Kegiatan"
+            ]
+        }
+    ],
+    "Pelatihan": [
+        {
+            "no": 1,
+            "name": "Pelatihan",
+            "package": "Paket 1",
+            "description": "Rp.2000.000/ Kelas",
+            "benefit": [
+                "Promosi di sosmed dan komunitas LPK PPPI",
+                "Link Mitigasi Permasalahan Peserta",
+                "Team Mitigasi Peserta",
+                "Sertifikat Kerjasama Lembaga Kegiatan"
+            ]
+        },
+        {
+            "no": 2,
+            "name": "Pelatihan",
+            "package": "Paket 2",
+            "description": "20% dari harga pendaftaran peserta",
+            "benefit": [
+                "Promosi di sosmed dan komunitas LPK PPPI",
+                "Link Mitigasi Permasalahan Peserta",
+                "Team Mitigasi Peserta",
+                "Sertifikat Kerjasama Lembaga Kegiatan"
+            ]
+        }
+    ]
+}

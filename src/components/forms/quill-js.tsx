@@ -30,7 +30,7 @@ export default function QuillJS({ value, onContent, isInvalid }: Props) {
     MENU_CONF: {
       uploadImage: {
         async customUpload(file: File, insertFn: (url: string) => void) {
-          const { url } = await uploadFile(file);
+          const { url } = await uploadFile(file, "content");
 
           insertFn(url);
         },

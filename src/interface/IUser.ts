@@ -1,3 +1,10 @@
+export interface IRole {
+  id: number;
+  name: string;
+  guard_name: string;
+  created_at: string;
+  updated_at: string;
+}
 export interface Province {
   id: number;
   name: string;
@@ -76,6 +83,7 @@ export interface IUser {
   rejected_note: string;
   profile: IUserProfile;
   created_at: string;
+  roles: IRole[];
 }
 
 export interface ICreateMember {

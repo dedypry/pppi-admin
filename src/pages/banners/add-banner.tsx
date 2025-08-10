@@ -8,7 +8,7 @@ import {
 } from "@heroui/react";
 import { useEffect, useState } from "react";
 
-import DropZone from "@/components/drop-zone";
+import DropZone from "@/components/forms/drop-zone";
 import { uploadMultipleFile } from "@/utils/helpers/upload-file";
 import { notify, notifyError } from "@/utils/helpers/notify";
 import { http } from "@/config/axios";

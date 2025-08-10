@@ -30,7 +30,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import debounce from "@/utils/helpers/debounce";
-import CustomInput from "@/components/custom-input";
+import CustomInput from "@/components/forms/custom-input";
 import Gender from "@/components/gender";
 import { confirmSweet } from "@/utils/helpers/confirm";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";

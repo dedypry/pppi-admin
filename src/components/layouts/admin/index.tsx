@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { useMediaQuery } from "react-responsive";
 import {
   Avatar,
@@ -13,20 +13,40 @@ import {
   NavbarContent,
 } from "@heroui/react";
 import { Bell, Settings, LogOut, MenuIcon, UserIcon } from "lucide-react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 import SidebarMenu from "./partials/sidebar-menu";
 
 import { responsive } from "@/config/responsive";
 import AuthGuard from "@/guards/AuthGuard";
+import { confirmSweet } from "@/utils/helpers/confirm";
+import { http } from "@/config/axios";
+import { notifyError } from "@/utils/helpers/notify";
+import { useAppDispatch } from "@/stores/hooks";
+import { setToken } from "@/stores/features/auth/authSlice";
 
-export default function AdminLayout() {
+interface Props {
+  children?: ReactNode;
+}
+export default function AdminLayout({ children }: Props) {
   const [isOpen, setIsOpen] = useState(true);
   const isMobile = useMediaQuery(responsive.mobile);
+  const dispatch = useAppDispatch();
+  const route = useNavigate();
 
   useEffect(() => {
     setIsOpen(!isMobile);
   }, [isMobile]);
+
+  function handleLogout() {
+    http
+      .delete("/auth/logout")
+      .then(() => {
+        dispatch(setToken(null));
+        route("/login");
+      })
+      .catch((err) => notifyError(err));
+  }
 
   return (
     <AuthGuard>
@@ -93,7 +113,7 @@ export default function AdminLayout() {
                   <DropdownItem
                     key={1}
                     startContent={<UserIcon />}
-                    onClick={() => {}}
+                    onClick={() => route("/profile")}
                   >
                     My Profile
                   </DropdownItem>
@@ -107,7 +127,11 @@ export default function AdminLayout() {
                   <DropdownItem
                     key={3}
                     startContent={<LogOut />}
-                    onClick={() => {}}
+                    onClick={() =>
+                      confirmSweet(handleLogout, {
+                        confirmButtonText: "Ya, Keluar",
+                      })
+                    }
                   >
                     Logout
                   </DropdownItem>
@@ -117,6 +141,7 @@ export default function AdminLayout() {
           </Navbar>
           <div className="py-5">
             <Outlet />
+            {children}
           </div>
         </main>
       </div>

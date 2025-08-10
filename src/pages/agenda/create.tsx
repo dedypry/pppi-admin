@@ -15,10 +15,10 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import dayjs from "dayjs";
 
-import CustomInput from "@/components/custom-input";
-import QuillJS from "@/components/quill-js";
-import CustomDateRangePicker from "@/components/custom-date-range-picker";
-import AttachmentSingleFile from "@/components/attacment-singgle-file";
+import CustomInput from "@/components/forms/custom-input";
+import QuillJS from "@/components/forms/quill-js";
+import CustomDateRangePicker from "@/components/forms/custom-date-range-picker";
+import AttachmentSingleFile from "@/components/forms/attacment-singgle-file";
 import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
 import {

@@ -11,9 +11,9 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 
-import CustomInput from "@/components/custom-input";
-import CustomTextArea from "@/components/custom-textarea";
-import UploadAvatar from "@/components/upload-avatar";
+import CustomInput from "@/components/forms/custom-input";
+import CustomTextArea from "@/components/forms/custom-textarea";
+import UploadAvatar from "@/components/forms/upload-avatar";
 import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
 import { useAppDispatch } from "@/stores/hooks";
@@ -76,10 +76,14 @@ export default function ModalCategory({
         notify("Kategori berhasil ditambahkan!!!");
         dispatch(getCategories({}));
         reset();
-        onSuccess!(data);
+        if (onSuccess) {
+          onSuccess(data);
+        }
         setOpen(false);
       })
-      .catch((err) => notifyError(err))
+      .catch((err) => {
+        notifyError(err);
+      })
       .finally(() => setLoading(false));
   }
 

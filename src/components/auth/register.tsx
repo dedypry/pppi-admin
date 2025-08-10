@@ -12,20 +12,20 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import dayjs from "dayjs";
 import { ReactNode, useEffect } from "react";
 
-import CustomDatePicker from "../custom-date-picker";
+import CustomDatePicker from "../forms/custom-date-picker";
 
-import CustomInput from "@/components/custom-input";
+import CustomInput from "@/components/forms/custom-input";
 import { ICreateMember, IUser } from "@/interface/IUser";
 import CityList from "@/components/regions/city";
-import CustomSelect from "@/components/custom-select";
+import CustomSelect from "@/components/forms/custom-select";
 import DistrictList from "@/components/regions/district";
 import ProvinceList from "@/components/regions/province";
 import Man from "@/assets/images/man.png";
 import Woman from "@/assets/images/woman.png";
-import CustomTextArea from "@/components/custom-textarea";
+import CustomTextArea from "@/components/forms/custom-textarea";
 import { educations } from "@/config/app";
-import AttachmentSingleFile from "@/components/attacment-singgle-file";
-import InputPhotoProfile from "@/components/input-photo-profile";
+import AttachmentSingleFile from "@/components/forms/attacment-singgle-file";
+import InputPhotoProfile from "@/components/forms/input-photo-profile";
 import debounce from "@/utils/helpers/debounce";
 import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";

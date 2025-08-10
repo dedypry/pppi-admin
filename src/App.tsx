@@ -14,6 +14,9 @@ import MemberDetail from "./pages/members/detail";
 import BlogCategoryPage from "./pages/blog-category";
 import DepartmentPage from "./pages/department";
 import BannerPage from "./pages/banners";
+import PackagePage from "./pages/patners/packages";
+import ErrorNotFoundPage from "./pages/errors/not-found";
+import ProfilePage from "./pages/profiles";
 
 function App() {
   return (
@@ -38,6 +41,14 @@ function App() {
           <Route element={<BlogCategoryPage />} path="category" />
         </Route>
 
+        <Route path="/partners">
+          <Route element={<PackagePage />} path="packages" />
+        </Route>
+
+        <Route path="/profile">
+          <Route element={<ProfilePage />} path="" />
+        </Route>
+
         <Route path="/settings">
           <Route element={<DepartmentPage />} path="department" />
           <Route element={<DepartmentPage />} path="user-management" />
@@ -51,6 +62,15 @@ function App() {
       <Route element={<AuthLayout />} path="/">
         <Route element={<LoginPage />} path="/login" />
       </Route>
+
+      <Route
+        element={
+          <AdminLayout>
+            <ErrorNotFoundPage />
+          </AdminLayout>
+        }
+        path="*"
+      />
     </Routes>
   );
 }
