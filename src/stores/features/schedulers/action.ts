@@ -1,16 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import dayjs from "dayjs";
 
 import { http } from "@/config/axios";
 import { IQueryPagination } from "@/interface/IPagination";
 import { IScheduler } from "@/interface/ISchedule";
-import dayjs from "dayjs";
 
 export const getScheduler = createAsyncThunk(
   "get-schedule",
   async ({ page = 1, pageSize = 10 }: IQueryPagination) => {
     try {
       const { data } = await http.get(
-        `/schedulers?page=${page}&pageSize=${pageSize}`
+        `/schedulers?page=${page}&pageSize=${pageSize}`,
       );
 
       return data;
@@ -19,7 +19,7 @@ export const getScheduler = createAsyncThunk(
 
       return null;
     }
-  }
+  },
 );
 
 export function formatDateSchedule(schedules: IScheduler[] = []) {

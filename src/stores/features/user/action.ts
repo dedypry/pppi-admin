@@ -30,7 +30,7 @@ export const getUserDetail = createAsyncThunk(
 
       return null;
     }
-  }
+  },
 );
 
 export function handleApprove(data: IApprove, dispatchCallback: () => any) {

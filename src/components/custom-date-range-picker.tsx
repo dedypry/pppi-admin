@@ -19,7 +19,6 @@ import CustomInput from "./custom-input";
 import id from "date-fns/locale/id";
 import dayjs from "dayjs";
 import { dateTimeFormat } from "@/utils/helpers/formater";
-import debounce from "@/utils/helpers/debounce";
 
 interface Props {
   startDate?: Date;
@@ -83,12 +82,6 @@ function CustomDateRangePicker(
       return dateR;
     });
   }
-
-  const dobounceChangeValue = (date: any) =>
-    debounce(() => {
-      console.log("DATA", date);
-      onChageValue(date);
-    }, 1000);
 
   return (
     <CustomInput

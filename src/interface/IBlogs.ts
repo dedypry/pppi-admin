@@ -45,4 +45,3 @@ export interface IBlog {
   category: ICategory;
   comments: IComment[];
 }
-

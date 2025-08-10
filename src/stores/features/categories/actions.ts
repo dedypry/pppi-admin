@@ -19,5 +19,5 @@ export const getCategories = createAsyncThunk(
 
       return null;
     }
-  }
+  },
 );
