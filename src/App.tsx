@@ -17,6 +17,7 @@ import BannerPage from "./pages/banners";
 import PackagePage from "./pages/patners/packages";
 import ErrorNotFoundPage from "./pages/errors/not-found";
 import ProfilePage from "./pages/profiles";
+import ComingSoon from "./pages/errors/cooming-soon";
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
         </Route>
 
         <Route element={<AgendaPage />} path="/agenda" />
-        <Route element={<OrganizationPage />} path="/organization" />
+        <Route element={<ComingSoon />} path="/organization" />
 
         <Route path="/blogs">
           <Route element={<BlogPage />} path="" />
@@ -42,7 +43,8 @@ function App() {
         </Route>
 
         <Route path="/partners">
-          <Route element={<PackagePage />} path="packages" />
+          {/* <Route element={<PackagePage />} path="packages" /> */}
+          <Route element={<ComingSoon />} path="packages" />
         </Route>
 
         <Route path="/profile">
@@ -50,12 +52,13 @@ function App() {
         </Route>
 
         <Route path="/settings">
-          <Route element={<DepartmentPage />} path="department" />
-          <Route element={<DepartmentPage />} path="user-management" />
-          <Route element={<DepartmentPage />} path="roles" />
-          <Route element={<DepartmentPage />} path="apps" />
+          {/* <Route element={<DepartmentPage />} path="department" /> */}
+          <Route element={<ComingSoon />} path="user-management" />
+          <Route element={<ComingSoon />} path="department" />
+          <Route element={<ComingSoon />} path="roles" />
+          <Route element={<ComingSoon />} path="apps" />
+          <Route element={<ComingSoon />} path="regions" />
           <Route element={<BannerPage />} path="banners" />
-          <Route element={<DepartmentPage />} path="regions" />
         </Route>
       </Route>
 
