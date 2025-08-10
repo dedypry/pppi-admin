@@ -34,12 +34,9 @@ export default function FormProfile({ user }: Props) {
   const dispatch = useAppDispatch();
   const {
     control,
-    reset,
     handleSubmit,
-    clearErrors,
     setValue,
     watch,
-    setError,
     formState: { errors },
   } = useForm<ICreateMember>({
     defaultValues: {

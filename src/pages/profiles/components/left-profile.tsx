@@ -8,7 +8,6 @@ import {
   MailIcon,
   MapPin,
   PhoneCallIcon,
-  SlackIcon,
   Ticket,
   User2Icon,
 } from "lucide-react";
