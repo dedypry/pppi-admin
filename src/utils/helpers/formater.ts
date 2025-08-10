@@ -16,6 +16,11 @@ export function dateFormat(date = "", format = "DD MMMM YYYY") {
 
   return dayjs(date).format(format);
 }
+export function dateTimeFormat(date = "", format = "DD MMMM YYYY | HH:mm WIB") {
+  if (!date) return "-";
+
+  return dayjs(date).format(format);
+}
 
 export function dateSchedule(date?: string) {
   const formater = "YYYY-MM-DD HH:mm";

@@ -1,12 +1,15 @@
 /* eslint-disable import/order */
 import {
+  Button,
   InputProps,
   Popover,
   PopoverContent,
   PopoverTrigger,
+  TimeInput,
 } from "@heroui/react";
 import { forwardRef, useEffect, useState } from "react";
 import { DateRangePicker, RangeKeyDict } from "react-date-range";
+import { parseAbsoluteToLocal, ZonedDateTime } from "@internationalized/date";
 
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
@@ -15,7 +18,8 @@ import { Calendar1Icon } from "lucide-react";
 import CustomInput from "./custom-input";
 import id from "date-fns/locale/id";
 import dayjs from "dayjs";
-import { dateFormat } from "@/utils/helpers/formater";
+import { dateTimeFormat } from "@/utils/helpers/formater";
+import debounce from "@/utils/helpers/debounce";
 
 interface Props {
   startDate?: Date;
@@ -45,7 +49,6 @@ function CustomDateRangePicker(
       ...dateRange,
       ...dateR,
     });
-
     onChageValue(dateR);
   }
 
@@ -60,10 +63,32 @@ function CustomDateRangePicker(
   }, [startDate, endDate]);
 
   useEffect(() => {
-    const value = `${dateFormat(dateRange.startDate as any)} - ${dateFormat(dateRange.endDate as any)}`;
+    const value = `${dateTimeFormat(dateRange.startDate as any)} - ${dateTimeFormat(dateRange.endDate as any)}`;
 
     setValue(value);
   }, [dateRange]);
+
+  function handleTimeInput(
+    key: "startDate" | "endDate",
+    val?: ZonedDateTime | null,
+  ) {
+    setDateRange((state) => {
+      const dateR = {
+        ...state,
+        [key]: dayjs(val?.toDate()).toDate(),
+      };
+
+      onChageValue(dateR);
+
+      return dateR;
+    });
+  }
+
+  const dobounceChangeValue = (date: any) =>
+    debounce(() => {
+      console.log("DATA", date);
+      onChageValue(date);
+    }, 1000);
 
   return (
     <CustomInput
@@ -90,6 +115,33 @@ function CustomDateRangePicker(
                 retainEndDateOnFirstSelection={false}
                 onChange={handleChooseDateRange}
               />
+              <div className="flex gap-2">
+                <TimeInput
+                  hourCycle={24}
+                  label="Waktu Mulai"
+                  value={parseAbsoluteToLocal(
+                    dayjs(dateRange.startDate).toISOString(),
+                  )}
+                  onChange={(val) => handleTimeInput("startDate", val)}
+                />
+                <TimeInput
+                  hourCycle={24}
+                  label="Waktu Berakhir"
+                  value={parseAbsoluteToLocal(
+                    dayjs(dateRange.endDate).toISOString(),
+                  )}
+                  onChange={(val) => handleTimeInput("endDate", val)}
+                />
+              </div>
+              <div className="text-right py-5">
+                <Button
+                  color="primary"
+                  variant="shadow"
+                  onPress={() => setOpen(false)}
+                >
+                  Simpan/Tutup
+                </Button>
+              </div>
             </div>
           </PopoverContent>
         </Popover>

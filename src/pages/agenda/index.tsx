@@ -1,44 +1,37 @@
-import dayjs from "dayjs";
+/* eslint-disable import/order */
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Calendar } from "lucide-react";
 
 import "./style.css";
+import dayjs from "dayjs";
+
 import CreateAgenda from "./create";
+
+import { useAppDispatch, useAppSelector } from "@/stores/hooks";
+import {
+  formatDateSchedule,
+  getScheduler,
+} from "@/stores/features/schedulers/action";
+import { http } from "@/config/axios";
+import { notifyError } from "@/utils/helpers/notify";
+import { IScheduler } from "@/interface/ISchedule";
 
 export default function AgendaPage() {
   const [isOpen, setOpen] = useState(false);
   const [dateStart, setDateStart] = useState<Date>();
   const [dateEnd, setDateEnd] = useState<Date>();
-  const [events, setEvents] = useState([
-    {
-      id: "1",
-      title: "Meeting Tim",
-      subtitle: "Diskusi bulanan",
-      start: dayjs().format("YYYY-MM-DD"),
-      end: dayjs().add(1, "day").format("YYYY-MM-DD"),
-      color: "red",
-    },
-    {
-      id: "2",
-      title: "Workshop",
-      subtitle: "Diskusi bulanan",
-      start: dayjs("2025-08-15 09:00").format(),
-      end: dayjs("2025-08-20 17:00").format(),
-      color: "blue",
-    },
-    {
-      id: "3",
-      title: "Meeting Beaar",
-      subtitle: "Diskusi bulanan",
-      start: dayjs("2025-08-15 09:00").format(),
-      end: dayjs("2025-08-20 17:00").format(),
-      color: "green",
-    },
-  ]);
+  const [data, setData] = useState<IScheduler>();
+  const { schedulers } = useAppSelector((state) => state.schedulers);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getScheduler({}));
+  }, []);
 
   const renderEventContent = (eventInfo: any) => {
     return (
@@ -55,31 +48,37 @@ export default function AgendaPage() {
   };
 
   const handleEventDrop = (info: any) => {
-    const updatedEvents = events.map((event) =>
-      event.id === info.event.id
-        ? {
-            ...event,
-            start: dayjs(info.event.start).format(),
-            end: info.event.end ? dayjs(info.event.end).format() : null,
-          }
-        : event,
-    );
+    const start = dayjs(info.event.start).format("YYYY-MM-DDT");
+    const end = info.event.end
+      ? dayjs(info.event.end).format("YYYY-MM-DDT")
+      : dayjs(new Date()).format("YYYY-MM-DDT");
 
-    setEvents(updatedEvents as any);
+    const current = info.event.extendedProps;
+    const currentTimeStart = dayjs(current.start_at).format("HH:mm:ss");
+    const currentTimeEnd = dayjs(current.end_at).format("HH:mm:ss");
+    const payload = {
+      id: info.event.id,
+      title: info.event.title,
+      ...current,
+      start_at: dayjs(`${start}${currentTimeStart}`).toISOString(),
+      end_at: dayjs(`${end}${currentTimeEnd}`).toISOString(),
+    };
+
+    http.post("/schedulers", payload).catch((err) => notifyError(err));
   };
-  const handleEventResize = (info: any) => {
-    console.log("resize", info);
-    const updatedEvents = events.map((event) =>
-      event.id === info.event.id
-        ? {
-            ...event,
-            start: dayjs(info.event.start).format(),
-            end: dayjs(info.event.end).format(),
-          }
-        : event,
-    );
 
-    setEvents(updatedEvents);
+  const handleEventClick = (info: any) => {
+    const payload = {
+      id: info.event.id,
+      title: info.event.title,
+      color: info.event.backgroundColor,
+      ...info.event.extendedProps,
+    };
+
+    setData(payload);
+    setDateStart(payload.start_at);
+    setDateEnd(payload.end_at);
+    setOpen(true);
   };
 
   function clear() {
@@ -90,13 +89,14 @@ export default function AgendaPage() {
   return (
     <>
       <CreateAgenda
+        data={data}
         endDate={dateEnd}
         isOpen={isOpen}
         setOpen={setOpen}
         startDate={dateStart}
         onClose={clear}
       />
-      x
+
       <FullCalendar
         dateClick={(e) => {
           setDateStart(e.date);
@@ -104,12 +104,12 @@ export default function AgendaPage() {
           setOpen(true);
         }}
         editable={true}
-        eventClick={(e) => console.log("CHANGE", e)}
+        eventClick={handleEventClick}
         eventColor="tranparent"
         eventContent={renderEventContent}
         eventDrop={handleEventDrop}
-        eventResize={handleEventResize}
-        events={events}
+        eventResize={handleEventDrop}
+        events={formatDateSchedule(schedulers?.data || []) as any}
         headerToolbar={{
           left: "prev,next today",
           center: "title",
@@ -124,7 +124,6 @@ export default function AgendaPage() {
           setDateStart(info.start);
           setDateEnd(adjustedEnd);
           setOpen(true);
-          // setData(info.)
         }}
         selectable={true}
       />
