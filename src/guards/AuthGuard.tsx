@@ -31,8 +31,8 @@ export default function AuthGuard({ children }: { children: ReactNode }) {
       .then(({ data }) => {
         dispatch(setUser(data));
       })
-      .catch((err) => {
-        notifyError(err);
+      .catch(() => {
+        // notifyError(err);
         dispatch(setToken(""));
         route("/login");
       })

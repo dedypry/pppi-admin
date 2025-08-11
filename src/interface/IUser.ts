@@ -83,6 +83,7 @@ export interface IUser {
   rejected_note: string;
   profile: IUserProfile;
   created_at: string;
+  bio: string;
   roles: IRole[];
 }
 

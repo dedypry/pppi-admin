@@ -22,13 +22,14 @@ import AuthGuard from "@/guards/AuthGuard";
 import { confirmSweet } from "@/utils/helpers/confirm";
 import { http } from "@/config/axios";
 import { notifyError } from "@/utils/helpers/notify";
-import { useAppDispatch } from "@/stores/hooks";
+import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { setToken } from "@/stores/features/auth/authSlice";
 
 interface Props {
   children?: ReactNode;
 }
 export default function AdminLayout({ children }: Props) {
+  const { user } = useAppSelector((state) => state.user);
   const [isOpen, setIsOpen] = useState(true);
   const isMobile = useMediaQuery(responsive.mobile);
   const dispatch = useAppDispatch();
@@ -104,10 +105,7 @@ export default function AdminLayout({ children }: Props) {
               </Button>
               <Dropdown showArrow offset={15} placement="bottom-end">
                 <DropdownTrigger>
-                  <Avatar
-                    size="sm"
-                    src="https://i.pravatar.cc/150?u=a04258114e29026702d"
-                  />
+                  <Avatar size="sm" src={user?.profile?.photo} />
                 </DropdownTrigger>
                 <DropdownMenu>
                   <DropdownItem
