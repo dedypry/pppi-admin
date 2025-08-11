@@ -1,7 +1,7 @@
 import { Avatar, Button } from "@heroui/react";
 import { useRef } from "react";
 
-import { uploadFile } from "@/utils/helpers/upload-file";
+import { destroyFile, uploadFile } from "@/utils/helpers/upload-file";
 
 interface Props {
   file: any;
@@ -9,6 +9,7 @@ interface Props {
   post?: () => void;
   label?: string;
   showButtonUpload?: boolean;
+  showButtonReset?: boolean;
 }
 export default function UploadAvatar({
   file,
@@ -16,10 +17,15 @@ export default function UploadAvatar({
   post,
   label,
   showButtonUpload = false,
+  showButtonReset = false,
 }: Props) {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const { url } = await uploadFile(e.target.files[0], "avatar");
+
+      if (file) {
+        destroyFile(file);
+      }
 
       setFile(url);
     }
@@ -28,7 +34,7 @@ export default function UploadAvatar({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   return (
-    <div className="flex justify-center gap-2">
+    <div className="flex  gap-2">
       <input
         ref={fileInputRef}
         accept="image/*"
@@ -51,14 +57,20 @@ export default function UploadAvatar({
       <div className="flex flex-col gap-1 self-center">
         {label && <p className="text-xs italic text-gray-400">{label}</p>}
 
-        <Button
-          className="px-10"
-          radius="full"
-          size="sm"
-          onPress={() => setFile("")}
-        >
-          Reset
-        </Button>
+        {showButtonReset && (
+          <Button
+            className="px-10"
+            radius="full"
+            size="sm"
+            onPress={() => {
+              destroyFile(file);
+              setFile("");
+            }}
+          >
+            Reset
+          </Button>
+        )}
+
         {showButtonUpload && (
           <Button
             className="bg-info px-10"

@@ -4,12 +4,11 @@ import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
 } from "@heroui/react";
-import { EyeIcon, MessageSquareTextIcon } from "lucide-react";
 
 import { getColorStatus } from "./helper";
+import Comment from "./comments";
 
 import { IBlog } from "@/interface/IBlogs";
 import { dateFormat } from "@/utils/helpers/formater";
@@ -25,7 +24,7 @@ export default function BlogDetail({ blog, isOpen, setOpen }: Props) {
       backdrop="blur"
       isOpen={isOpen}
       placement="bottom-center"
-      scrollBehavior="inside"
+      scrollBehavior="outside"
       size="5xl"
       onOpenChange={() => setOpen(!isOpen)}
     >
@@ -51,20 +50,9 @@ export default function BlogDetail({ blog, isOpen, setOpen }: Props) {
               {blog?.status?.toUpperCase()}
             </Chip>{" "}
           </div>
+
+          {blog && <Comment blog={blog} />}
         </ModalBody>
-        <ModalFooter className="flex justify-between">
-          <div>
-            <p className="italic">Penulis : {blog?.writer?.name} </p>
-          </div>
-          <div className="flex gap-5">
-            <div className="flex gap-2">
-              <EyeIcon /> View
-            </div>
-            <div className="flex gap-2">
-              <MessageSquareTextIcon /> Comment
-            </div>
-          </div>
-        </ModalFooter>
       </ModalContent>
     </Modal>
   );

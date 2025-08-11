@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { getBlogDetail, getBlogs } from "./actions";
+import { getBlogComment, getBlogDetail, getBlogs } from "./actions";
 
-import { IBlog } from "@/interface/IBlogs";
+import { IBlog, IComment } from "@/interface/IBlogs";
 import { IPagination } from "@/interface/IPagination";
 
 export const blogSlice = createSlice({
@@ -10,6 +10,7 @@ export const blogSlice = createSlice({
   initialState: {
     blogs: null as IPagination<IBlog[]> | null,
     blog: null as IBlog | null,
+    comments: [] as IComment[],
   },
   reducers: {},
   extraReducers: (builder) =>
@@ -19,6 +20,9 @@ export const blogSlice = createSlice({
       })
       .addCase(getBlogDetail.fulfilled, (state, action) => {
         state.blog = action.payload;
+      })
+      .addCase(getBlogComment.fulfilled, (state, action) => {
+        state.comments = action.payload;
       }),
 });
 

@@ -22,7 +22,8 @@ export interface IComment {
   name: string;
   email: string;
   website: string | null;
-  user: IUser | null;
+  avatar: string | null;
+  children: IComment[];
 }
 
 export interface IBlog {
@@ -45,4 +46,14 @@ export interface IBlog {
   slug: string;
   category: ICategory;
   comments: IComment[];
+}
+
+export interface ICreateBlogComment {
+  blog_id: number;
+  parent_id?: number;
+  content: string;
+  name: string;
+  email: string;
+  avatar: string;
+  website: string;
 }

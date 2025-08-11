@@ -33,3 +33,16 @@ export const getBlogDetail = createAsyncThunk(
     }
   },
 );
+
+export const getBlogComment = createAsyncThunk(
+  "get-blogs/comment",
+  async ({ id }: { id: number }) => {
+    try {
+      const { data } = await http.get(`/blog-comments/${id}`);
+
+      return data;
+    } catch (error) {
+      return [];
+    }
+  }
+);
