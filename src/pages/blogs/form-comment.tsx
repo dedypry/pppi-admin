@@ -104,7 +104,7 @@ export default function FormComment({ blogId, parentId }: Props) {
 
         {!userCommnet?.show && (
           <>
-            <div className="col-span-3 row-span-3 py-10">
+            <div className="col-span-12 md:col-span-3 md:row-span-3 py-10 flex items-center justify-center">
               <Controller
                 control={control}
                 name="avatar"
@@ -117,7 +117,7 @@ export default function FormComment({ blogId, parentId }: Props) {
                 rules={{ required: true }}
               />
             </div>
-            <div className="col-span-9">
+            <div className="col-span-12 md:col-span-9">
               <Controller
                 control={control}
                 name="name"
@@ -136,7 +136,7 @@ export default function FormComment({ blogId, parentId }: Props) {
                 rules={{ required: true }}
               />
             </div>
-            <div className="col-span-9">
+            <div className="col-span-12 md:col-span-9">
               <Controller
                 control={control}
                 name="email"
@@ -155,7 +155,7 @@ export default function FormComment({ blogId, parentId }: Props) {
                 rules={{ required: true }}
               />
             </div>
-            <div className="col-span-9">
+            <div className="col-span-12 md:col-span-9">
               <Controller
                 control={control}
                 name="website"

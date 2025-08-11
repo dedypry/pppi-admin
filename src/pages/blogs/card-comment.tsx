@@ -1,11 +1,5 @@
-import {
-  Accordion,
-  AccordionItem,
-  Avatar,
-  Button,
-  Selection,
-} from "@heroui/react";
-import { ReplyIcon } from "lucide-react";
+import { Accordion, AccordionItem, Avatar, Selection } from "@heroui/react";
+import { MessageCircleMoreIcon } from "lucide-react";
 import { useState } from "react";
 
 import FormComment from "./form-comment";
@@ -49,30 +43,21 @@ export default function CardComment({ comment }: Props) {
           disableIndicatorAnimation
           aria-label={comment.name}
           indicator={
-            !isOpen ? (
-              <Button
-                as="span"
-                color="primary"
-                radius="full"
-                size="sm"
-                startContent={<ReplyIcon />}
-                variant="bordered"
-                onPress={toggleComment} // Toggle open/close
-              >
-                Balas Comment
-              </Button>
-            ) : (
-              <span />
-            )
+            <div className="flex gap-1">
+              <MessageCircleMoreIcon />
+              {comment.children.length > 0 && (
+                <p className="font-normal text-sm">{comment.children.length}</p>
+              )}
+            </div>
           }
           startContent={<Avatar isBordered src={comment?.avatar!} />}
           subtitle={comment.content}
           title={
-            <span className="flex gap-2 items-end">
-              <p className="text-md font-semibold">{comment.name} </p>
-              <p className="text-[10px] italic text-secondary-600">
+            <span className="flex flex-col">
+              <p className="text-[10px] italic p-0 m-0 text-secondary-600">
                 {dateFormat(comment.created_at, "MMMM, DD YYYY | HH:ss WIB")}
               </p>
+              <p className="text-md font-semibold p-0 m-0">{comment.name} </p>
             </span>
           }
         >
