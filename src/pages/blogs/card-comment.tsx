@@ -1,11 +1,13 @@
 import { Accordion, AccordionItem, Avatar, Selection } from "@heroui/react";
-import { MessageCircleMoreIcon } from "lucide-react";
+import { MessageCircleMoreIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 
 import FormComment from "./form-comment";
 
 import { IComment } from "@/interface/IBlogs";
 import { dateFormat } from "@/utils/helpers/formater";
+import { confirmSweet } from "@/utils/helpers/confirm";
+import { socket } from "@/utils/helpers/socket.io";
 
 interface Props {
   comment: IComment;
@@ -16,20 +18,6 @@ export default function CardComment({ comment }: Props) {
   const [selectedKey, setSelectedKey] = useState<Selection>(new Set([]));
 
   const isOpen = selectedKey instanceof Set && selectedKey.has(commentKey);
-
-  const toggleComment = () => {
-    setSelectedKey((prev) => {
-      const newSet = new Set(prev as Set<string>);
-
-      if (newSet.has(commentKey)) {
-        newSet.delete(commentKey); // close
-      } else {
-        newSet.add(commentKey); // open
-      }
-
-      return newSet;
-    });
-  };
 
   return (
     <div>
@@ -48,6 +36,14 @@ export default function CardComment({ comment }: Props) {
               {comment.children.length > 0 && (
                 <p className="font-normal text-sm">{comment.children.length}</p>
               )}
+              <Trash2Icon
+                className="text-danger-300 cursor-pointer"
+                onClick={() =>
+                  confirmSweet(() =>
+                    socket.emit("delete-comment", { id: comment.id }),
+                  )
+                }
+              />
             </div>
           }
           startContent={<Avatar isBordered src={comment?.avatar!} />}

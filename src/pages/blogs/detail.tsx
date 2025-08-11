@@ -22,6 +22,7 @@ export default function BlogDetail({ blog, isOpen, setOpen }: Props) {
   return (
     <Modal
       backdrop="blur"
+      isDismissable={false}
       isOpen={isOpen}
       placement="bottom-center"
       scrollBehavior="outside"
