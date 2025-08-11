@@ -134,9 +134,11 @@ export default function MemberPage() {
                           className="h-20 w-20"
                           src={user?.profile?.photo}
                         />
-                        <Chip className="bg-cyan-700 text-white" size="sm">
-                          {user.nia}
-                        </Chip>
+                        {user.nia && (
+                          <Chip className="bg-cyan-700 text-white" size="sm">
+                            {user.nia}
+                          </Chip>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell className="text-center">
