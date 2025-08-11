@@ -25,6 +25,7 @@ import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
 import { useAppDispatch } from "@/stores/hooks";
 import { setUser } from "@/stores/features/user/userSlice";
+import debounce from "@/utils/helpers/debounce";
 
 interface Props {
   user?: IUser;
@@ -37,6 +38,8 @@ export default function FormProfile({ user }: Props) {
     handleSubmit,
     setValue,
     watch,
+    clearErrors,
+    setError,
     formState: { errors },
   } = useForm<ICreateMember>({
     defaultValues: {
@@ -97,6 +100,35 @@ export default function FormProfile({ user }: Props) {
       setValue("photo", user?.profile?.photo!);
     }
   }, [user]);
+
+  useEffect(() => {
+    const email = watch("email");
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (email && regex.test(email)) {
+      debounceCheckEmail(email);
+    }
+  }, [watch("email")]);
+
+  const debounceCheckEmail = debounce((email: string) => {
+    http
+      .post("/users/check-email", { email, user_id: user?.id })
+      .then(({ data }) => {
+        if (data.message) {
+          clearErrors("email");
+        }
+      })
+      .catch((err) => {
+        const { message } = err?.response?.data;
+
+        if (message) {
+          setError("email", {
+            type: "manual",
+            message,
+          });
+        }
+      });
+  }, 1000);
 
   function onSubmit(data: ICreateMember) {
     setProcesing(true);
