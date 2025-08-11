@@ -3,7 +3,6 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { http } from "@/config/axios";
-import { notifyError } from "@/utils/helpers/notify";
 import { setToken } from "@/stores/features/auth/authSlice";
 import { setUser } from "@/stores/features/user/userSlice";
 import Loading from "@/components/loading/Loading";
@@ -31,7 +30,8 @@ export default function AuthGuard({ children }: { children: ReactNode }) {
       .then(({ data }) => {
         dispatch(setUser(data));
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error("AUTH GUARD", err);
         // notifyError(err);
         dispatch(setToken(""));
         route("/login");

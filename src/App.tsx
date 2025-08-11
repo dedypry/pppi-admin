@@ -7,17 +7,18 @@ import Dashboard from "./pages/dashboard";
 import MemberPage from "./pages/members";
 import MemberCreate from "./pages/members/create";
 import AgendaPage from "./pages/agenda";
-import OrganizationPage from "./pages/organization";
 import BlogPage from "./pages/blogs";
 import BlogCreate from "./pages/blogs/create";
 import MemberDetail from "./pages/members/detail";
 import BlogCategoryPage from "./pages/blog-category";
-import DepartmentPage from "./pages/department";
-import BannerPage from "./pages/banners";
-import PackagePage from "./pages/patners/packages";
+import BannerPage from "./pages/settings/banners";
 import ErrorNotFoundPage from "./pages/errors/not-found";
 import ProfilePage from "./pages/profiles";
 import ComingSoon from "./pages/errors/cooming-soon";
+import RegionPage from "./pages/settings/regions";
+import ProvincePage from "./pages/settings/regions/province";
+import CityPage from "./pages/settings/regions/city";
+import DistrictPage from "./pages/settings/regions/district";
 
 function App() {
   return (
@@ -52,12 +53,16 @@ function App() {
         </Route>
 
         <Route path="/settings">
+          <Route element={<RegionPage />} path="regions">
+            <Route element={<ProvincePage />} path="provinces" />
+            <Route element={<CityPage />} path="cities" />
+            <Route element={<DistrictPage />} path="districts" />
+          </Route>
           {/* <Route element={<DepartmentPage />} path="department" /> */}
           <Route element={<ComingSoon />} path="user-management" />
           <Route element={<ComingSoon />} path="department" />
           <Route element={<ComingSoon />} path="roles" />
           <Route element={<ComingSoon />} path="apps" />
-          <Route element={<ComingSoon />} path="regions" />
           <Route element={<BannerPage />} path="banners" />
         </Route>
       </Route>

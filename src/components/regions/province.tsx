@@ -1,7 +1,6 @@
 import { Autocomplete, AutocompleteItem } from "@heroui/react";
 import { useEffect, useState } from "react";
 
-import { notifyError } from "@/utils/helpers/notify";
 import { http } from "@/config/axios";
 
 interface Props {
@@ -30,7 +29,9 @@ export default function ProvinceList({
       .then(({ data }) => {
         seList(data.map((e: any) => ({ value: e.id, label: e.name })));
       })
-      .catch((err) => notifyError(err));
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   return (

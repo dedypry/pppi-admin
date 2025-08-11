@@ -28,6 +28,7 @@ export default function ProfilePage() {
 
         updatePhoto(url);
       } catch (error) {
+        console.error(error);
         notifyError(error as any);
       }
     }

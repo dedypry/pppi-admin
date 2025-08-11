@@ -9,4 +9,5 @@ export interface IPagination<T> {
 export interface IQueryPagination {
   page?: number;
   pageSize?: number;
+  search?: string;
 }

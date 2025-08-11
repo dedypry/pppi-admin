@@ -138,7 +138,10 @@ export default function FormProfile({ user }: Props) {
         notify(data.message);
         getProfile();
       })
-      .catch((err) => notifyError(err))
+      .catch((err) => {
+        console.error("PROFILE", err);
+        notifyError(err);
+      })
       .finally(() => setProcesing(false));
   }
 
@@ -149,6 +152,7 @@ export default function FormProfile({ user }: Props) {
         dispatch(setUser(data));
       })
       .catch((err) => {
+        console.error("PROFILE", err);
         notifyError(err);
       })
       .finally(() => setProcesing(false));

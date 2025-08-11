@@ -37,6 +37,7 @@ import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { getUser, handleApprove } from "@/stores/features/user/action";
 import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
+import EmptyContent from "@/components/empty-content";
 
 export default function MemberPage() {
   const queryParams = new URLSearchParams(window.location.search);
@@ -119,7 +120,7 @@ export default function MemberPage() {
               <TableColumn>Status</TableColumn>
               <TableColumn> </TableColumn>
             </TableHeader>
-            <TableBody emptyContent={`Tidak Ada Data`}>
+            <TableBody emptyContent={<EmptyContent />}>
               {list.data?.map((user, i) => (
                 <Fragment key={i}>
                   <TableRow

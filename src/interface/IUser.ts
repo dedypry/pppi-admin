@@ -5,7 +5,7 @@ export interface IRole {
   created_at: string;
   updated_at: string;
 }
-export interface Province {
+export interface IProvince {
   id: number;
   name: string;
   code: string;
@@ -13,24 +13,24 @@ export interface Province {
   updated_at: string | null;
 }
 
-export interface City {
+export interface ICity {
   id: number;
   province_id: number;
   name: string;
   code: string;
   created_at: string | null;
   updated_at: string | null;
-  province: Province | null;
+  province: IProvince | null;
 }
 
-export interface District {
+export interface IDistrict {
   id: number;
   city_id: number;
   name: string;
   code: string | null;
   created_at: string | null;
   updated_at: string | null;
-  city: City | null;
+  city: ICity | null;
 }
 
 export interface IUserProfile {
@@ -57,9 +57,9 @@ export interface IUserProfile {
   member_payment_file: string;
   reason_reject: string;
   photo: string;
-  province: Province;
-  city: City;
-  district: District;
+  province: IProvince;
+  city: ICity;
+  district: IDistrict;
 }
 
 export interface IUser {

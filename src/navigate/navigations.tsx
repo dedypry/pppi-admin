@@ -109,7 +109,7 @@ export const navigate = [
       {
         title: "Regions",
         icon: MapPinHouse,
-        href: "/settings/regions",
+        href: "/settings/regions/provinces",
       },
     ],
   },
