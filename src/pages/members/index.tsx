@@ -48,7 +48,7 @@ export default function MemberPage() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getUser());
+    dispatch(getUser({}));
   }, []);
 
   function handleSearch(val: string) {
@@ -83,7 +83,7 @@ export default function MemberPage() {
     http
       .delete(`/users/${id}`)
       .then(({ data }) => {
-        dispatch(getUser());
+        dispatch(getUser({}));
         notify(data.message);
       })
       .catch((err) => notifyError(err));
@@ -124,9 +124,9 @@ export default function MemberPage() {
               {list.data?.map((user, i) => (
                 <Fragment key={i}>
                   <TableRow
-                    key={user.id}
+                    key={user?.id}
                     className="cursor-pointer hover:bg-primary-50"
-                    onClick={() => route(`/member/${user.id}`)}
+                    onClick={() => route(`/member/${user?.id}`)}
                   >
                     <TableCell>
                       <div className="flex flex-col items-center justify-center gap-2">
@@ -135,21 +135,22 @@ export default function MemberPage() {
                           className="h-20 w-20"
                           src={user?.profile?.photo}
                         />
-                        {user.nia && (
+                        {user?.nia && (
                           <Chip className="bg-cyan-700 text-white" size="sm">
-                            {user.nia}
+                            {user?.nia}
                           </Chip>
                         )}
                       </div>
                     </TableCell>
                     <TableCell className="text-center">
                       <div className="flex flex-nowrap justify-center gap-2">
-                        <Gender gender={user.profile.gender} />
+                        <Gender gender={user?.profile?.gender} />
                         <p className="text-nowrap">
-                          {user.front_title} {user.name} {user.back_title}{" "}
+                          {user?.front_title} {user?.name}{" "}
+                          {user?.back_title}{" "}
                         </p>
                       </div>
-                      <p className="pl-5">{user.email}</p>
+                      <p className="pl-5">{user?.email}</p>
                       <Button
                         className="mt-1"
                         color="primary"
@@ -157,9 +158,9 @@ export default function MemberPage() {
                         size="sm"
                         startContent={<PhoneIcon size={15} />}
                       >
-                        Telp. {user.profile.phone}
+                        Telp. {user?.profile?.phone}
                       </Button>
-                      {(!user.status || user.status == "submission") && (
+                      {(!user?.status || user?.status == "submission") && (
                         <div className="mt-2 flex justify-center gap-1">
                           <Button
                             color="danger"
@@ -169,11 +170,11 @@ export default function MemberPage() {
                               dispatch(
                                 handleApprove(
                                   {
-                                    user_id: user.id,
+                                    user_id: user?.id,
                                     approve: false,
                                   },
-                                  getUser,
-                                ),
+                                  () => dispatch(getUser({}))
+                                )
                               )
                             }
                           >
@@ -187,11 +188,11 @@ export default function MemberPage() {
                               dispatch(
                                 handleApprove(
                                   {
-                                    user_id: user.id,
+                                    user_id: user?.id,
                                     approve: true,
                                   },
-                                  getUser,
-                                ),
+                                  () => dispatch(getUser({}))
+                                )
                               )
                             }
                           >
@@ -202,28 +203,29 @@ export default function MemberPage() {
                     </TableCell>
                     <TableCell>
                       <p>
-                        {user.profile.district.name}, {user.profile.city.name} -{" "}
-                        {user.profile.province.name}
+                        {user?.profile?.district?.name},{" "}
+                        {user?.profile?.city?.name} -{" "}
+                        {user?.profile?.province?.name}
                       </p>
-                      <p>{user.profile.address}</p>
+                      <p>{user?.profile?.address}</p>
                     </TableCell>
                     <TableCell>
                       <p>
-                        {user.profile?.last_education_nursing.toUpperCase()} |{" "}
-                        {user.profile?.last_education.toUpperCase()}
+                        {user?.profile?.last_education_nursing?.toUpperCase()} |{" "}
+                        {user?.profile?.last_education?.toUpperCase()}
                       </p>
                       <p className="text-nowrap">
                         {" "}
-                        {user.profile.citizenship.toUpperCase()} -{" "}
-                        {user.profile.workplace}{" "}
+                        {user?.profile?.citizenship.toUpperCase()} -{" "}
+                        {user?.profile?.workplace}{" "}
                       </p>
                     </TableCell>
                     <TableCell>
                       <Chip
-                        color={chipColor(user.status!) as any}
+                        color={chipColor(user?.status!) as any}
                         variant="dot"
                       >
-                        {user.status}
+                        {user?.status}
                       </Chip>
                     </TableCell>
                     <TableCell>
@@ -238,7 +240,7 @@ export default function MemberPage() {
                             key="edit"
                             color="warning"
                             startContent={<EditIcon size={20} />}
-                            onClick={() => route(`/member/${user.id}/edit`)}
+                            onClick={() => route(`/member/${user?.id}/edit`)}
                           >
                             Edit
                           </DropdownItem>
@@ -246,7 +248,7 @@ export default function MemberPage() {
                             key="detail"
                             color="primary"
                             startContent={<EyeIcon size={20} />}
-                            onClick={() => route(`/member/${user.id}`)}
+                            onClick={() => route(`/member/${user?.id}`)}
                           >
                             Detail
                           </DropdownItem>
@@ -255,7 +257,7 @@ export default function MemberPage() {
                             color="danger"
                             startContent={<Trash2Icon size={20} />}
                             onClick={() =>
-                              confirmSweet(() => handleDelete(user.id))
+                              confirmSweet(() => handleDelete(user?.id))
                             }
                           >
                             Hapus
@@ -277,9 +279,7 @@ export default function MemberPage() {
               initialPage={list.current_page}
               radius="full"
               total={list.last_page}
-              onChange={(page) => {
-                console.log(page);
-              }}
+              onChange={(page) => dispatch(getUser({ page }))}
             />
           </CardFooter>
         )}

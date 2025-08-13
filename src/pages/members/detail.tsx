@@ -6,6 +6,7 @@ import {
   CardFooter,
   Button,
   CardHeader,
+  Image,
 } from "@heroui/react";
 import { DownloadIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -63,24 +64,24 @@ export default function MemberDetail() {
               <Avatar
                 isBordered
                 className="h-28 w-28"
-                color={user?.profile.gender == "female" ? "danger" : "success"}
-                src={user?.profile.photo}
+                color={user?.profile?.gender == "female" ? "danger" : "success"}
+                src={user?.profile?.photo}
               />
               <Chip className="text-white" color="success">
                 {user?.nia}
               </Chip>
             </CardBody>
             <CardBody className="flex flex-col gap-1">
-              <TextHeader title="NIK" val={user?.profile.nik!} />
+              <TextHeader title="NIK" val={user?.profile?.nik!} />
               <TextHeader
-                rightIcon={<Gender gender={user?.profile.gender!} />}
+                rightIcon={<Gender gender={user?.profile?.gender!} />}
                 title="Nama"
                 val={user?.name!}
               />
               <TextHeader title="Email" val={user?.email!} />
               <TextHeader
                 title="Lahir"
-                val={`${user?.profile.place_birth}, ${dateFormat(user?.profile?.date_birth! as string)}`}
+                val={`${user?.profile?.place_birth}, ${dateFormat(user?.profile?.date_birth! as string)}`}
               />
               <TextHeader title="Telp" val={user?.profile?.phone!} />
             </CardBody>
@@ -125,8 +126,8 @@ export default function MemberDetail() {
                         user_id: user?.id as number,
                         approve: false,
                       },
-                      () => getUserDetail({ id: id as any }),
-                    ),
+                      () => getUserDetail({ id: id as any })
+                    )
                   )
                 }
               >
@@ -144,8 +145,8 @@ export default function MemberDetail() {
                         user_id: user?.id as number,
                         approve: true,
                       },
-                      () => getUserDetail({ id: id as any }),
-                    ),
+                      () => getUserDetail({ id: id as any })
+                    )
                   )
                 }
               >
@@ -169,49 +170,67 @@ export default function MemberDetail() {
               <TextHeader
                 fontSize="13px"
                 title="Kota"
-                val={user?.profile.city.name!}
+                val={user?.profile?.city?.name!}
                 width={150}
               />
               <TextHeader
                 fontSize="13px"
                 title="Kabupaten"
-                val={user?.profile.district.name!}
+                val={user?.profile?.district?.name!}
                 width={150}
               />
               <TextHeader
                 fontSize="13px"
                 title="Alamat"
-                val={user?.profile.address!}
+                val={user?.profile?.address!}
                 width={150}
               />
               <TextHeader
                 fontSize="13px"
                 title="Pendidikan"
-                val={`${user?.profile.last_education_nursing} Keperawatan`}
+                val={`${user?.profile?.last_education_nursing} Keperawatan`}
                 width={150}
               />
               <TextHeader
                 fontSize="13px"
                 title="Pendidikan Formal"
-                val={user?.profile.last_education!}
+                val={user?.profile?.last_education!}
                 width={150}
               />
               <TextHeader
                 fontSize="13px"
                 title="Tempat Kerja"
-                val={user?.profile.workplace!}
+                val={user?.profile?.workplace!}
                 width={150}
               />
               <TextHeader
                 fontSize="13px"
                 title="Harapan"
-                val={user?.profile.hope_in || ""}
+                val={user?.profile?.hope_in || ""}
                 width={150}
               />
               <TextHeader
                 fontSize="13px"
                 title="Kontribusi"
-                val={user?.profile.contribution || ""}
+                val={user?.profile?.contribution || ""}
+                width={150}
+              />
+              <TextHeader
+                fontSize="13px"
+                title="Bersedia membayar"
+                val={user?.profile?.is_member_payment ? "Bersedia" : "Tidak"}
+                width={150}
+              />
+              <TextHeader
+                fontSize="13px"
+                title="Alasa Tidak bersedia"
+                val={user?.profile?.reason_reject || ""}
+                width={150}
+              />
+              <TextHeader
+                fontSize="13px"
+                title="File"
+                val={user?.profile?.member_payment_file || ""}
                 width={150}
               />
             </CardBody>
@@ -220,10 +239,10 @@ export default function MemberDetail() {
           <Card>
             <CardHeader>File Attachment</CardHeader>
             <CardBody>
-              <img
+              <Image
                 alt="foto"
-                height={200}
-                src={user?.profile.member_payment_file!}
+                src={user?.profile?.member_payment_file! || "/no-data.jpeg"}
+                className="max-w-1/2"
               />
             </CardBody>
           </Card>

@@ -4,19 +4,24 @@ import { http } from "@/config/axios";
 import { IApprove } from "@/interface/IUser";
 import { notify, notifyError } from "@/utils/helpers/notify";
 import { AppDispatch } from "@/stores";
+import { IQueryPagination } from "@/interface/IPagination";
 
-export const getUser = createAsyncThunk("user/get-user", async () => {
-  try {
-    console.log("GET USER");
-    const { data } = await http.get("/members");
+export const getUser = createAsyncThunk(
+  "user/get-user",
+  async ({ page = 1, pageSize = 10 }: IQueryPagination) => {
+    try {
+      const { data } = await http.get(
+        `/members?page=${page}&pageSize=${pageSize}`
+      );
 
-    return data;
-  } catch (error) {
-    console.log("GET USER", error);
+      return data;
+    } catch (error) {
+      console.log("GET USER", error);
 
-    return {};
+      return {};
+    }
   }
-});
+);
 
 export const getUserDetail = createAsyncThunk(
   "user-detail",
@@ -30,7 +35,7 @@ export const getUserDetail = createAsyncThunk(
 
       return null;
     }
-  },
+  }
 );
 
 export function handleApprove(data: IApprove, dispatchCallback: () => any) {
