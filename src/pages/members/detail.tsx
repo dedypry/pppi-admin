@@ -126,8 +126,8 @@ export default function MemberDetail() {
                         user_id: user?.id as number,
                         approve: false,
                       },
-                      () => getUserDetail({ id: id as any })
-                    )
+                      () => getUserDetail({ id: id as any }),
+                    ),
                   )
                 }
               >
@@ -145,8 +145,8 @@ export default function MemberDetail() {
                         user_id: user?.id as number,
                         approve: true,
                       },
-                      () => getUserDetail({ id: id as any })
-                    )
+                      () => getUserDetail({ id: id as any }),
+                    ),
                   )
                 }
               >
@@ -241,8 +241,8 @@ export default function MemberDetail() {
             <CardBody>
               <Image
                 alt="foto"
-                src={user?.profile?.member_payment_file! || "/no-data.jpeg"}
                 className="max-w-1/2"
+                src={user?.profile?.member_payment_file! || "/no-data.jpeg"}
               />
             </CardBody>
           </Card>
