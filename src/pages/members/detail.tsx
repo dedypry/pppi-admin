@@ -7,8 +7,12 @@ import {
   Button,
   CardHeader,
   Image,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
 } from "@heroui/react";
-import { DownloadIcon, MailCheckIcon } from "lucide-react";
+import { DownloadIcon, EditIcon, MailCheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { saveAs } from "file-saver";
@@ -25,8 +29,10 @@ import { notify, notifyError } from "@/utils/helpers/notify";
 import { chipColor } from "@/utils/helpers/global";
 import { confirmSweet } from "@/utils/helpers/confirm";
 import CustomInput from "@/components/forms/custom-input";
+import RegisterMember from "@/components/auth/register";
 
 export default function MemberDetail() {
+  const [modal, setModal] = useState(false);
   const { detail: user } = useAppSelector((state) => state.user);
   const { id } = useParams();
   const dispatch = useAppDispatch();
@@ -78,6 +84,36 @@ export default function MemberDetail() {
 
   return (
     <div className="grid grid-cols-12 gap-5">
+      <Modal
+        isOpen={modal}
+        scrollBehavior="outside"
+        size="5xl"
+        onOpenChange={() => setModal(!modal)}
+      >
+        <ModalContent>
+          <ModalHeader>Update Data</ModalHeader>
+          <ModalBody>
+            <RegisterMember
+              action={
+                <div className="flex justify-end gap-3">
+                  <Button color="primary" type="submit" variant="shadow">
+                    {id ? "Update" : "Add"} Member
+                  </Button>
+                  <Button color="secondary" variant="bordered">
+                    Cancel
+                  </Button>
+                </div>
+              }
+              isAdmin={false}
+              user={user!}
+              onSuccess={() => {
+                setModal(false);
+                dispatch(getUserDetail({ id: id as any }));
+              }}
+            />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       <div className="col-span-12 md:col-span-4">
         <div className="flex flex-col gap-4">
           <Card>
@@ -218,7 +254,17 @@ export default function MemberDetail() {
       <div className="col-span-12 md:col-span-8">
         <div className="flex flex-col gap-3">
           <Card>
-            <CardHeader>Deskripsi</CardHeader>
+            <CardHeader className="flex justify-between">
+              <p>Deskripsi</p>
+              <Button
+                isIconOnly
+                radius="full"
+                variant="light"
+                onPress={() => setModal(true)}
+              >
+                <EditIcon className="text-warning" />
+              </Button>
+            </CardHeader>
             <CardBody className="flex flex-col gap-1">
               <TextHeader
                 fontSize="13px"

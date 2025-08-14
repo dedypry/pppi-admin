@@ -233,7 +233,6 @@ export default function RegisterMember({
                 render={({ field }) => (
                   <CustomInput
                     {...field}
-                    isRequired
                     description="Gelar Depan akan tampil di Kartu anggota"
                     errorMessage="Gelar Depan tidak boleh kosong"
                     isInvalid={!!errors.front_title}
@@ -241,7 +240,6 @@ export default function RegisterMember({
                     placeholder="Ex: Dr, Br, Sr"
                   />
                 )}
-                rules={{ required: true }}
               />
             </div>
             <div className="col-span-12 sm:col-span-6 md:col-span-4">
@@ -277,7 +275,6 @@ export default function RegisterMember({
                     placeholder="contoh S.Kep, Ners ..."
                   />
                 )}
-                rules={{ required: true }}
               />
             </div>
             <div className="col-span-12 sm:col-span-6 md:col-span-6">
