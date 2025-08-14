@@ -165,7 +165,6 @@ export default function MemberPage() {
               <TableColumn className="text-center">User</TableColumn>
               <TableColumn>Address</TableColumn>
               <TableColumn>Latar Belakang</TableColumn>
-              <TableColumn>Status</TableColumn>
               <TableColumn> </TableColumn>
             </TableHeader>
             <TableBody emptyContent={<EmptyContent />}>
@@ -188,6 +187,12 @@ export default function MemberPage() {
                             {user?.nia}
                           </Chip>
                         )}
+                        <Chip
+                          color={chipColor(user?.status!) as any}
+                          variant="dot"
+                        >
+                          {user?.status}
+                        </Chip>
                       </div>
                     </TableCell>
                     <TableCell className="text-center">
@@ -263,24 +268,16 @@ export default function MemberPage() {
                       </p>
                       <p>{user?.profile?.address}</p>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="max-w-2xl">
                       <p>
                         {user?.profile?.last_education_nursing?.toUpperCase()} |{" "}
                         {user?.profile?.last_education?.toUpperCase()}
                       </p>
-                      <p className="text-nowrap">
+                      <p >
                         {" "}
                         {user?.profile?.citizenship.toUpperCase()} -{" "}
                         {user?.profile?.workplace}{" "}
                       </p>
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        color={chipColor(user?.status!) as any}
-                        variant="dot"
-                      >
-                        {user?.status}
-                      </Chip>
                     </TableCell>
                     <TableCell>
                       <Dropdown>
