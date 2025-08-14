@@ -29,11 +29,11 @@ export default function RegionPage() {
     setValue(val);
 
     if (province) {
-      dispatch(getProvince({ search: val }));
+      dispatch(getProvince({ q: val }));
     } else if (city) {
-      dispatch(getCity({ search: val }));
+      dispatch(getCity({ q: val }));
     } else if (distric) {
-      dispatch(getDistrict({ search: val }));
+      dispatch(getDistrict({ q: val }));
     }
   }
 

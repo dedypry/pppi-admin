@@ -7,10 +7,10 @@ import { IQueryPagination } from "@/interface/IPagination";
 
 export const getProvince = createAsyncThunk(
   "province-get",
-  async ({ page = 1, pageSize = 15, search = "" }: IQueryPagination) => {
+  async ({ page = 1, pageSize = 15, q = "" }: IQueryPagination) => {
     try {
       const { data } = await http.get(
-        `/provinces?page=${page}&pageSize=${pageSize}&q=${search}`,
+        `/provinces?page=${page}&pageSize=${pageSize}&q=${q}`,
       );
 
       return data;
@@ -25,10 +25,10 @@ export const getProvince = createAsyncThunk(
 
 export const getCity = createAsyncThunk(
   "city-get",
-  async ({ page = 1, pageSize = 15, search = "" }: IQueryPagination) => {
+  async ({ page = 1, pageSize = 15, q = "" }: IQueryPagination) => {
     try {
       const { data } = await http.get(
-        `/cities?page=${page}&pageSize=${pageSize}&q=${search}`,
+        `/cities?page=${page}&pageSize=${pageSize}&q=${q}`,
       );
 
       return data;
@@ -42,10 +42,10 @@ export const getCity = createAsyncThunk(
 );
 export const getDistrict = createAsyncThunk(
   "districts-get",
-  async ({ page = 1, pageSize = 15, search = "" }: IQueryPagination) => {
+  async ({ page = 1, pageSize = 15, q = "" }: IQueryPagination) => {
     try {
       const { data } = await http.get(
-        `/districts?page=${page}&pageSize=${pageSize}&q=${search}`,
+        `/districts?page=${page}&pageSize=${pageSize}&q=${q}`,
       );
 
       return data;
