@@ -11,6 +11,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
+  Divider,
 } from "@heroui/react";
 import { DownloadIcon, EditIcon, MailCheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -271,25 +272,6 @@ export default function MemberDetail() {
             <CardBody className="flex flex-col gap-1">
               <TextHeader
                 fontSize="13px"
-                title="Provinsi"
-                val={user?.profile?.province?.name!}
-                width={150}
-              />
-              <TextHeader
-                fontSize="13px"
-                title="Kota"
-                val={user?.profile?.city?.name!}
-                width={150}
-              />
-              <TextHeader
-                fontSize="13px"
-                title="Kabupaten"
-                val={user?.profile?.district?.name!}
-                width={150}
-              />
-
-              <TextHeader
-                fontSize="13px"
                 title="Pendidikan"
                 val={`${user?.profile?.last_education_nursing} Keperawatan`}
                 width={150}
@@ -318,10 +300,23 @@ export default function MemberDetail() {
                 val={user?.profile?.contribution || ""}
                 width={150}
               />
+
               <TextHeader
                 fontSize="13px"
-                title="Bersedia membayar"
-                val={user?.profile?.is_member_payment ? "Bersedia" : "Tidak"}
+                title="Provinsi"
+                val={user?.profile?.province?.name!}
+                width={150}
+              />
+              <TextHeader
+                fontSize="13px"
+                title="Kota"
+                val={user?.profile?.city?.name!}
+                width={150}
+              />
+              <TextHeader
+                fontSize="13px"
+                title="Kabupaten"
+                val={user?.profile?.district?.name!}
                 width={150}
               />
 
@@ -332,6 +327,15 @@ export default function MemberDetail() {
                 val={user?.profile?.address!}
                 width={150}
               />
+              <Divider />
+
+              <TextHeader
+                fontSize="13px"
+                title="Bersedia membayar"
+                val={user?.profile?.is_member_payment ? "Bersedia" : "Tidak"}
+                width={150}
+              />
+
               <TextHeader
                 fontSize="13px"
                 horizontal={true}
