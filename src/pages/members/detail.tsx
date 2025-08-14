@@ -242,12 +242,6 @@ export default function MemberDetail() {
                 val={user?.profile?.reason_reject || ""}
                 width={150}
               />
-              <TextHeader
-                fontSize="13px"
-                title="File"
-                val={user?.profile?.member_payment_file || ""}
-                width={150}
-              />
             </CardBody>
           </Card>
 
