@@ -118,6 +118,8 @@ export default function RegisterMember({
       setValue("reason_reject", user?.profile.reason_reject);
       setValue("photo", user?.profile.photo);
       setValue("member_payment_file", user?.profile.member_payment_file);
+    } else {
+      reset();
     }
   }, [user]);
 
