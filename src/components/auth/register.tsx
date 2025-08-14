@@ -108,11 +108,14 @@ export default function RegisterMember({
       setValue("city_id", user?.profile.city_id);
       setValue("district_id", user?.profile.district_id);
       setValue("phone", user?.profile.phone);
-      setValue("last_education_nursing", user?.profile.last_education_nursing);
-      setValue("last_education", user?.profile.last_education);
-      setValue("workplace", user?.profile.workplace);
-      setValue("hope_in", user?.profile.hope_in);
-      setValue("contribution", user?.profile.contribution);
+      setValue(
+        "last_education_nursing",
+        user?.profile?.last_education_nursing.toUpperCase(),
+      );
+      setValue("last_education", user?.profile?.last_education);
+      setValue("workplace", user?.profile?.workplace);
+      setValue("hope_in", user?.profile?.hope_in);
+      setValue("contribution", user?.profile?.contribution);
       setValue(
         "is_member_payment",
         user?.profile.is_member_payment ? "yes" : "no",
