@@ -22,12 +22,14 @@ import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { getUserDetail, handleApprove } from "@/stores/features/user/action";
 import { http } from "@/config/axios";
 import CustomInput from "@/components/forms/custom-input";
+import { notify, notifyError } from "@/utils/helpers/notify";
 
 export default function MemberDetail() {
   const { detail: user } = useAppSelector((state) => state.user);
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
+  const [isSendMail, setIsSendMail] = useState(false);
   const [nia, setNia] = useState("");
 
   useEffect(() => {
@@ -54,9 +56,22 @@ export default function MemberDetail() {
       saveAs(response.data, filename);
     } catch (error) {
       console.error("Gagal mengunduh file:", error);
+
+      notify("Gagal mengunduh file", "error");
     } finally {
       setLoading(false);
     }
+  }
+
+  function sendEmail() {
+    setIsSendMail(true);
+    http
+      .post(`/members/send-mail/${user?.id}`)
+      .then(({ data }) => {
+        notify(data.message);
+      })
+      .catch((err) => notifyError(err))
+      .finally(() => setIsSendMail(false));
   }
 
   return (
@@ -120,10 +135,10 @@ export default function MemberDetail() {
               <Button
                 fullWidth
                 color="warning"
-                isLoading={loading}
+                isLoading={isSendMail}
                 startContent={<MailCheckIcon />}
                 variant="shadow"
-                onPress={downloadKta}
+                onPress={sendEmail}
               >
                 Kirm E-KTA via email
               </Button>
