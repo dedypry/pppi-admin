@@ -57,8 +57,6 @@ export default function MemberPage() {
   const { list } = useAppSelector((state) => state.user);
   const route = useNavigate();
 
-  console.log(query);
-
   const dispatch = useAppDispatch();
 
   useEffect(() => {

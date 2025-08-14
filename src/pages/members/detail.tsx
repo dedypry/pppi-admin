@@ -8,10 +8,12 @@ import {
   CardHeader,
   Image,
 } from "@heroui/react";
-import { DownloadIcon } from "lucide-react";
+import { DownloadIcon, MailCheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { saveAs } from "file-saver";
+
+import FormSetting from "./form-setting";
 
 import Gender from "@/components/gender";
 import TextHeader from "@/components/text-header";
@@ -104,16 +106,29 @@ export default function MemberDetail() {
             </Card>
           )}
           {user?.approved_at && user?.status !== "rejected" ? (
-            <Button
-              fullWidth
-              color="primary"
-              isLoading={loading}
-              startContent={<DownloadIcon />}
-              variant="shadow"
-              onPress={downloadKta}
-            >
-              Download E-KTA
-            </Button>
+            <>
+              <Button
+                fullWidth
+                color="primary"
+                isLoading={loading}
+                startContent={<DownloadIcon />}
+                variant="shadow"
+                onPress={downloadKta}
+              >
+                Download E-KTA
+              </Button>
+              <Button
+                fullWidth
+                color="warning"
+                isLoading={loading}
+                startContent={<MailCheckIcon />}
+                variant="shadow"
+                onPress={downloadKta}
+              >
+                Kirm E-KTA via email
+              </Button>
+              <FormSetting />
+            </>
           ) : (
             <Card>
               <CardBody>
