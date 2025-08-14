@@ -19,12 +19,14 @@ import { dateFormat } from "@/utils/helpers/formater";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { getUserDetail, handleApprove } from "@/stores/features/user/action";
 import { http } from "@/config/axios";
+import CustomInput from "@/components/forms/custom-input";
 
 export default function MemberDetail() {
   const { detail: user } = useAppSelector((state) => state.user);
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
+  const [nia, setNia] = useState("");
 
   useEffect(() => {
     dispatch(getUserDetail({ id: id as any }));
@@ -113,46 +115,59 @@ export default function MemberDetail() {
               Download E-KTA
             </Button>
           ) : (
-            <div className="mt-2 flex justify-center gap-1">
-              <Button
-                fullWidth
-                color="danger"
-                radius="full"
-                size="sm"
-                onPress={() =>
-                  dispatch(
-                    handleApprove(
-                      {
-                        user_id: user?.id as number,
-                        approve: false,
-                      },
-                      () => getUserDetail({ id: id as any }),
-                    ),
-                  )
-                }
-              >
-                Tolak
-              </Button>
-              <Button
-                fullWidth
-                color="primary"
-                radius="full"
-                size="sm"
-                onPress={() =>
-                  dispatch(
-                    handleApprove(
-                      {
-                        user_id: user?.id as number,
-                        approve: true,
-                      },
-                      () => getUserDetail({ id: id as any }),
-                    ),
-                  )
-                }
-              >
-                Setujui
-              </Button>
-            </div>
+            <Card>
+              <CardBody>
+                <div className="mt-2 flex flex-col gap-2">
+                  <CustomInput
+                    description="Kosongkan jika NIA di generate oleh system"
+                    placeholder="Masukan NIA Secara manual"
+                    value={nia}
+                    onChange={(e) => setNia(e.target.value)}
+                  />
+                  <div className="mt-2 flex justify-center gap-1">
+                    <Button
+                      fullWidth
+                      color="danger"
+                      radius="full"
+                      size="sm"
+                      onPress={() =>
+                        dispatch(
+                          handleApprove(
+                            {
+                              user_id: user?.id as number,
+                              approve: false,
+                            },
+                            () => getUserDetail({ id: id as any }),
+                          ),
+                        )
+                      }
+                    >
+                      Tolak
+                    </Button>
+                    <Button
+                      fullWidth
+                      color="primary"
+                      radius="full"
+                      size="sm"
+                      onPress={() =>
+                        dispatch(
+                          handleApprove(
+                            {
+                              user_id: user?.id as number,
+                              approve: true,
+                              nia: nia,
+                            },
+                            () => getUserDetail({ id: id as any }),
+                          ),
+                        )
+                      }
+                    >
+                      Setujui
+                    </Button>
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
           )}
         </div>
       </div>

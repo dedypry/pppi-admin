@@ -121,4 +121,5 @@ export interface IApprove {
   approve: boolean;
   rejected_note?: string;
   user_id: number;
+  nia?: string;
 }

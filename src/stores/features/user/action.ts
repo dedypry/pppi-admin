@@ -49,6 +49,7 @@ export function handleApprove(data: IApprove, dispatchCallback: () => any) {
       .patch(`/members/${data.user_id}`, {
         approved: data.approve,
         rejected_note: data?.rejected_note,
+        nia: data.nia,
       })
       .then(({ data }) => {
         notify(data.message);
