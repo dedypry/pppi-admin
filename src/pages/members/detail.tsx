@@ -105,6 +105,8 @@ export default function MemberDetail() {
                 </div>
               }
               isAdmin={false}
+              paymentFile={false}
+              requireRegion={false}
               user={user!}
               onSuccess={() => {
                 setModal(false);

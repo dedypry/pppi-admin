@@ -34,6 +34,8 @@ interface Props {
   action: ReactNode;
   isAdmin?: boolean;
   user?: IUser;
+  requireRegion?: boolean;
+  paymentFile?: boolean;
 }
 
 export default function RegisterMember({
@@ -41,6 +43,8 @@ export default function RegisterMember({
   action,
   isAdmin = true,
   user,
+  requireRegion = true,
+  paymentFile = true,
 }: Props) {
   const {
     control,
@@ -267,7 +271,6 @@ export default function RegisterMember({
                 render={({ field }) => (
                   <CustomInput
                     {...field}
-                    isRequired
                     description="Gelar Belakang akan tampil di Kartu anggota"
                     errorMessage="Gelar Belakang tidak boleh kosong"
                     isInvalid={!!errors.back_title}
@@ -445,17 +448,17 @@ export default function RegisterMember({
                 name="province_id"
                 render={({ field }) => (
                   <ProvinceList
-                    isRequired
                     errorMessage={
                       errors.province_id?.message ||
                       "Provinsi tidak boleh kosong"
                     }
                     isInvalid={!!errors.province_id}
+                    isRequired={requireRegion}
                     setValue={(val) => field.onChange(val)}
                     value={field.value?.toString()}
                   />
                 )}
-                rules={{ required: true }}
+                rules={{ required: requireRegion }}
               />
             </div>
             <div className="col-span-12 sm:col-span-6 md:col-span-4">
@@ -464,17 +467,17 @@ export default function RegisterMember({
                 name="city_id"
                 render={({ field }) => (
                   <CityList
-                    isRequired
                     errorMessage={
                       errors.city_id?.message || "Kota tidak boleh kosong"
                     }
                     isInvalid={!!errors.city_id}
+                    isRequired={requireRegion}
                     provinceId={watch("province_id")}
                     setValue={(val) => field.onChange(val)}
                     value={field.value}
                   />
                 )}
-                rules={{ required: true }}
+                rules={{ required: requireRegion }}
               />
             </div>
             <div className="col-span-12 sm:col-span-6 md:col-span-4">
@@ -483,18 +486,18 @@ export default function RegisterMember({
                 name="district_id"
                 render={({ field }) => (
                   <DistrictList
-                    isRequired
                     cityId={watch("city_id")}
                     errorMessage={
                       errors.district_id?.message ||
                       "Kelurahan tidak boleh kosong"
                     }
                     isInvalid={!!errors.district_id}
+                    isRequired={requireRegion}
                     setValue={(val) => field.onChange(val)}
                     value={field.value}
                   />
                 )}
-                rules={{ required: true }}
+                rules={{ required: requireRegion }}
               />
             </div>
             <div className="col-span-12">
@@ -663,7 +666,7 @@ export default function RegisterMember({
               setFile={(val) => field.onChange(val)}
             />
           )}
-          rules={{ required: true }}
+          rules={{ required: paymentFile }}
         />
       ) : (
         <Card>
@@ -674,14 +677,14 @@ export default function RegisterMember({
               render={({ field }) => (
                 <CustomTextArea
                   {...field}
-                  isRequired
                   errorMessage={errors.reason_reject?.message}
                   isInvalid={!!errors.reason_reject}
+                  isRequired={paymentFile}
                   label="Alasan Tidak Bersedia"
                   placeholder="Masukan Alasan"
                 />
               )}
-              rules={{ required: true }}
+              rules={{ required: paymentFile }}
             />
           </CardBody>
         </Card>
