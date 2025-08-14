@@ -104,7 +104,6 @@ export default function MemberDetail() {
                   </Button>
                 </div>
               }
-              isAdmin={false}
               paymentFile={false}
               requireRegion={false}
               user={user!}
