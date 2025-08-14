@@ -99,7 +99,7 @@ export default function RegisterMember({
       setValue("place_birth", user?.profile.place_birth);
       setValue(
         "date_birth",
-        dayjs(user?.profile.date_birth).format("DD MMMM YYYY"),
+        dayjs(user?.profile.date_birth).format("DD MMMM YYYY").trim(),
       );
       setValue("gender", user?.profile.gender);
       setValue("citizenship", user?.profile.citizenship);

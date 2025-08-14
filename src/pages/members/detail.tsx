@@ -288,12 +288,7 @@ export default function MemberDetail() {
                 val={user?.profile?.workplace!}
                 width={150}
               />
-              <TextHeader
-                fontSize="13px"
-                title="Harapan"
-                val={user?.profile?.hope_in || ""}
-                width={150}
-              />
+
               <TextHeader
                 fontSize="13px"
                 title="Kontribusi"
@@ -325,6 +320,14 @@ export default function MemberDetail() {
                 horizontal={true}
                 title="Alamat"
                 val={user?.profile?.address!}
+                width={150}
+              />
+              <Divider />
+              <TextHeader
+                fontSize="13px"
+                horizontal={true}
+                title="Harapan"
+                val={user?.profile?.hope_in || ""}
                 width={150}
               />
               <Divider />
