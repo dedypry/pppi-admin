@@ -19,6 +19,7 @@ import {
   CardFooter,
   Pagination,
   SelectItem,
+  Alert,
 } from "@heroui/react";
 import {
   SearchIcon,
@@ -273,11 +274,23 @@ export default function MemberPage() {
                         {user?.profile?.last_education_nursing?.toUpperCase()} |{" "}
                         {user?.profile?.last_education?.toUpperCase()}
                       </p>
-                      <p >
+                      <p>
                         {" "}
                         {user?.profile?.citizenship.toUpperCase()} -{" "}
                         {user?.profile?.workplace}{" "}
                       </p>
+                      {user?.profile?.reason_reject! && (
+                        <Alert
+                          className="mt-1"
+                          classNames={{
+                            title: "italic underline",
+                            description: "italic",
+                          }}
+                          color="danger"
+                          description={user?.profile?.reason_reject}
+                          title="Catatan"
+                        />
+                      )}
                     </TableCell>
                     <TableCell>
                       <Dropdown>
