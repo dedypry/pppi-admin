@@ -6,6 +6,7 @@ interface Props {
   rightIcon?: ReactNode;
   fontSize?: string;
   width?: number;
+  horizontal?: boolean;
 }
 export default function TextHeader({
   title,
@@ -13,13 +14,15 @@ export default function TextHeader({
   rightIcon,
   fontSize = "12px",
   width = 60,
+  horizontal = false,
 }: Props) {
   return (
     <div
-      className={`flex items-center gap-2 align-middle text-[${fontSize}] text-gray-500`}
+      className={`flex ${horizontal ? "flex-col" : "flex-row items-center align-middle gap-2"} text-[${fontSize}] text-gray-500`}
     >
       <p style={{ width: width }}>{title}</p>
-      <p>:</p>
+      {!horizontal && <p>:</p>}
+
       <p>{val}</p>
       {rightIcon && rightIcon}
     </div>

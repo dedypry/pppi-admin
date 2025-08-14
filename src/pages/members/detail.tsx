@@ -125,9 +125,11 @@ export default function MemberDetail() {
                 color={user?.profile?.gender == "female" ? "danger" : "success"}
                 src={user?.profile?.photo}
               />
-              <Chip className="text-white" color="success">
-                {user?.nia}
-              </Chip>
+              {user?.nia && (
+                <Chip className="text-white" color="success">
+                  {user?.nia}
+                </Chip>
+              )}
             </CardBody>
             <CardBody className="flex flex-col gap-1">
               <TextHeader title="NIK" val={user?.profile?.nik!} />
@@ -256,7 +258,7 @@ export default function MemberDetail() {
         <div className="flex flex-col gap-3">
           <Card>
             <CardHeader className="flex justify-between">
-              <p>Deskripsi</p>
+              <p className="text-gray-600 font-bold">Deskripsi</p>
               <Button
                 isIconOnly
                 radius="full"
@@ -285,12 +287,7 @@ export default function MemberDetail() {
                 val={user?.profile?.district?.name!}
                 width={150}
               />
-              <TextHeader
-                fontSize="13px"
-                title="Alamat"
-                val={user?.profile?.address!}
-                width={150}
-              />
+
               <TextHeader
                 fontSize="13px"
                 title="Pendidikan"
@@ -327,8 +324,17 @@ export default function MemberDetail() {
                 val={user?.profile?.is_member_payment ? "Bersedia" : "Tidak"}
                 width={150}
               />
+
               <TextHeader
                 fontSize="13px"
+                horizontal={true}
+                title="Alamat"
+                val={user?.profile?.address!}
+                width={150}
+              />
+              <TextHeader
+                fontSize="13px"
+                horizontal={true}
                 title="Alasa Tidak bersedia"
                 val={user?.profile?.reason_reject || ""}
                 width={150}
@@ -337,7 +343,9 @@ export default function MemberDetail() {
           </Card>
 
           <Card>
-            <CardHeader>File Attachment</CardHeader>
+            <CardHeader className="text-gray-600 font-bold">
+              File Attachment
+            </CardHeader>
             <CardBody>
               <Image
                 alt="foto"
