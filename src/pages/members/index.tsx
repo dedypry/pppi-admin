@@ -60,7 +60,7 @@ export default function MemberPage() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getUser({ pageSize: query.pageSize }));
+    dispatch(getUser(query));
   }, []);
 
   const debounceSearch = debounce(
@@ -86,7 +86,7 @@ export default function MemberPage() {
     http
       .delete(`/users/${id}`)
       .then(({ data }) => {
-        dispatch(getUser({ pageSize: query.pageSize }));
+        dispatch(getUser(query));
         notify(data.message);
       })
       .catch((err) => notifyError(err));
@@ -115,9 +115,7 @@ export default function MemberPage() {
         <CardHeader className="flex justify-between gap-2">
           <div>
             <PageSize
-              setSize={(val) => {
-                dispatch(getUser({ pageSize: Number(val) }));
-              }}
+              setSize={(val) => setQueryParams("pageSize", val)}
               size={query.pageSize}
             />
           </div>
@@ -225,10 +223,7 @@ export default function MemberPage() {
                                     user_id: user?.id,
                                     approve: false,
                                   },
-                                  () =>
-                                    dispatch(
-                                      getUser({ pageSize: query.pageSize }),
-                                    ),
+                                  () => dispatch(getUser(query)),
                                 ),
                               )
                             }
@@ -246,10 +241,7 @@ export default function MemberPage() {
                                     user_id: user?.id,
                                     approve: true,
                                   },
-                                  () =>
-                                    dispatch(
-                                      getUser({ pageSize: query.pageSize }),
-                                    ),
+                                  () => dispatch(getUser(query)),
                                 ),
                               )
                             }
