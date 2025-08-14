@@ -51,7 +51,7 @@ export default function MemberPage() {
     q: "",
     pageSize: "10",
     page: 1,
-    status: "all",
+    status: "submission",
     ...Object.fromEntries(queryParams.entries()),
   });
 
