@@ -316,7 +316,12 @@ export default function MemberPage() {
           </Table>
         </CardBody>
         {list?.data?.length > 0 && (
-          <CardFooter className="flex justify-center">
+          <CardFooter className="flex justify-between">
+            <div>
+              <p className="font-bold text-gray-600">
+                Total : {list?.total || 0} Data
+              </p>
+            </div>
             <Pagination
               isCompact
               showControls
