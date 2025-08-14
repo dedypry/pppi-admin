@@ -42,6 +42,7 @@ import { notify, notifyError } from "@/utils/helpers/notify";
 import EmptyContent from "@/components/empty-content";
 import PageSize from "@/components/page-size";
 import CustomSelect from "@/components/forms/custom-select";
+import { chipColor } from "@/utils/helpers/global";
 
 export default function MemberPage() {
   const { search } = useLocation();
@@ -67,20 +68,6 @@ export default function MemberPage() {
     (val: string) => setQueryParams("q", val),
     500,
   );
-
-  function chipColor(status: string) {
-    let color = "";
-
-    if (status === "approved") {
-      color = "success";
-    } else if (status == "rejected") {
-      color = "danger";
-    } else {
-      color = "secondary";
-    }
-
-    return color;
-  }
 
   function handleDelete(id: number) {
     http

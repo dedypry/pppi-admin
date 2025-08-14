@@ -21,8 +21,10 @@ import { dateFormat } from "@/utils/helpers/formater";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { getUserDetail, handleApprove } from "@/stores/features/user/action";
 import { http } from "@/config/axios";
-import CustomInput from "@/components/forms/custom-input";
 import { notify, notifyError } from "@/utils/helpers/notify";
+import { chipColor } from "@/utils/helpers/global";
+import { confirmSweet } from "@/utils/helpers/confirm";
+import CustomInput from "@/components/forms/custom-input";
 
 export default function MemberDetail() {
   const { detail: user } = useAppSelector((state) => state.user);
@@ -112,6 +114,11 @@ export default function MemberDetail() {
                 Created At : {dateFormat(user?.created_at)}
               </p>
             </CardFooter>
+            <CardFooter className="flex justify-between">
+              <Chip color={chipColor(user?.status!) as any} variant="dot">
+                {user?.status}
+              </Chip>
+            </CardFooter>
           </Card>
           {user?.status == "rejected" && user?.rejected_note && (
             <Card>
@@ -120,7 +127,7 @@ export default function MemberDetail() {
               </CardBody>
             </Card>
           )}
-          {user?.approved_at && user?.status !== "rejected" ? (
+          {user?.status == "approved" && (
             <>
               <Button
                 fullWidth
@@ -144,7 +151,8 @@ export default function MemberDetail() {
               </Button>
               <FormSetting />
             </>
-          ) : (
+          )}
+          {user?.status == "submission" && (
             <Card>
               <CardBody>
                 <div className="mt-2 flex flex-col gap-2">
@@ -161,14 +169,20 @@ export default function MemberDetail() {
                       radius="full"
                       size="sm"
                       onPress={() =>
-                        dispatch(
-                          handleApprove(
-                            {
-                              user_id: user?.id as number,
-                              approve: false,
-                            },
-                            () => getUserDetail({ id: id as any }),
-                          ),
+                        confirmSweet(
+                          () =>
+                            dispatch(
+                              handleApprove(
+                                {
+                                  user_id: user?.id as number,
+                                  approve: false,
+                                },
+                                () => getUserDetail({ id: id as any }),
+                              ),
+                            ),
+                          {
+                            confirmButtonText: "Ya, Tolak",
+                          },
                         )
                       }
                     >
