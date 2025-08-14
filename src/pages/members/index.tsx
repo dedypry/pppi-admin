@@ -113,11 +113,23 @@ export default function MemberPage() {
     <>
       <Card>
         <CardHeader className="flex justify-between gap-2">
-          <div>
+          <div className="flex gap-2">
             <PageSize
               setSize={(val) => setQueryParams("pageSize", val)}
               size={query.pageSize}
             />
+            <CustomSelect
+              className="w-40"
+              label="Status"
+              placeholder="Pilih Status"
+              selectedKeys={[query.status]}
+              onChange={(e) => setQueryParams("status", e.target.value)}
+            >
+              <SelectItem key="all">All</SelectItem>
+              <SelectItem key="submission">Submission</SelectItem>
+              <SelectItem key="rejected">Reject</SelectItem>
+              <SelectItem key="approved">Approve</SelectItem>
+            </CustomSelect>
           </div>
           <div className="flex justify-between gap-2">
             <div>
@@ -139,22 +151,7 @@ export default function MemberPage() {
             </Button>
           </div>
         </CardHeader>
-        <CardHeader>
-          <div>
-            <CustomSelect
-              className="w-40"
-              label="Status"
-              placeholder="Pilih Status"
-              selectedKeys={[query.status]}
-              onChange={(e) => setQueryParams("status", e.target.value)}
-            >
-              <SelectItem key="all">All</SelectItem>
-              <SelectItem key="submission">Submission</SelectItem>
-              <SelectItem key="rejected">Reject</SelectItem>
-              <SelectItem key="approved">Approve</SelectItem>
-            </CustomSelect>
-          </div>
-        </CardHeader>
+
         <CardBody>
           <Table removeWrapper>
             <TableHeader>
