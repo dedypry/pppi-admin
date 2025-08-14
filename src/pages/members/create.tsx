@@ -27,7 +27,7 @@ export default function MemberCreate() {
         action={
           <div className="flex justify-end gap-3">
             <Button color="primary" type="submit" variant="shadow">
-              Add Member
+              {id ? "Update" : "Add"} Member
             </Button>
             <Button color="secondary" variant="bordered">
               Cancel

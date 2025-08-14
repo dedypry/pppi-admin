@@ -8,10 +8,15 @@ import { IQueryPagination } from "@/interface/IPagination";
 
 export const getUser = createAsyncThunk(
   "user/get-user",
-  async ({ page = 1, pageSize = 10 }: IQueryPagination) => {
+  async ({
+    page = 1,
+    pageSize = 10,
+    q = "",
+    status = "",
+  }: IQueryPagination) => {
     try {
       const { data } = await http.get(
-        `/members?page=${page}&pageSize=${pageSize}`
+        `/members?page=${page}&pageSize=${pageSize}&q=${q}&status=${status}`,
       );
 
       return data;
@@ -20,7 +25,7 @@ export const getUser = createAsyncThunk(
 
       return {};
     }
-  }
+  },
 );
 
 export const getUserDetail = createAsyncThunk(
@@ -35,7 +40,7 @@ export const getUserDetail = createAsyncThunk(
 
       return null;
     }
-  }
+  },
 );
 
 export function handleApprove(data: IApprove, dispatchCallback: () => any) {

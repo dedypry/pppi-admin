@@ -18,6 +18,7 @@ import {
   DropdownItem,
   CardFooter,
   Pagination,
+  SelectItem,
 } from "@heroui/react";
 import {
   SearchIcon,
@@ -27,7 +28,7 @@ import {
   EyeIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import debounce from "@/utils/helpers/debounce";
 import CustomInput from "@/components/forms/custom-input";
@@ -38,32 +39,35 @@ import { getUser, handleApprove } from "@/stores/features/user/action";
 import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
 import EmptyContent from "@/components/empty-content";
+import PageSize from "@/components/page-size";
+import CustomSelect from "@/components/forms/custom-select";
 
 export default function MemberPage() {
-  const queryParams = new URLSearchParams(window.location.search);
-  const [search, setSearch] = useState(queryParams.get("search"));
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+  const [query, setQuery] = useState({
+    q: "",
+    pageSize: "10",
+    page: 1,
+    status: "all",
+    ...Object.fromEntries(queryParams.entries()),
+  });
+
   const { list } = useAppSelector((state) => state.user);
   const route = useNavigate();
+
+  console.log(query);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getUser({}));
+    dispatch(getUser({ pageSize: query.pageSize }));
   }, []);
 
-  function handleSearch(val: string) {
-    console.log(val);
-    // router.get(
-    //     route('member.index'),
-    //     { search: val },
-    //     {
-    //         preserveState: true,
-    //         replace: true,
-    //         preserveScroll: true,
-    //     },
-    // );
-  }
-  const debounceSearch = debounce((val: string) => handleSearch(val), 500);
+  const debounceSearch = debounce(
+    (val: string) => setQueryParams("q", val),
+    500,
+  );
 
   function chipColor(status: string) {
     let color = "";
@@ -83,32 +87,76 @@ export default function MemberPage() {
     http
       .delete(`/users/${id}`)
       .then(({ data }) => {
-        dispatch(getUser({}));
+        dispatch(getUser({ pageSize: query.pageSize }));
         notify(data.message);
       })
       .catch((err) => notifyError(err));
   }
 
+  function setQueryParams(key: string, value: any) {
+    setQuery((val) => ({
+      ...val,
+      [key]: value,
+      ...(key === "q" && {
+        page: 1,
+      }),
+    }));
+  }
+
+  useEffect(() => {
+    dispatch(getUser(query));
+    const params = new URLSearchParams(query as any).toString();
+
+    route(`?${params}`, { replace: true });
+  }, [query]);
+
   return (
     <>
       <Card>
         <CardHeader className="flex justify-between gap-2">
-          <CustomInput
-            defaultValue={search || ""}
-            endContent={<SearchIcon className="text-gray-500" />}
-            placeholder="Search"
-            onChange={(e) => {
-              setSearch(e.target.value);
-              debounceSearch(e.target.value);
-            }}
-          />
-          <Button
-            color="primary"
-            variant="shadow"
-            onPress={() => route("/member/create")}
-          >
-            Tambah Anggota
-          </Button>
+          <div>
+            <PageSize
+              setSize={(val) => {
+                dispatch(getUser({ pageSize: Number(val) }));
+              }}
+              size={query.pageSize}
+            />
+          </div>
+          <div className="flex justify-between gap-2">
+            <div>
+              <CustomInput
+                defaultValue={query.q || ""}
+                endContent={<SearchIcon className="text-gray-500" />}
+                placeholder="Search"
+                onChange={(e) => {
+                  debounceSearch(e.target.value);
+                }}
+              />
+            </div>
+            <Button
+              color="primary"
+              variant="shadow"
+              onPress={() => route("/member/create")}
+            >
+              Tambah Anggota
+            </Button>
+          </div>
+        </CardHeader>
+        <CardHeader>
+          <div>
+            <CustomSelect
+              className="w-40"
+              label="Status"
+              placeholder="Pilih Status"
+              selectedKeys={[query.status]}
+              onChange={(e) => setQueryParams("status", e.target.value)}
+            >
+              <SelectItem key="all">All</SelectItem>
+              <SelectItem key="submission">Submission</SelectItem>
+              <SelectItem key="rejected">Reject</SelectItem>
+              <SelectItem key="approved">Approve</SelectItem>
+            </CustomSelect>
+          </div>
         </CardHeader>
         <CardBody>
           <Table removeWrapper>
@@ -173,8 +221,11 @@ export default function MemberPage() {
                                     user_id: user?.id,
                                     approve: false,
                                   },
-                                  () => dispatch(getUser({}))
-                                )
+                                  () =>
+                                    dispatch(
+                                      getUser({ pageSize: query.pageSize }),
+                                    ),
+                                ),
                               )
                             }
                           >
@@ -191,8 +242,11 @@ export default function MemberPage() {
                                     user_id: user?.id,
                                     approve: true,
                                   },
-                                  () => dispatch(getUser({}))
-                                )
+                                  () =>
+                                    dispatch(
+                                      getUser({ pageSize: query.pageSize }),
+                                    ),
+                                ),
                               )
                             }
                           >
@@ -279,7 +333,7 @@ export default function MemberPage() {
               initialPage={list.current_page}
               radius="full"
               total={list.last_page}
-              onChange={(page) => dispatch(getUser({ page }))}
+              onChange={(page) => setQueryParams("page", page)}
             />
           </CardFooter>
         )}
