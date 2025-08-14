@@ -13,13 +13,11 @@ import dayjs from "dayjs";
 import { ReactNode, useEffect } from "react";
 
 import CustomDatePicker from "../forms/custom-date-picker";
+import AllDistrictList from "../regions/all-district";
 
 import CustomInput from "@/components/forms/custom-input";
 import { ICreateMember, IUser } from "@/interface/IUser";
-import CityList from "@/components/regions/city";
 import CustomSelect from "@/components/forms/custom-select";
-import DistrictList from "@/components/regions/district";
-import ProvinceList from "@/components/regions/province";
 import Man from "@/assets/images/man.png";
 import Woman from "@/assets/images/woman.png";
 import CustomTextArea from "@/components/forms/custom-textarea";
@@ -442,54 +440,15 @@ export default function RegisterMember({
                 rules={{ required: true }}
               />
             </div>
-            <div className="col-span-12 sm:col-span-6 md:col-span-4">
-              <Controller
-                control={control}
-                name="province_id"
-                render={({ field }) => (
-                  <ProvinceList
-                    errorMessage={
-                      errors.province_id?.message ||
-                      "Provinsi tidak boleh kosong"
-                    }
-                    isInvalid={!!errors.province_id}
-                    isRequired={requireRegion}
-                    setValue={(val) => field.onChange(val)}
-                    value={field.value?.toString()}
-                  />
-                )}
-                rules={{ required: requireRegion }}
-              />
-            </div>
-            <div className="col-span-12 sm:col-span-6 md:col-span-4">
-              <Controller
-                control={control}
-                name="city_id"
-                render={({ field }) => (
-                  <CityList
-                    errorMessage={
-                      errors.city_id?.message || "Kota tidak boleh kosong"
-                    }
-                    isInvalid={!!errors.city_id}
-                    isRequired={requireRegion}
-                    provinceId={watch("province_id")}
-                    setValue={(val) => field.onChange(val)}
-                    value={field.value}
-                  />
-                )}
-                rules={{ required: requireRegion }}
-              />
-            </div>
-            <div className="col-span-12 sm:col-span-6 md:col-span-4">
+            <div className="col-span-12">
               <Controller
                 control={control}
                 name="district_id"
                 render={({ field }) => (
-                  <DistrictList
-                    cityId={watch("city_id")}
+                  <AllDistrictList
                     errorMessage={
                       errors.district_id?.message ||
-                      "Kelurahan tidak boleh kosong"
+                      "Regional tidak boleh kosong"
                     }
                     isInvalid={!!errors.district_id}
                     isRequired={requireRegion}
@@ -500,6 +459,7 @@ export default function RegisterMember({
                 rules={{ required: requireRegion }}
               />
             </div>
+
             <div className="col-span-12">
               <Controller
                 control={control}
