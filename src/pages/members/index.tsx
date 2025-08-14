@@ -214,14 +214,20 @@ export default function MemberPage() {
                             radius="full"
                             size="sm"
                             onPress={() =>
-                              dispatch(
-                                handleApprove(
-                                  {
-                                    user_id: user?.id,
-                                    approve: false,
-                                  },
-                                  () => dispatch(getUser(query)),
-                                ),
+                              confirmSweet(
+                                () =>
+                                  dispatch(
+                                    handleApprove(
+                                      {
+                                        user_id: user?.id,
+                                        approve: false,
+                                      },
+                                      () => dispatch(getUser(query)),
+                                    ),
+                                  ),
+                                {
+                                  confirmButtonText: "Ya, Tolak",
+                                },
                               )
                             }
                           >
