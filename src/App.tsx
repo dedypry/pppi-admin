@@ -21,6 +21,7 @@ import CityPage from "./pages/settings/regions/city";
 import DistrictPage from "./pages/settings/regions/district";
 import OrganizationPage from "./pages/organization";
 import RolePage from "./pages/settings/roles";
+import AppsPage from "./pages/settings/apps";
 
 function App() {
   return (
@@ -64,7 +65,7 @@ function App() {
           <Route element={<ComingSoon />} path="user-management" />
           <Route element={<ComingSoon />} path="department" />
           <Route element={<RolePage />} path="roles" />
-          <Route element={<ComingSoon />} path="apps" />
+          <Route element={<AppsPage />} path="apps" />
           <Route element={<BannerPage />} path="banners" />
         </Route>
       </Route>
