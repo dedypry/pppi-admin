@@ -19,6 +19,8 @@ import RegionPage from "./pages/settings/regions";
 import ProvincePage from "./pages/settings/regions/province";
 import CityPage from "./pages/settings/regions/city";
 import DistrictPage from "./pages/settings/regions/district";
+import OrganizationPage from "./pages/organization";
+import RolePage from "./pages/settings/roles";
 
 function App() {
   return (
@@ -34,7 +36,7 @@ function App() {
         </Route>
 
         <Route element={<AgendaPage />} path="/agenda" />
-        <Route element={<ComingSoon />} path="/organization" />
+        <Route element={<OrganizationPage />} path="/organization" />
 
         <Route path="/blogs">
           <Route element={<BlogPage />} path="" />
@@ -61,7 +63,7 @@ function App() {
           {/* <Route element={<DepartmentPage />} path="department" /> */}
           <Route element={<ComingSoon />} path="user-management" />
           <Route element={<ComingSoon />} path="department" />
-          <Route element={<ComingSoon />} path="roles" />
+          <Route element={<RolePage />} path="roles" />
           <Route element={<ComingSoon />} path="apps" />
           <Route element={<BannerPage />} path="banners" />
         </Route>
