@@ -22,10 +22,7 @@ interface IForm {
 export default function AddOrg() {
   const [open, setOpen] = useState(false);
 
-  const {
-    control,
-    formState: { errors },
-  } = useForm<IForm>({
+  const { control } = useForm<IForm>({
     defaultValues: {
       id: undefined,
       user_id: undefined,
