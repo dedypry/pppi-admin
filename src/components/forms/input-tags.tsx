@@ -45,6 +45,7 @@ export default function InputTags({
         {items.map((item) => (
           <Chip
             key={item}
+            as="div"
             color="primary"
             endContent={
               <XIcon

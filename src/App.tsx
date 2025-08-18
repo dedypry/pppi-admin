@@ -22,6 +22,7 @@ import DistrictPage from "./pages/settings/regions/district";
 import OrganizationPage from "./pages/organization";
 import RolePage from "./pages/settings/roles";
 import AppsPage from "./pages/settings/apps";
+import PackagePage from "./pages/patners/packages";
 
 function App() {
   return (
@@ -48,7 +49,8 @@ function App() {
 
         <Route path="/partners">
           {/* <Route element={<PackagePage />} path="packages" /> */}
-          <Route element={<ComingSoon />} path="packages" />
+          <Route element={<ComingSoon />} path="" />
+          <Route element={<PackagePage />} path="packages" />
         </Route>
 
         <Route path="/profile">

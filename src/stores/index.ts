@@ -20,6 +20,7 @@ import schedulers from "./features/schedulers/scheduleSlice";
 import area from "./features/area/areaSlice";
 import role from "./features/roles/roleSlice";
 import apps from "./features/apps/appSlice";
+import packages from "./features/packages/packageSlice";
 
 const persistedAuth = persistReducer({ key: "auth", storage }, auth);
 
@@ -34,6 +35,7 @@ export const store = configureStore({
     area,
     role,
     apps,
+    packages,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

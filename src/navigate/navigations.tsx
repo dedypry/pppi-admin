@@ -13,6 +13,7 @@ import {
   ShieldEllipsis,
   User,
   UserPlus2,
+  Users2Icon,
   WarehouseIcon,
 } from "lucide-react";
 
@@ -50,6 +51,11 @@ export const navigate = [
   {
     header: "Partner",
     children: [
+      {
+        title: "List Partner",
+        icon: Users2Icon,
+        href: "/partners",
+      },
       {
         title: "List Paket",
         icon: PackageCheckIcon,
