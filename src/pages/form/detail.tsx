@@ -12,7 +12,6 @@ import {
 } from "@heroui/react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import React from "react";
 
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { getFormResultDetail } from "@/stores/features/form/actions";
