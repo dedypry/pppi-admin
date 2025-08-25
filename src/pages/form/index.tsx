@@ -22,6 +22,7 @@ import { copyClipboard } from "@/utils/helpers/global";
 import config from "@/config/api";
 import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
+import EmptyContent from "@/components/empty-content";
 
 export default function FormPage() {
   const { forms } = useAppSelector((state) => state.form);
@@ -54,7 +55,7 @@ export default function FormPage() {
             <TableColumn>Total Respon</TableColumn>
             <TableColumn className="text-right">aksi</TableColumn>
           </TableHeader>
-          <TableBody>
+          <TableBody emptyContent={<EmptyContent />}>
             {(forms?.data || []).map((item) => (
               <TableRow
                 key={item.id}

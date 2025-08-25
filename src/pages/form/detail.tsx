@@ -21,6 +21,7 @@ import TextHeader from "@/components/text-header";
 import { confirmSweet } from "@/utils/helpers/confirm";
 import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
+import EmptyContent from "@/components/empty-content";
 
 export default function FormViewDetail() {
   const { id } = useParams();
@@ -72,7 +73,10 @@ export default function FormViewDetail() {
               <TableColumn>Results</TableColumn>
               <TableColumn>Aksi</TableColumn>
             </TableHeader>
-            <TableBody items={result?.form_results || []}>
+            <TableBody
+              emptyContent={<EmptyContent />}
+              items={result?.form_results || []}
+            >
               {(item) => (
                 <TableRow key={item.id}>
                   <TableCell>
