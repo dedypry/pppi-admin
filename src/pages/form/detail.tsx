@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Button,
   Card,
   CardBody,
   CardHeader,
@@ -12,10 +13,14 @@ import {
 } from "@heroui/react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { Trash2Icon } from "lucide-react";
 
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { getFormResultDetail } from "@/stores/features/form/actions";
 import TextHeader from "@/components/text-header";
+import { confirmSweet } from "@/utils/helpers/confirm";
+import { http } from "@/config/axios";
+import { notify, notifyError } from "@/utils/helpers/notify";
 
 export default function FormViewDetail() {
   const { id } = useParams();
@@ -38,6 +43,16 @@ export default function FormViewDetail() {
     return key;
   }
 
+  function handleDeleteHeader(resultId: number) {
+    http
+      .delete(`/form/header/${resultId}`)
+      .then(({ data }) => {
+        notify(data.message);
+        dispatch(getFormResultDetail(id as any));
+      })
+      .catch((err) => notifyError(err));
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <Card>
@@ -55,6 +70,7 @@ export default function FormViewDetail() {
               <TableColumn>Avatar</TableColumn>
               <TableColumn>User</TableColumn>
               <TableColumn>Results</TableColumn>
+              <TableColumn>Aksi</TableColumn>
             </TableHeader>
             <TableBody items={result?.form_results || []}>
               {(item) => (
@@ -75,6 +91,18 @@ export default function FormViewDetail() {
                         width={200}
                       />
                     ))}
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      isIconOnly
+                      radius="full"
+                      variant="light"
+                      onPress={() =>
+                        confirmSweet(() => handleDeleteHeader(item.id))
+                      }
+                    >
+                      <Trash2Icon className="text-danger" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               )}
