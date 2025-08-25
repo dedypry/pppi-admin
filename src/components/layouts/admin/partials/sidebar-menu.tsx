@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Image } from "@heroui/react";
 
 import MenuItem from "./menu-item";
 
@@ -17,11 +18,7 @@ export default function SidebarMenu() {
   return (
     <div className="flex max-h-screen flex-col">
       <Link className="my-5 ml-5 flex items-center gap-2" to="/">
-        <img
-          alt="logo"
-          className="h-[60px] object-cover"
-          src={apps?.logo || "/logo.png"}
-        />
+        <Image alt="logo" height={60} src={apps?.logo || "/logo.png"} />
         <h1 className="!text-white">{apps?.short_name?.toUpperCase()}</h1>
       </Link>
 
