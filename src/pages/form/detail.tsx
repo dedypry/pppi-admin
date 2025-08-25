@@ -22,6 +22,7 @@ import { confirmSweet } from "@/utils/helpers/confirm";
 import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
 import EmptyContent from "@/components/empty-content";
+import "./style.css";
 
 export default function FormViewDetail() {
   const { id } = useParams();
