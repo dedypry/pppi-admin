@@ -68,7 +68,12 @@ export default function FormViewDetail() {
                   </TableCell>
                   <TableCell>
                     {Object.entries(item.value).map(([key, val]) => (
-                      <TextHeader key={key} title={getTitle(key)} val={val} />
+                      <TextHeader
+                        key={key}
+                        title={getTitle(key)}
+                        val={val}
+                        width={200}
+                      />
                     ))}
                   </TableCell>
                 </TableRow>
