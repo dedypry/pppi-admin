@@ -33,7 +33,7 @@ export interface IForm {
     }[];
   }[];
 }
-export default function FormPage() {
+export default function FormCreatePage() {
   const [loading, setLoading] = useState(false);
   const {
     control,

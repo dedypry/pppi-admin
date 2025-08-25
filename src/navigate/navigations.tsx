@@ -34,11 +34,7 @@ export const navigate = [
     icon: CalendarRangeIcon,
     href: "/agenda",
   },
-  {
-    title: "Form",
-    icon: FormInputIcon,
-    href: "/form",
-  },
+
   {
     header: "Anggota",
     children: [
@@ -51,6 +47,16 @@ export const navigate = [
         title: "Tambah Anggota",
         icon: UserPlus2,
         href: "/member/create",
+      },
+    ],
+  },
+  {
+    header: "Form",
+    children: [
+      {
+        title: "Buat Form",
+        icon: FormInputIcon,
+        href: "/form/create",
       },
     ],
   },

@@ -65,7 +65,7 @@ export default function LoginPage() {
             <h1 className="text-[30px] font-bold">{apps?.short_name}</h1>
           </CardHeader>
           <CardHeader className="flex justify-center">
-            <h1>{apps.full_name} 🇮🇩</h1>
+            <h5>{apps.full_name} 🇮🇩</h5>
           </CardHeader>
           <CardBody className="flex flex-col gap-5">
             <Controller
