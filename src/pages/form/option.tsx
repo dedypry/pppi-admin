@@ -7,9 +7,10 @@ import {
   useFieldArray,
 } from "react-hook-form";
 
-import { IForm } from ".";
+import { IForm } from "./create";
 
 import CustomInput from "@/components/forms/custom-input";
+
 interface Props {
   control: Control;
   index: number;

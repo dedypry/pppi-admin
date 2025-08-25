@@ -54,6 +54,11 @@ export const navigate = [
     header: "Form",
     children: [
       {
+        title: "List Form",
+        icon: FormInputIcon,
+        href: "/form",
+      },
+      {
         title: "Buat Form",
         icon: FormInputIcon,
         href: "/form/create",

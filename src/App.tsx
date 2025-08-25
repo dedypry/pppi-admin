@@ -24,6 +24,7 @@ import RolePage from "./pages/settings/roles";
 import AppsPage from "./pages/settings/apps";
 import PackagePage from "./pages/patners/packages";
 import FormCreatePage from "./pages/form/create";
+import FormPage from "./pages/form";
 
 function App() {
   return (
@@ -32,7 +33,9 @@ function App() {
         <Route element={<Dashboard />} path="/" />
 
         <Route path="/form">
+          <Route element={<FormPage />} path="" />
           <Route element={<FormCreatePage />} path="create" />
+          <Route element={<FormCreatePage />} path=":id" />
         </Route>
 
         <Route path="/member">

@@ -21,6 +21,7 @@ import area from "./features/area/areaSlice";
 import role from "./features/roles/roleSlice";
 import apps from "./features/apps/appSlice";
 import packages from "./features/packages/packageSlice";
+import form from "./features/form/formSlice";
 
 const persistedAuth = persistReducer({ key: "auth", storage }, auth);
 
@@ -36,6 +37,7 @@ export const store = configureStore({
     role,
     apps,
     packages,
+    form,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

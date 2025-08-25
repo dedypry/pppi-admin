@@ -9,7 +9,8 @@ import {
 } from "@heroui/react";
 import { Controller, useForm, useFieldArray } from "react-hook-form";
 import { Trash2Icon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import FormOptions from "./option";
 
@@ -18,6 +19,8 @@ import QuillJS from "@/components/forms/quill-js";
 import CustomSelect from "@/components/forms/custom-select";
 import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
+import { getFormDetail } from "@/stores/features/form/actions";
+import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 
 export interface IForm {
   id?: number;
@@ -28,6 +31,7 @@ export interface IForm {
     title: string;
     type: string;
     sort: number;
+    required: boolean;
     options: {
       label: string;
     }[];
@@ -35,12 +39,26 @@ export interface IForm {
 }
 export default function FormCreatePage() {
   const [loading, setLoading] = useState(false);
+  const { detail } = useAppSelector((state) => state.form);
+  const { id } = useParams();
+  const dispatch = useAppDispatch();
+  const route = useNavigate();
+
+  console.log("SLUG", id);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(getFormDetail(id as any));
+    }
+  }, [id]);
+
   const {
     control,
     watch,
     reset,
     formState: { errors },
     handleSubmit,
+    setValue,
   } = useForm<IForm>({
     defaultValues: {
       id: undefined,
@@ -53,10 +71,21 @@ export default function FormCreatePage() {
           type: "input",
           options: [],
           sort: 0,
+          required: true,
         },
       ],
     },
   });
+
+  useEffect(() => {
+    if (detail) {
+      setValue("id", detail.id);
+      setValue("title", detail.title);
+      setValue("member_required", detail.member_required);
+      setValue("description", detail.description);
+      setValue("form_headers", detail.form_headers);
+    }
+  }, [detail]);
 
   // pakai useFieldArray untuk form_headers
   const { fields, append, remove } = useFieldArray({
@@ -75,6 +104,7 @@ export default function FormCreatePage() {
       .then(({ data }) => {
         notify(data.message);
         reset();
+        route("/form");
       })
       .catch((err) => notifyError(err))
       .finally(() => setLoading(false));
@@ -153,7 +183,7 @@ export default function FormCreatePage() {
                     render={({ field }) => (
                       <CustomSelect
                         {...field}
-                        className="w-xs"
+                        className="w-[120px]"
                         label="Pilih Type"
                         labelPlacement="inside"
                         selectedKeys={[item.type]}
@@ -162,6 +192,18 @@ export default function FormCreatePage() {
                           <SelectItem key={item}>{item}</SelectItem>
                         ))}
                       </CustomSelect>
+                    )}
+                  />
+                  <Controller
+                    control={control}
+                    name={`form_headers.${i}.required`}
+                    render={({ field }) => (
+                      <Checkbox
+                        isSelected={field.value}
+                        onValueChange={(val) => field.onChange(val)}
+                      >
+                        Wajib
+                      </Checkbox>
                     )}
                   />
 
@@ -194,6 +236,7 @@ export default function FormCreatePage() {
                 title: "",
                 type: "input",
                 sort: watch("form_headers").length,
+                required: true,
                 options: [],
               })
             }
