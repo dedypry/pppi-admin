@@ -186,7 +186,7 @@ export default function FormCreatePage() {
                         className="w-[120px]"
                         label="Pilih Type"
                         labelPlacement="inside"
-                        selectedKeys={[item.type]}
+                        selectedKeys={[field.value]}
                       >
                         {types.map((item) => (
                           <SelectItem key={item}>{item}</SelectItem>
