@@ -104,9 +104,9 @@ export default defineConfig([
       "no-unused-vars": "off",
       "unused-imports/no-unused-vars": "off",
       "unused-imports/no-unused-imports": "warn",
-
+      "no-console":"off",
       "@typescript-eslint/no-unused-vars": [
-        "warn",
+        "off",
         {
           args: "after-used",
           ignoreRestSiblings: false,
