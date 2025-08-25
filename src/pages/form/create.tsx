@@ -21,6 +21,7 @@ import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
 import { getFormDetail } from "@/stores/features/form/actions";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
+import { setDetail } from "@/stores/features/form/formSlice";
 
 export interface IForm {
   id?: number;
@@ -44,11 +45,11 @@ export default function FormCreatePage() {
   const dispatch = useAppDispatch();
   const route = useNavigate();
 
-  console.log("SLUG", id);
-
   useEffect(() => {
     if (id) {
       dispatch(getFormDetail(id as any));
+    } else {
+      dispatch(setDetail(null));
     }
   }, [id]);
 
@@ -84,6 +85,8 @@ export default function FormCreatePage() {
       setValue("member_required", detail.member_required);
       setValue("description", detail.description);
       setValue("form_headers", detail.form_headers);
+    } else {
+      reset();
     }
   }, [detail]);
 
@@ -93,11 +96,10 @@ export default function FormCreatePage() {
     name: "form_headers",
   });
 
-  const types = ["input", "region", "select", "check", "radio"];
+  const types = ["input", "region", "date", "select", "check", "radio"];
 
   const onSubmit = (data: IForm) => {
     setLoading(true);
-    console.log("Form result: ", data);
 
     http
       .post("/form", data)

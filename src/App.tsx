@@ -25,6 +25,7 @@ import AppsPage from "./pages/settings/apps";
 import PackagePage from "./pages/patners/packages";
 import FormCreatePage from "./pages/form/create";
 import FormPage from "./pages/form";
+import FormViewDetail from "./pages/form/detail";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route element={<FormPage />} path="" />
           <Route element={<FormCreatePage />} path="create" />
           <Route element={<FormCreatePage />} path=":id" />
+          <Route element={<FormViewDetail />} path=":id/view" />
         </Route>
 
         <Route path="/member">

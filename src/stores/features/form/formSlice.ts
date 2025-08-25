@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { getForm, getFormDetail } from "./actions";
+import { getForm, getFormDetail, getFormResultDetail } from "./actions";
 
 import { IPagination } from "@/interface/IPagination";
 import { IFormList } from "@/interface/IForm";
@@ -10,8 +10,13 @@ export const formSlice = createSlice({
   initialState: {
     forms: null as IPagination<IFormList[]> | null,
     detail: null as IFormList | null,
+    result: null as IFormList | null,
   },
-  reducers: {},
+  reducers: {
+    setDetail: (state, action) => {
+      state.detail = action.payload;
+    },
+  },
   extraReducers: (builder) =>
     builder
       .addCase(getForm.fulfilled, (state, action) => {
@@ -19,7 +24,10 @@ export const formSlice = createSlice({
       })
       .addCase(getFormDetail.fulfilled, (state, action) => {
         state.detail = action.payload;
+      })
+      .addCase(getFormResultDetail.fulfilled, (state, action) => {
+        state.result = action.payload;
       }),
 });
-
+export const { setDetail } = formSlice.actions;
 export default formSlice.reducer;

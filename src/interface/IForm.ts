@@ -1,3 +1,5 @@
+import { IUser } from "./IUser";
+
 export interface IFormOption {
   label: string;
 }
@@ -14,6 +16,21 @@ export interface IFormHeader {
   type: string; // kalau ada enum tipe field tertentu, bisa dijadikan union
   options: IFormOption[];
 }
+export interface IFormValue {
+  [key: string]: string;
+}
+
+export interface IFormResult {
+  id: number;
+  created_at: string; // bisa diganti Date kalau di-convert
+  updated_at: string;
+  form_id: number;
+  nia: string;
+  name: string;
+  email: string;
+  value: IFormValue;
+  user: IUser;
+}
 
 export interface IFormList {
   id: number;
@@ -23,6 +40,8 @@ export interface IFormList {
   slug: string;
   member_required: boolean;
   description: string;
-  required: boolean; // typo? kalau maksudnya "required" nanti bisa disesuaikan
+  required: boolean;
+  result_total: number;
   form_headers: IFormHeader[];
+  form_results: IFormResult[];
 }

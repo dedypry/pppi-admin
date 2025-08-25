@@ -26,3 +26,15 @@ export const getFormDetail = createAsyncThunk("get-form-detail", async (id) => {
     return null;
   }
 });
+export const getFormResultDetail = createAsyncThunk(
+  "get-form-result-detail",
+  async (id) => {
+    try {
+      const { data } = await http.get(`/form/result/${id}`);
+
+      return data;
+    } catch (error) {
+      return null;
+    }
+  },
+);

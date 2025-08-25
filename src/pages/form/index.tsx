@@ -20,6 +20,8 @@ import { dateFormat } from "@/utils/helpers/formater";
 import TableAction from "@/components/table-action";
 import { copyClipboard } from "@/utils/helpers/global";
 import config from "@/config/api";
+import { http } from "@/config/axios";
+import { notify, notifyError } from "@/utils/helpers/notify";
 
 export default function FormPage() {
   const { forms } = useAppSelector((state) => state.form);
@@ -30,6 +32,16 @@ export default function FormPage() {
     dispatch(getForm({}));
   }, []);
 
+  function handleDelete(id: number) {
+    http
+      .delete(`/form/${id}`)
+      .then(({ data }) => {
+        notify(data.message);
+        dispatch(getForm({}));
+      })
+      .catch((err) => notifyError(err));
+  }
+
   return (
     <Card>
       <CardHeader as={"h4"}>Form List</CardHeader>
@@ -39,14 +51,20 @@ export default function FormPage() {
             <TableColumn>Title</TableColumn>
             <TableColumn>slug</TableColumn>
             <TableColumn>dibuat</TableColumn>
+            <TableColumn>Total Respon</TableColumn>
             <TableColumn className="text-right">aksi</TableColumn>
           </TableHeader>
           <TableBody>
             {(forms?.data || []).map((item) => (
-              <TableRow key={item.id}>
+              <TableRow
+                key={item.id}
+                className="hover:bg-primary-50 cursor-pointer"
+                onClick={() => route(`/form/${item.id}/view`)}
+              >
                 <TableCell>{item.title}</TableCell>
                 <TableCell>{item.slug}</TableCell>
                 <TableCell>{dateFormat(item.created_at)}</TableCell>
+                <TableCell>{item.result_total}</TableCell>
                 <TableCell className="flex items-center justify-end">
                   <div>
                     <Button
@@ -60,9 +78,9 @@ export default function FormPage() {
                     </Button>
                   </div>
                   <TableAction
-                    onDelete={() => {}}
+                    onDelete={() => handleDelete(item.id)}
                     onEdit={() => route(`/form/${item.id}`)}
-                    onView={() => {}}
+                    onView={() => route(`/form/${item.id}/view`)}
                   />
                 </TableCell>
               </TableRow>

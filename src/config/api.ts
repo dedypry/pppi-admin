@@ -15,7 +15,7 @@ const currentEnv = (import.meta.env.VITE_NODE_ENV || "local") as EnvKeys;
 
 const configs: IConfigs = {
   local: {
-    front: "http://127.0.0.1:5174",
+    front: "http://localhost:5174",
     api: "http://127.0.0.1:3333",
     socket: "http://127.0.0.1:3334",
     gallery: "http://127.0.0.1:9876",
