@@ -1,6 +1,7 @@
 import {
   CalendarRangeIcon,
   ClipboardPlusIcon,
+  FormInputIcon,
   GalleryThumbnailsIcon,
   Grid2X2CheckIcon,
   LayoutDashboard,
@@ -32,6 +33,11 @@ export const navigate = [
     title: "Agenda",
     icon: CalendarRangeIcon,
     href: "/agenda",
+  },
+  {
+    title: "Form",
+    icon: FormInputIcon,
+    href: "/form",
   },
   {
     header: "Anggota",

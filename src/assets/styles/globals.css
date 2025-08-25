@@ -54,3 +54,19 @@
 .text-sub{
     @apply text-[14px] md:text-[16px] text-gray-600
 }
+
+h1{
+    @apply text-5xl font-bold text-gray-600
+}
+h2{
+    @apply text-4xl font-bold text-gray-600
+}
+h3{
+    @apply text-3xl font-bold text-gray-600
+}
+h4{
+    @apply text-2xl font-bold text-gray-600
+}
+h5{
+    @apply text-xl font-bold text-gray-600
+}

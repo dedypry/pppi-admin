@@ -17,7 +17,7 @@ interface Props {
   label?: string;
   isInvalid?: boolean;
 }
-export default function QuillJS({ value, onContent, isInvalid }: Props) {
+export default function QuillJS({ value, onContent, isInvalid, label }: Props) {
   const [editor, setEditor] = useState<IDomEditor | null>(null);
   const [html, setHtml] = useState(value);
 
@@ -48,7 +48,7 @@ export default function QuillJS({ value, onContent, isInvalid }: Props) {
     };
   }, [editor]);
 
-  return (
+  const content = (
     <div
       className={`w-full min-h-[400px] border ${isInvalid ? "border-danger" : "border-secondary-200"} `}
     >
@@ -69,6 +69,19 @@ export default function QuillJS({ value, onContent, isInvalid }: Props) {
         }}
         onCreated={setEditor}
       />
+    </div>
+  );
+
+  return (
+    <div>
+      {label && (
+        <p
+          className={`text-gray-600 text-sm py-2 ${isInvalid ? "text-danger" : ""} `}
+        >
+          {label}
+        </p>
+      )}
+      {content}
     </div>
   );
 }

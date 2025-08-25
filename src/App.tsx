@@ -23,12 +23,14 @@ import OrganizationPage from "./pages/organization";
 import RolePage from "./pages/settings/roles";
 import AppsPage from "./pages/settings/apps";
 import PackagePage from "./pages/patners/packages";
+import FormPage from "./pages/form";
 
 function App() {
   return (
     <Routes>
       <Route element={<AdminLayout />} path="/">
         <Route element={<Dashboard />} path="/" />
+        <Route element={<FormPage />} path="/form" />
 
         <Route path="/member">
           <Route element={<MemberPage />} path="" />

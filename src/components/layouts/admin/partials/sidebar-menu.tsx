@@ -22,9 +22,7 @@ export default function SidebarMenu() {
           className="h-[60px] object-cover"
           src={apps?.logo || "/logo.png"}
         />
-        <h1 className="text-[35px] font-bold text-white">
-          {apps?.short_name?.toUpperCase()}
-        </h1>
+        <h1 className="!text-white">{apps?.short_name?.toUpperCase()}</h1>
       </Link>
 
       <ul className="scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary-200 scrollbar-track-transparent flex-1 overflow-y-auto pb-10 pr-1">
