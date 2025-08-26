@@ -40,8 +40,10 @@ export interface IFormList {
   slug: string;
   member_required: boolean;
   description: string;
+  status: string;
   required: boolean;
   result_total: number;
   form_headers: IFormHeader[];
   form_results: IFormResult[];
+  created_by: IUser;
 }
