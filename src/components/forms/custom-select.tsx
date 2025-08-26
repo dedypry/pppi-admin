@@ -8,7 +8,7 @@ function CustomSelect(
     <Select
       ref={ref}
       classNames={{
-        label: "text-gray-800",
+        label: "text-gray-800 top-8",
         description: "text-gray-400 italic text-xs",
       }}
       color="primary"
