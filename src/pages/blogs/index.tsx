@@ -67,6 +67,16 @@ export default function BlogPage() {
       .catch((err) => notifyError(err));
   }
 
+  function handleDelete(slug: string) {
+    http
+      .delete(`/blogs/${slug}`)
+      .then(({ data }) => {
+        notify(data.message);
+        dispatch(getBlogs({}));
+      })
+      .catch((err) => notifyError(err));
+  }
+
   return (
     <>
       {data && <BlogDetail blog={data} isOpen={isOpen} setOpen={setOpen} />}
@@ -185,7 +195,9 @@ export default function BlogPage() {
                           key="delete"
                           color="danger"
                           startContent={<Trash2Icon size={18} />}
-                          onPress={() => confirmSweet(() => {})}
+                          onPress={() =>
+                            confirmSweet(() => handleDelete(item.slug))
+                          }
                         >
                           Hapus
                         </DropdownItem>
