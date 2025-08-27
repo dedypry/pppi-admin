@@ -13,6 +13,7 @@ export default function PageSize({ size, setSize }: Props) {
     <CustomSelect
       className="w-32"
       label="Page Size"
+      labelPlacement="inside"
       placeholder="select size"
       selectedKeys={[size]}
       onChange={(e) => setSize(e.target.value)}

@@ -108,6 +108,7 @@ export default function MemberPage() {
             <CustomSelect
               className="w-40"
               label="Status"
+              labelPlacement="inside"
               placeholder="Pilih Status"
               selectedKeys={[query.status]}
               onChange={(e) => setQueryParams("status", e.target.value)}
