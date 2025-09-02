@@ -52,6 +52,7 @@ export const navigate = [
   },
   {
     header: "Form",
+    roles: ["admin", "super-admin", "biro"],
     children: [
       {
         title: "List Form",
@@ -67,6 +68,7 @@ export const navigate = [
   },
   {
     header: "Partner",
+    roles: ["admin", "super-admin"],
     children: [
       {
         title: "List Partner",
@@ -118,16 +120,19 @@ export const navigate = [
         title: "Role",
         icon: ShieldEllipsis,
         href: "/settings/roles",
+        roles: ["admin", "super-admin"],
       },
       {
         title: "Apps",
         icon: Grid2X2CheckIcon,
         href: "/settings/apps",
+        roles: ["admin", "super-admin"],
       },
       {
         title: "Banner",
         icon: GalleryThumbnailsIcon,
         href: "/settings/banners",
+        roles: ["admin", "super-admin"],
       },
       {
         title: "Regions",

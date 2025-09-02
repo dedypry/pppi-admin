@@ -6,8 +6,11 @@ import MenuItem from "./menu-item";
 
 import { navigate } from "@/navigate/navigations";
 import { apps } from "@/config/app";
+import { useAppSelector } from "@/stores/hooks";
+import { hasRoles } from "@/utils/helpers/match-roles";
 
 export default function SidebarMenu() {
+  const { user } = useAppSelector((state) => state.user);
   const [selected, setSelected] = useState<string>(window.location.pathname);
   const { pathname } = useLocation();
 
@@ -25,6 +28,12 @@ export default function SidebarMenu() {
       <ul className="scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary-200 scrollbar-track-transparent flex-1 overflow-y-auto pb-10 pr-1">
         {navigate.map((item, i) => {
           const IconParent: any = item.icon;
+
+          if (item?.roles?.length! > 0) {
+            const hasAccess = hasRoles(item.roles || []);
+
+            if (!hasAccess) return null;
+          }
 
           return (
             <div key={i}>
