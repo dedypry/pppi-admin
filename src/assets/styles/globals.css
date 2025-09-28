@@ -3,7 +3,6 @@
 @config "../../../tailwind.config.js";
 
 
-
 .link-anim {
     @apply relative inline-block before:absolute before:bottom-0 before:left-1/2 before:h-[2px] before:w-0 before:-translate-x-1/2 before:bg-white before:transition-all before:duration-300 hover:before:w-full;
 }
@@ -69,4 +68,17 @@ h4{
 }
 h5{
     @apply text-xl font-bold text-gray-600
+}
+
+/* globals.css */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #a3a3a3; /* ganti sesuai warna Tailwind */
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
 }

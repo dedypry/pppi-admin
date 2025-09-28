@@ -6,11 +6,9 @@ import MenuItem from "./menu-item";
 
 import { navigate } from "@/navigate/navigations";
 import { apps } from "@/config/app";
-import { useAppSelector } from "@/stores/hooks";
 import { hasRoles } from "@/utils/helpers/match-roles";
 
 export default function SidebarMenu() {
-  const { user } = useAppSelector((state) => state.user);
   const [selected, setSelected] = useState<string>(window.location.pathname);
   const { pathname } = useLocation();
 

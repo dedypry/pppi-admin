@@ -1,5 +1,4 @@
 import { heroui } from "@heroui/react";
-import tailwindScrollbar from "tailwind-scrollbar";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -15,7 +14,6 @@ export default {
   },
   darkMode: "class",
   plugins: [
-    tailwindScrollbar(),
     heroui({
       prefix: "heroui", // prefix for themes variables
       defaultTheme: "light", // default theme from the themes object
