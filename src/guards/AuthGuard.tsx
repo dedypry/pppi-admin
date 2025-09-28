@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { http } from "@/config/axios";
@@ -8,13 +8,20 @@ import { setUser } from "@/stores/features/user/userSlice";
 import Loading from "@/components/loading/Loading";
 
 export default function AuthGuard({ children }: { children: ReactNode }) {
-  const { token } = useAppSelector((state) => state.auth);
+  const { token: stateToken } = useAppSelector((state) => state.auth);
   const [isLoading, setIsLoading] = useState(false);
   const route = useNavigate();
   const dispatch = useAppDispatch();
+  const { search } = useLocation();
+  const query = new URLSearchParams(search);
+
+  const token = stateToken || query.get("token");
 
   useEffect(() => {
     if (token) {
+      if (!stateToken) {
+        dispatch(setToken(token));
+      }
       getProfile();
     }
   }, []);
