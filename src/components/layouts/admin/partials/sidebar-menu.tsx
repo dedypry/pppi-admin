@@ -23,7 +23,7 @@ export default function SidebarMenu() {
         <h1 className="!text-white">{apps?.short_name?.toUpperCase()}</h1>
       </Link>
 
-      <ul className="scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary-200 scrollbar-track-transparent flex-1 overflow-y-auto pb-10 pr-1">
+      <ul className="flex-1 overflow-y-auto pb-10 pr-1">
         {navigate.map((item, i) => {
           const IconParent: any = item.icon;
 

@@ -76,7 +76,7 @@ h5{
   height: 6px;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #a3a3a3; /* ganti sesuai warna Tailwind */
+  background-color: #bcbebc;
   border-radius: 8px;
 }
 ::-webkit-scrollbar-track {
