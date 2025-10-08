@@ -165,7 +165,7 @@ export default function RegisterMember({
       method: "POST",
       data: {
         ...data,
-        date_birth: dayjs(data.date_birth).toDate(),
+        date_birth: dayjs(data.date_birth).add(1, "d").toDate(),
         is_member_payment: data.is_member_payment === "yes",
       },
     })
