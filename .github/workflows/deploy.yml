@@ -11,18 +11,21 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.21.0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
 
-      - name: Install PNPM
-        run: npm install -g pnpm
-
       - name: Install dependencies and build
         run: |
+          echo "VITE_NODE_ENV=production" >> .env
           pnpm install
           pnpm lint
           pnpm build
@@ -34,5 +37,5 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.REMOTE_PORT }}
-          source: "dist/*"
-          target: "/www/wwwroot/admin.dpn-pppi.org"
+          source: "admin.dpn-pppi.org/*"
+          target: "/www/wwwroot"
