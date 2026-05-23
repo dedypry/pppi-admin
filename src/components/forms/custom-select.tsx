@@ -8,10 +8,9 @@ function CustomSelect(
     <Select
       ref={ref}
       classNames={{
-        label: `text-gray-800 ${!props.labelPlacement || props.labelPlacement == "outside" ? "top-8" : ""}`,
+        label: `text-gray-800 ${!props.labelPlacement || props.labelPlacement == "outside" ? "top-5" : ""}`,
         description: "text-gray-400 italic text-xs",
       }}
-      color="primary"
       labelPlacement="outside"
       variant="bordered"
       {...props}

@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 
 import { hasRoles } from "@/utils/helpers/match-roles";
+import { useAppSelector } from "@/stores/hooks";
 
 export default function MenuItem({ item, selected }: any) {
+  const { newOrdersCount } = useAppSelector((state) => state.shopOrders);
+
   return (
     <>
       <p className="mt-5 pb-1 text-sm text-gray-200">{item.header}</p>
@@ -22,6 +25,11 @@ export default function MenuItem({ item, selected }: any) {
                 to={href}
               >
                 <Icon /> {title}
+                {href === "/ecommerce/transactions" && newOrdersCount > 0 && (
+                  <span className="ml-auto rounded-full bg-danger px-2 py-[1px] text-[11px] font-bold text-white">
+                    {newOrdersCount}
+                  </span>
+                )}
               </Link>
             );
           },

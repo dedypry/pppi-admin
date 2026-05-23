@@ -3,6 +3,7 @@ import { useMediaQuery } from "react-responsive";
 import {
   Avatar,
   Button,
+  DropdownSection,
   Drawer,
   DrawerContent,
   Dropdown,
@@ -24,12 +25,19 @@ import { http } from "@/config/axios";
 import { notifyError } from "@/utils/helpers/notify";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { setToken } from "@/stores/features/auth/authSlice";
+import {
+  getShopOrderNotifications,
+  readShopOrderNotifications,
+} from "@/stores/features/shop-orders/action";
 
 interface Props {
   children?: ReactNode;
 }
 export default function AdminLayout({ children }: Props) {
   const { user } = useAppSelector((state) => state.user);
+  const { newOrdersCount, notifications } = useAppSelector(
+    (state) => state.shopOrders,
+  );
   const [isOpen, setIsOpen] = useState(true);
   const isMobile = useMediaQuery(responsive.mobile);
   const dispatch = useAppDispatch();
@@ -38,6 +46,15 @@ export default function AdminLayout({ children }: Props) {
   useEffect(() => {
     setIsOpen(!isMobile);
   }, [isMobile]);
+
+  useEffect(() => {
+    dispatch(getShopOrderNotifications());
+    const timer = setInterval(() => {
+      dispatch(getShopOrderNotifications());
+    }, 30000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   function handleLogout() {
     http
@@ -94,15 +111,59 @@ export default function AdminLayout({ children }: Props) {
               <p className="font-bold text-primary">PPPI</p>
             </NavbarContent>
             <NavbarContent justify="end">
-              <Button
-                isIconOnly
-                className="text-sm font-bold text-black"
-                radius="full"
-                size="sm"
-                variant="light"
-              >
-                <Bell />
-              </Button>
+              <Dropdown showArrow offset={15} placement="bottom-end">
+                <DropdownTrigger>
+                  <Button
+                    isIconOnly
+                    className="relative text-sm font-bold text-black"
+                    radius="full"
+                    size="sm"
+                    variant="light"
+                  >
+                    <Bell />
+                    {newOrdersCount > 0 && (
+                      <span className="absolute -right-0.5 -top-0.5 rounded-full bg-danger px-1.5 text-[10px] font-bold text-white">
+                        {newOrdersCount > 99 ? "99+" : newOrdersCount}
+                      </span>
+                    )}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="notifikasi transaksi"
+                  onAction={(key) => {
+                    if (key === "mark-all") {
+                      dispatch(readShopOrderNotifications()).finally(() =>
+                        dispatch(getShopOrderNotifications()),
+                      );
+                    }
+                    if (String(key).startsWith("order-")) {
+                      route("/ecommerce/transactions");
+                    }
+                    if (key === "open-transactions") {
+                      route("/ecommerce/transactions");
+                    }
+                  }}
+                >
+                  <DropdownSection showDivider title="Order Masuk">
+                    {notifications.length > 0 ? (
+                      notifications.map((item) => (
+                        <DropdownItem
+                          key={`order-${item.id}`}
+                          description={`${item.customer_name} • ${item.customer_phone}`}
+                        >
+                          {item.order_code}
+                        </DropdownItem>
+                      ))
+                    ) : (
+                      <DropdownItem key="empty">Belum ada order baru</DropdownItem>
+                    )}
+                  </DropdownSection>
+                  <DropdownItem key="mark-all">Tandai sudah dibaca</DropdownItem>
+                  <DropdownItem key="open-transactions" color="primary">
+                    Kelola Transaksi
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
               <Dropdown showArrow offset={15} placement="bottom-end">
                 <DropdownTrigger>
                   <Avatar size="sm" src={user?.profile?.photo} />

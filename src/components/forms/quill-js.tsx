@@ -16,8 +16,15 @@ interface Props {
   onContent: (val: any) => void;
   label?: string;
   isInvalid?: boolean;
+  height?: number;
 }
-export default function QuillJS({ value, onContent, isInvalid, label }: Props) {
+export default function QuillJS({
+  value,
+  onContent,
+  isInvalid,
+  label,
+  height = 400,
+}: Props) {
   const [editor, setEditor] = useState<IDomEditor | null>(null);
   const [html, setHtml] = useState(value);
 
@@ -50,7 +57,7 @@ export default function QuillJS({ value, onContent, isInvalid, label }: Props) {
 
   const content = (
     <div
-      className={`w-full min-h-[400px] border ${isInvalid ? "border-danger" : "border-secondary-200"} `}
+      className={`w-full border ${isInvalid ? "border-danger" : "border-secondary-200"} `}
     >
       {/* {label && (
           <p className={`text-sm mb-1 ${isInvalid ? "text-red-500" : ""}`}>
@@ -61,7 +68,7 @@ export default function QuillJS({ value, onContent, isInvalid, label }: Props) {
       <Editor
         defaultConfig={editorConfig}
         mode="default"
-        style={{ height: "400px", overflowY: "auto" }}
+        style={{ height: `${height}px`, overflowY: "auto" }}
         value={html}
         onChange={(editor: any) => {
           setHtml(editor.getHtml());

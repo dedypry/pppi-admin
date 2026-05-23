@@ -6,6 +6,16 @@ export interface IRole {
   created_at: string;
   updated_at: string;
 }
+
+export interface IDepartment {
+  id: number;
+  name: string;
+  code: string | null;
+  description: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
 export interface IProvince {
   id: number;
   name: string;

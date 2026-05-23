@@ -22,6 +22,9 @@ import role from "./features/roles/roleSlice";
 import apps from "./features/apps/appSlice";
 import packages from "./features/packages/packageSlice";
 import form from "./features/form/formSlice";
+import packageInterests from "./features/package-interests/packageInterestSlice";
+import partners from "./features/partners/partnerSlice";
+import shopOrders from "./features/shop-orders/shopOrderSlice";
 
 const persistedAuth = persistReducer({ key: "auth", storage }, auth);
 
@@ -38,6 +41,9 @@ export const store = configureStore({
     apps,
     packages,
     form,
+    packageInterests,
+    partners,
+    shopOrders,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

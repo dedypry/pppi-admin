@@ -14,18 +14,25 @@ import BlogCategoryPage from "./pages/blog-category";
 import BannerPage from "./pages/settings/banners";
 import ErrorNotFoundPage from "./pages/errors/not-found";
 import ProfilePage from "./pages/profiles";
-import ComingSoon from "./pages/errors/cooming-soon";
 import RegionPage from "./pages/settings/regions";
 import ProvincePage from "./pages/settings/regions/province";
 import CityPage from "./pages/settings/regions/city";
 import DistrictPage from "./pages/settings/regions/district";
+import DepartmentPage from "./pages/settings/department";
 import OrganizationPage from "./pages/organization";
 import RolePage from "./pages/settings/roles";
 import AppsPage from "./pages/settings/apps";
 import PackagePage from "./pages/patners/packages";
+import PackageInterestPage from "./pages/patners/package-interests";
 import FormCreatePage from "./pages/form/create";
 import FormPage from "./pages/form";
 import FormViewDetail from "./pages/form/detail";
+import PartnerPage from "./pages/patners";
+import UserManagementPage from "./pages/settings/user-management";
+import ProductManagementPage from "./pages/ecommerce/products";
+import ProductMastersPage from "./pages/ecommerce/masters";
+import TransactionPage from "./pages/ecommerce/transactions";
+import TransactionDetailPage from "./pages/ecommerce/transactions/detail";
 
 function App() {
   return (
@@ -58,9 +65,9 @@ function App() {
         </Route>
 
         <Route path="/partners">
-          {/* <Route element={<PackagePage />} path="packages" /> */}
-          <Route element={<ComingSoon />} path="" />
+          <Route element={<PartnerPage />} path="" />
           <Route element={<PackagePage />} path="packages" />
+          <Route element={<PackageInterestPage />} path="package-interests" />
         </Route>
 
         <Route path="/profile">
@@ -73,12 +80,18 @@ function App() {
             <Route element={<CityPage />} path="cities" />
             <Route element={<DistrictPage />} path="districts" />
           </Route>
-          {/* <Route element={<DepartmentPage />} path="department" /> */}
-          <Route element={<ComingSoon />} path="user-management" />
-          <Route element={<ComingSoon />} path="department" />
+          <Route element={<UserManagementPage />} path="user-management" />
+          <Route element={<DepartmentPage />} path="department" />
           <Route element={<RolePage />} path="roles" />
           <Route element={<AppsPage />} path="apps" />
           <Route element={<BannerPage />} path="banners" />
+        </Route>
+
+        <Route path="/ecommerce">
+          <Route element={<ProductMastersPage />} path="masters" />
+          <Route element={<ProductManagementPage />} path="products" />
+          <Route element={<TransactionPage />} path="transactions" />
+          <Route element={<TransactionDetailPage />} path="transactions/:id" />
         </Route>
       </Route>
 

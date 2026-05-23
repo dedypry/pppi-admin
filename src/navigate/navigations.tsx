@@ -12,6 +12,7 @@ import {
   RssIcon,
   ShieldCheckIcon,
   ShieldEllipsis,
+  ShoppingBasket,
   User,
   UserPlus2,
   Users2Icon,
@@ -80,6 +81,11 @@ export const navigate = [
         icon: PackageCheckIcon,
         href: "/partners/packages",
       },
+      {
+        title: "Minat Paket",
+        icon: PackageCheckIcon,
+        href: "/partners/package-interests",
+      },
     ],
   },
   {
@@ -103,6 +109,27 @@ export const navigate = [
     ],
   },
 
+  {
+    header: "E-Commerce",
+    roles: ["admin", "super-admin"],
+    children: [
+      {
+        title: "Master Product",
+        icon: ShoppingBasket,
+        href: "/ecommerce/masters",
+      },
+      {
+        title: "Manage Product",
+        icon: ShoppingBasket,
+        href: "/ecommerce/products",
+      },
+      {
+        title: "Transaksi",
+        icon: ShoppingBasket,
+        href: "/ecommerce/transactions",
+      },
+    ],
+  },
   {
     header: "Settings",
     children: [
