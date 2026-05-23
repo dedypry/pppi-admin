@@ -34,7 +34,7 @@ export default function ChartPie() {
             },
           },
         },
-      ] as ApexNonAxisChartSeries[] | any,
+      ] as any,
     },
   });
 
