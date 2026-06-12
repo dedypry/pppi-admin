@@ -96,7 +96,7 @@ export default function FormViewDetail() {
       <Card>
         <CardHeader className="w-full">
           <div className="flex items-center justify-between w-full">
-            <h4>Result</h4>
+            <h4>Result {items.length} Peserta</h4>
             <div>
               <Button
                 color="primary"
