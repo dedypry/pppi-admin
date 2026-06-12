@@ -6,6 +6,7 @@ import {
   CardHeader,
   Chip,
   Pagination,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -125,9 +126,25 @@ export default function FormPage() {
                   </p>
                 </TableCell>
                 <TableCell>
-                  <Chip color={getStatus(item.status) as any} variant="dot">
-                    {item.status}
-                  </Chip>
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      isSelected={item.status === "active"}
+                      size="sm"
+                      onValueChange={(val) =>
+                        handleUpdateStatus(
+                          item.id,
+                          val ? "active" : "submission",
+                        )
+                      }
+                    />
+                    <Chip
+                      color={getStatus(item.status) as any}
+                      size="sm"
+                      variant="dot"
+                    >
+                      {item.status}
+                    </Chip>
+                  </div>
                 </TableCell>
                 <TableCell>{item.result_total}</TableCell>
                 <TableCell className="flex items-center justify-end">
