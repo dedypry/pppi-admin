@@ -14,6 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { DownloadIcon, Trash2Icon } from "lucide-react";
+import dayjs from "dayjs";
 
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { getFormResultDetail } from "@/stores/features/form/actions";
@@ -23,7 +24,6 @@ import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
 import EmptyContent from "@/components/empty-content";
 import { handleDownloadExcel } from "@/utils/helpers/global";
-import dayjs from "dayjs";
 
 export default function FormViewDetail() {
   const [isExporting, setIsExporting] = useState(false);
@@ -84,12 +84,6 @@ export default function FormViewDetail() {
     }
   }
 
-  function handleExport(id: number) {
-    http.get(`/form/export/${id}`).then(({ data }) => {
-      console.log(data);
-    });
-  }
-
   return (
     <div className="flex flex-col gap-4">
       <Card>
@@ -106,9 +100,9 @@ export default function FormViewDetail() {
             <div>
               <Button
                 color="primary"
-                startContent={<DownloadIcon />}
+                isLoading={isExporting}
+                startContent={!isExporting ? <DownloadIcon /> : null}
                 variant="shadow"
-                // onPress={() => handleExport(result?.id!)}
                 onPress={() => {
                   handleDownloadExcel(
                     `/form/export/${id}`,
