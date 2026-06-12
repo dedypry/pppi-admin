@@ -35,7 +35,7 @@ export default function FormSetting() {
 
   function getRole() {
     http
-      .get("/roles")
+      .get("/roles", { params: { noPagination: true } })
       .then(({ data }) => {
         setRoles(data);
       })
