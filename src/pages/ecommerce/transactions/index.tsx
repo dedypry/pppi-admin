@@ -72,7 +72,7 @@ export default function TransactionPage() {
 
   useEffect(() => {
     getTransactions();
-    dispatch(readShopOrderNotifications());
+    dispatch(readShopOrderNotifications([]));
     dispatch(getShopOrderNotifications());
   }, []);
 

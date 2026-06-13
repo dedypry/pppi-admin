@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect, ReactNode, useRef } from "react";
 import { useMediaQuery } from "react-responsive";
 import {
   Avatar,
@@ -42,13 +42,20 @@ export default function AdminLayout({ children }: Props) {
   const isMobile = useMediaQuery(responsive.mobile);
   const dispatch = useAppDispatch();
   const route = useNavigate();
+  const hasFetched = useRef(false);
 
   useEffect(() => {
     setIsOpen(!isMobile);
   }, [isMobile]);
 
   useEffect(() => {
-    dispatch(getShopOrderNotifications());
+    if (!hasFetched.current) {
+      hasFetched.current = true;
+      dispatch(getShopOrderNotifications());
+      setTimeout(() => {
+        hasFetched.current = false;
+      }, 1000);
+    }
     const timer = setInterval(() => {
       dispatch(getShopOrderNotifications());
     }, 30000);
@@ -132,7 +139,7 @@ export default function AdminLayout({ children }: Props) {
                   aria-label="notifikasi transaksi"
                   onAction={(key) => {
                     if (key === "mark-all") {
-                      dispatch(readShopOrderNotifications()).finally(() =>
+                      dispatch(readShopOrderNotifications([])).finally(() =>
                         dispatch(getShopOrderNotifications()),
                       );
                     }
@@ -155,10 +162,14 @@ export default function AdminLayout({ children }: Props) {
                         </DropdownItem>
                       ))
                     ) : (
-                      <DropdownItem key="empty">Belum ada order baru</DropdownItem>
+                      <DropdownItem key="empty">
+                        Belum ada order baru
+                      </DropdownItem>
                     )}
                   </DropdownSection>
-                  <DropdownItem key="mark-all">Tandai sudah dibaca</DropdownItem>
+                  <DropdownItem key="mark-all">
+                    Tandai sudah dibaca
+                  </DropdownItem>
                   <DropdownItem key="open-transactions" color="primary">
                     Kelola Transaksi
                   </DropdownItem>

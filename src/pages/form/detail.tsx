@@ -11,9 +11,9 @@ import {
   TableHeader,
   TableRow,
 } from "@heroui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { DownloadIcon, Trash2Icon } from "lucide-react";
+import { DownloadIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import dayjs from "dayjs";
 
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
@@ -30,6 +30,7 @@ export default function FormViewDetail() {
   const { id } = useParams();
   const { result } = useAppSelector((state) => state.form);
   const dispatch = useAppDispatch();
+  const hasFetched = useRef(false);
 
   const items = result?.form_results || [];
   const headers = result?.form_headers || [];
@@ -42,8 +43,12 @@ export default function FormViewDetail() {
   ];
 
   useEffect(() => {
-    if (id) {
+    if (id && !hasFetched.current) {
+      hasFetched.current = true;
       dispatch(getFormResultDetail(id as any));
+      setTimeout(() => {
+        hasFetched.current = false;
+      }, 1000);
     }
   }, [id]);
 
@@ -64,7 +69,10 @@ export default function FormViewDetail() {
       case "user":
         return (
           <>
-            <TextHeader title="Nama" val={item.name} />
+            <TextHeader
+              title="Nama"
+              val={`${item.user?.front_title} ${item.name} ${item.user?.back_title}`}
+            />
             <TextHeader title="Email" val={item.email} />
           </>
         );
@@ -97,10 +105,19 @@ export default function FormViewDetail() {
         <CardHeader className="w-full">
           <div className="flex items-center justify-between w-full">
             <h4>Result {items.length} Peserta</h4>
-            <div>
+            <div className="flex items-center gap-2">
+              <Button
+                color="warning"
+                size="sm"
+                startContent={<PlusIcon />}
+                variant="shadow"
+              >
+                Buat Presensi
+              </Button>
               <Button
                 color="primary"
                 isLoading={isExporting}
+                size="sm"
                 startContent={!isExporting ? <DownloadIcon /> : null}
                 variant="shadow"
                 onPress={() => {

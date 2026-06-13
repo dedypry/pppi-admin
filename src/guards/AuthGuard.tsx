@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
@@ -14,15 +14,20 @@ export default function AuthGuard({ children }: { children: ReactNode }) {
   const dispatch = useAppDispatch();
   const { search } = useLocation();
   const query = new URLSearchParams(search);
+  const hasFetched = useRef(false);
 
   const token = stateToken || query.get("token");
 
   useEffect(() => {
-    if (token) {
+    if (token && !hasFetched.current) {
+      hasFetched.current = true;
       if (!stateToken) {
         dispatch(setToken(token));
       }
       getProfile();
+      setTimeout(() => {
+        hasFetched.current = false;
+      }, 1000);
     }
   }, []);
 
