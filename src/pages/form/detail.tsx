@@ -136,7 +136,7 @@ export default function FormViewDetail() {
             <div className="flex items-center gap-2">
               <Autocomplete
                 items={dataPengurus}
-                label="Wilayah"
+                label="Pengurus"
                 size="sm"
                 onSelectionChange={(val) => handleSetValue(val, "pengurus")}
               >
