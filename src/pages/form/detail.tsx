@@ -1,4 +1,6 @@
 import {
+  Autocomplete,
+  AutocompleteItem,
   Avatar,
   Button,
   Card,
@@ -31,8 +33,19 @@ export default function FormViewDetail() {
   const { result } = useAppSelector((state) => state.form);
   const dispatch = useAppDispatch();
   const hasFetched = useRef(false);
+  const [items, setItems] = useState<any[]>([]);
 
-  const items = result?.form_results || [];
+  const pengurus =
+    result?.form_headers.find((e) => e.key === "pengurus")?.options || [];
+
+  const dataPengurus = [{ label: "Semua", value: null }, ...pengurus];
+
+  // let items = result?.form_results || [];
+
+  useEffect(() => {
+    setItems(result?.form_results || []);
+  }, [result]);
+
   const headers = result?.form_headers || [];
 
   const columns = [
@@ -92,6 +105,21 @@ export default function FormViewDetail() {
     }
   }
 
+  function handleSetValue(value: any, columnKey: string) {
+    if (value === null || value === "Semua") {
+      setItems(result?.form_results || []);
+
+      return;
+    }
+
+    const itemsData =
+      result?.form_results.filter((e) => {
+        return e.value?.[columnKey as string] === value;
+      }) || [];
+
+    setItems(itemsData);
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <Card>
@@ -106,6 +134,18 @@ export default function FormViewDetail() {
           <div className="flex items-center justify-between w-full">
             <h4>Result {items.length} Peserta</h4>
             <div className="flex items-center gap-2">
+              <Autocomplete
+                items={dataPengurus}
+                label="Wilayah"
+                size="sm"
+                onSelectionChange={(val) => handleSetValue(val, "pengurus")}
+              >
+                {(item) => (
+                  <AutocompleteItem key={item.label}>
+                    {item.label}
+                  </AutocompleteItem>
+                )}
+              </Autocomplete>
               <Button
                 color="warning"
                 size="sm"
