@@ -12,4 +12,5 @@ export interface IQueryPagination {
   q?: string;
   status?: string;
   verification_status?: string;
+  is_need_verify?: string;
 }

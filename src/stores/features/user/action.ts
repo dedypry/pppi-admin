@@ -14,10 +14,11 @@ export const getUser = createAsyncThunk(
     q = "",
     status = "",
     verification_status = "",
+    is_need_verify = "",
   }: IQueryPagination) => {
     try {
       const { data } = await http.get(
-        `/members?page=${page}&pageSize=${pageSize}&q=${q}&status=${status}&verification_status=${verification_status}`,
+        `/members?page=${page}&pageSize=${pageSize}&q=${q}&status=${status}&verification_status=${verification_status}&is_need_verify=${is_need_verify}`,
       );
 
       return data;

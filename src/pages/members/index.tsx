@@ -29,8 +29,10 @@ import {
   EditIcon,
   EyeIcon,
   Trash2Icon,
+  DownloadIcon,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 import debounce from "@/utils/helpers/debounce";
 import CustomInput from "@/components/forms/custom-input";
@@ -43,18 +45,20 @@ import { notify, notifyError } from "@/utils/helpers/notify";
 import EmptyContent from "@/components/empty-content";
 import PageSize from "@/components/page-size";
 import CustomSelect from "@/components/forms/custom-select";
-import { chipColor } from "@/utils/helpers/global";
+import { chipColor, handleDownloadExcel } from "@/utils/helpers/global";
 
 export default function MemberPage() {
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
   const [selectedRows, setSelectedRows] = useState<Selection>(new Set([]));
+  const [exporting, setExporting] = useState(false);
   const [query, setQuery] = useState({
     q: "",
     pageSize: "10",
     page: 1,
     status: "submission",
     verification_status: "all",
+    is_need_verify: "all",
     ...Object.fromEntries(queryParams.entries()),
   });
 
@@ -211,6 +215,18 @@ export default function MemberPage() {
               <SelectItem key="approved">Terverifikasi</SelectItem>
               <SelectItem key="rejected">Ditolak</SelectItem>
             </CustomSelect>
+            <CustomSelect
+              className="w-48"
+              label="Butuh Verifikasi"
+              labelPlacement="inside"
+              placeholder="Butuh Verifikasi"
+              selectedKeys={[query.is_need_verify || "all"]}
+              onChange={(e) => setQueryParams("is_need_verify", e.target.value)}
+            >
+              <SelectItem key="all">Semua</SelectItem>
+              <SelectItem key="yes">Butuh Verifikasi</SelectItem>
+              <SelectItem key="no">Tidak Butuh</SelectItem>
+            </CustomSelect>
           </div>
           <div className="flex justify-between gap-2">
             <div>
@@ -223,6 +239,27 @@ export default function MemberPage() {
                 }}
               />
             </div>
+            <Button
+              color="success"
+              isLoading={exporting}
+              startContent={!exporting ? <DownloadIcon size={16} /> : null}
+              variant="shadow"
+              onPress={() =>
+                handleDownloadExcel(
+                  "/members/export",
+                  {
+                    q: query.q,
+                    status: query.status,
+                    verification_status: query.verification_status,
+                    is_need_verify: query.is_need_verify,
+                  },
+                  `members-${dayjs().format("YYYYMMDD-HHmmss")}`,
+                  setExporting,
+                )
+              }
+            >
+              Export Excel
+            </Button>
             <Button
               color="primary"
               variant="shadow"
