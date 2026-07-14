@@ -1,67 +1,86 @@
-import { useEffect, useState } from "react";
 import { Card, CardBody, CardHeader } from "@heroui/react";
 import ReactApexChart from "react-apexcharts";
 
-import { http } from "@/config/axios";
-import { notifyError } from "@/utils/helpers/notify";
+interface Props {
+  submission?: number;
+  approved?: number;
+  rejected?: number;
+  loading?: boolean;
+}
 
-export default function ChartPie() {
-  const [state, setState] = useState({
-    series: [44, 55, 13],
-    options: {
-      chart: {
-        width: 380,
-        type: "pie",
+export default function ChartPie({
+  submission = 0,
+  approved = 0,
+  rejected = 0,
+  loading,
+}: Props) {
+  const series = [submission, approved, rejected];
+  const total = series.reduce((a, b) => a + b, 0);
+
+  const options: ApexCharts.ApexOptions = {
+    chart: {
+      type: "donut",
+      fontFamily: "inherit",
+    },
+    labels: ["Pengajuan", "Disetujui", "Ditolak"],
+    colors: ["#a1a1aa", "#15980d", "#f31260"],
+    legend: {
+      position: "bottom",
+    },
+    dataLabels: {
+      enabled: true,
+      style: {
+        fontSize: "13px",
+        fontWeight: "bold",
+        colors: ["#ffffff"],
       },
-      labels: ["Pengajuan", "Disetujui", "Di Totak"],
-      colors: ["#b6b4b9", "#15980d", "#f31260"],
-      dataLabels: {
-        style: {
-          fontSize: "16px",
-          fontWeight: "bold",
-          colors: ["#ffffff"], // warna label dalam chart
-        },
-      } as ApexCharts.ApexOptions,
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200,
-            },
-            legend: {
-              position: "bottom",
+    },
+    plotOptions: {
+      pie: {
+        donut: {
+          size: "62%",
+          labels: {
+            show: true,
+            total: {
+              show: true,
+              label: "Total",
+              formatter: () => String(total),
             },
           },
         },
-      ] as any,
+      },
     },
-  });
-
-  useEffect(() => {
-    http
-      .get("/dashboard/members")
-      .then(({ data }) => {
-        const { submission, approved, rejected } = data;
-
-        setState((e) => ({
-          ...e,
-          series: [submission, approved, rejected],
-        }));
-      })
-      .catch((err) => notifyError(err));
-  }, []);
+    stroke: {
+      width: 2,
+      colors: ["#fff"],
+    },
+  };
 
   return (
-    <Card>
-      <CardHeader>Data Anggota PPPI</CardHeader>
-      <CardBody>
-        <ReactApexChart
-          options={state.options as any}
-          series={state.series}
-          type="pie"
-          width={380}
-        />
+    <Card className="h-full border border-default-100 shadow-sm">
+      <CardHeader className="flex flex-col items-start gap-1 pb-0">
+        <p className="text-lg font-semibold">Status Keanggotaan</p>
+        <p className="text-sm text-default-400">
+          Sebaran pengajuan, disetujui, dan ditolak
+        </p>
+      </CardHeader>
+      <CardBody className="flex items-center justify-center">
+        {loading ? (
+          <div className="flex h-[280px] items-center text-default-400">
+            Memuat chart...
+          </div>
+        ) : total === 0 ? (
+          <div className="flex h-[280px] items-center text-default-400">
+            Belum ada data anggota
+          </div>
+        ) : (
+          <ReactApexChart
+            options={options}
+            series={series}
+            type="donut"
+            width="100%"
+          />
+        )}
       </CardBody>
     </Card>
   );
