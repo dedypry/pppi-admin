@@ -13,10 +13,11 @@ export const getUser = createAsyncThunk(
     pageSize = 10,
     q = "",
     status = "",
+    verification_status = "",
   }: IQueryPagination) => {
     try {
       const { data } = await http.get(
-        `/members?page=${page}&pageSize=${pageSize}&q=${q}&status=${status}`,
+        `/members?page=${page}&pageSize=${pageSize}&q=${q}&status=${status}&verification_status=${verification_status}`,
       );
 
       return data;

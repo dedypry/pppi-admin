@@ -2,7 +2,8 @@ interface Config {
   front: string;
   api: string;
   gallery: string;
-  socket: string;
+  pusherKey: string;
+  pusherCluster: string;
 }
 
 interface IConfigs {
@@ -17,14 +18,16 @@ const configs: IConfigs = {
   local: {
     front: "http://localhost:5174",
     api: "http://127.0.0.1:3333",
-    socket: "http://127.0.0.1:3334",
     gallery: "http://127.0.0.1:9876",
+    pusherKey: "ed31e29e169f6f779fbb",
+    pusherCluster: "ap1",
   },
   production: {
     front: "https://dpn-pppi.org",
     api: "https://api.dpn-pppi.org",
-    socket: "https://socket.dpn-pppi.org",
     gallery: "https://gallery.dpn-pppi.org",
+    pusherKey: "ed31e29e169f6f779fbb",
+    pusherCluster: "ap1",
   },
 };
 

@@ -7,7 +7,7 @@ import FormComment from "./form-comment";
 import { IComment } from "@/interface/IBlogs";
 import { dateFormat } from "@/utils/helpers/formater";
 import { confirmSweet } from "@/utils/helpers/confirm";
-import { socket } from "@/utils/helpers/socket.io";
+import { http } from "@/config/axios";
 
 interface Props {
   comment: IComment;
@@ -40,7 +40,7 @@ export default function CardComment({ comment }: Props) {
                 className="text-danger-300 cursor-pointer"
                 onClick={() =>
                   confirmSweet(() =>
-                    socket.emit("delete-comment", { id: comment.id }),
+                    http.delete(`/blog-comments/${comment.id}`),
                   )
                 }
               />

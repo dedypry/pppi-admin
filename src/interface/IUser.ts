@@ -96,6 +96,10 @@ export interface IUser {
   created_at: string;
   bio: string;
   roles: IRole[];
+  is_need_verify: boolean;
+  is_verified: boolean;
+  verification_status?: string | null;
+  verification_note?: string | null;
 }
 
 export interface ICreateMember {

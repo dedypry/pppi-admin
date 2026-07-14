@@ -20,6 +20,7 @@ import {
   Pagination,
   SelectItem,
   Alert,
+  Selection,
 } from "@heroui/react";
 import {
   SearchIcon,
@@ -47,11 +48,13 @@ import { chipColor } from "@/utils/helpers/global";
 export default function MemberPage() {
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
+  const [selectedRows, setSelectedRows] = useState<Selection>(new Set([]));
   const [query, setQuery] = useState({
     q: "",
     pageSize: "10",
     page: 1,
     status: "submission",
+    verification_status: "all",
     ...Object.fromEntries(queryParams.entries()),
   });
 
@@ -96,6 +99,79 @@ export default function MemberPage() {
     route(`?${params}`, { replace: true });
   }, [query]);
 
+  function handleSendEmailVerification() {
+    let ids: number[] = [];
+
+    if (selectedRows === "all") {
+      ids = list.data?.map((user) => Number(user?.id)) || [];
+    } else {
+      ids = Array.from(selectedRows).map((id) => Number(id));
+    }
+    http
+      .post(`/users/send-email-verification`, { ids })
+      .then(({ data }) => {
+        notify(data.message);
+        dispatch(getUser(query));
+        setSelectedRows(new Set([]));
+      })
+      .catch((err) => notifyError(err));
+  }
+
+  function handleApproveVerification(id: number, approved: boolean) {
+    confirmSweet(
+      () => {
+        http
+          .patch(`/users/${id}/approve-verification`, { approved })
+          .then(({ data }) => {
+            notify(data.message);
+            dispatch(getUser(query));
+          })
+          .catch((err) => notifyError(err));
+      },
+      {
+        text: approved
+          ? "Setujui verifikasi anggota ini?"
+          : "Tolak verifikasi anggota ini?",
+        confirmButtonText: approved ? "Ya, setujui" : "Ya, tolak",
+        confirmButtonColor: approved ? "#15980d" : "#f31260",
+      },
+    );
+  }
+
+  function verificationLabel(status?: string | null) {
+    switch (status) {
+      case "pending":
+        return "Email Terkirim";
+      case "re_verified":
+        return "Re Verified";
+      case "submitted":
+        return "Menunggu Approve";
+      case "approved":
+        return "Terverifikasi";
+      case "rejected":
+        return "Ditolak";
+      default:
+        return "Belum Dikirim";
+    }
+  }
+
+  function verificationColor(status?: string | null) {
+    switch (status) {
+      case "pending":
+        return "warning";
+      case "re_verified":
+        return "secondary";
+      case "submitted":
+        return "primary";
+      case "approved":
+        return "success";
+      case "rejected":
+        return "danger";
+      default:
+        return "default";
+    }
+  }
+
   return (
     <>
       <Card>
@@ -117,6 +193,23 @@ export default function MemberPage() {
               <SelectItem key="submission">Submission</SelectItem>
               <SelectItem key="rejected">Reject</SelectItem>
               <SelectItem key="approved">Approve</SelectItem>
+            </CustomSelect>
+            <CustomSelect
+              className="w-48"
+              label="Verifikasi"
+              labelPlacement="inside"
+              placeholder="Status Verifikasi"
+              selectedKeys={[query.verification_status || "all"]}
+              onChange={(e) =>
+                setQueryParams("verification_status", e.target.value)
+              }
+            >
+              <SelectItem key="all">Semua Verifikasi</SelectItem>
+              <SelectItem key="pending">Email Terkirim</SelectItem>
+              <SelectItem key="re_verified">Re Verified</SelectItem>
+              <SelectItem key="submitted">Menunggu Approve</SelectItem>
+              <SelectItem key="approved">Terverifikasi</SelectItem>
+              <SelectItem key="rejected">Ditolak</SelectItem>
             </CustomSelect>
           </div>
           <div className="flex justify-between gap-2">
@@ -141,12 +234,30 @@ export default function MemberPage() {
         </CardHeader>
 
         <CardBody>
-          <Table removeWrapper>
+          <div className="flex justify-between mb-4">
+            <div />
+            {(selectedRows === "all" || selectedRows.size > 0) && (
+              <Button
+                color="danger"
+                size="sm"
+                onPress={handleSendEmailVerification}
+              >
+                Kirim Email Verifikasi
+              </Button>
+            )}
+          </div>
+          <Table
+            removeWrapper
+            selectedKeys={selectedRows}
+            selectionMode="multiple"
+            onSelectionChange={(keys) => setSelectedRows(keys)}
+          >
             <TableHeader>
               <TableColumn className="text-center">Photo</TableColumn>
               <TableColumn className="text-center">User</TableColumn>
               <TableColumn>Address</TableColumn>
               <TableColumn>Latar Belakang</TableColumn>
+              <TableColumn>Status Verifikasi</TableColumn>
               <TableColumn> </TableColumn>
             </TableHeader>
             <TableBody emptyContent={<EmptyContent />}>
@@ -272,6 +383,41 @@ export default function MemberPage() {
                           title="Catatan"
                         />
                       )}
+                    </TableCell>
+                    <TableCell className="w-60">
+                      <div className="flex flex-col gap-2">
+                        <Chip
+                          color={verificationColor(user?.verification_status) as any}
+                          size="sm"
+                          variant="flat"
+                        >
+                          {verificationLabel(user?.verification_status)}
+                        </Chip>
+                        {user?.verification_status === "submitted" && (
+                          <div className="flex gap-1">
+                            <Button
+                              color="success"
+                              size="sm"
+                              variant="flat"
+                              onPress={() =>
+                                handleApproveVerification(user.id, true)
+                              }
+                            >
+                              Approve
+                            </Button>
+                            <Button
+                              color="danger"
+                              size="sm"
+                              variant="flat"
+                              onPress={() =>
+                                handleApproveVerification(user.id, false)
+                              }
+                            >
+                              Tolak
+                            </Button>
+                          </div>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell>
                       <Dropdown>

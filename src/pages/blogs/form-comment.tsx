@@ -3,7 +3,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
-import { socket } from "@/utils/helpers/socket.io";
+import { http } from "@/config/axios";
 import { ICreateBlogComment } from "@/interface/IBlogs";
 import { setUserComment } from "@/stores/features/auth/authSlice";
 import UploadAvatar from "@/components/forms/upload-avatar";
@@ -63,20 +63,23 @@ export default function FormComment({ blogId, parentId }: Props) {
     }
   }, [user]);
 
-  function onSubmit(data: ICreateBlogComment) {
+  async function onSubmit(data: ICreateBlogComment) {
     setProcessing(true);
 
-    socket.emit("sendComment", data);
-    setProcessing(false);
-    setValue("content", "");
-    dispatch(
-      setUserComment({
-        show: !!data.name && !!data.email,
-        name: data.name,
-        email: data.email,
-        avatar: data.avatar,
-      }),
-    );
+    try {
+      await http.post("/blog-comments", data);
+      setValue("content", "");
+      dispatch(
+        setUserComment({
+          show: !!data.name && !!data.email,
+          name: data.name,
+          email: data.email,
+          avatar: data.avatar,
+        }),
+      );
+    } finally {
+      setProcessing(false);
+    }
   }
 
   return (

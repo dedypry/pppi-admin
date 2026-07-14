@@ -11,4 +11,5 @@ export interface IQueryPagination {
   pageSize?: number | string;
   q?: string;
   status?: string;
+  verification_status?: string;
 }

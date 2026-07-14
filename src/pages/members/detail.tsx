@@ -12,8 +12,15 @@ import {
   ModalHeader,
   ModalBody,
   Divider,
+  Textarea,
+  Alert,
 } from "@heroui/react";
-import { DownloadIcon, EditIcon, MailCheckIcon } from "lucide-react";
+import {
+  DownloadIcon,
+  EditIcon,
+  MailCheckIcon,
+  RefreshCwIcon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { saveAs } from "file-saver";
@@ -32,6 +39,40 @@ import { confirmSweet } from "@/utils/helpers/confirm";
 import CustomInput from "@/components/forms/custom-input";
 import RegisterMember from "@/components/auth/register";
 
+function verificationLabel(status?: string | null) {
+  switch (status) {
+    case "pending":
+      return "Email Terkirim";
+    case "re_verified":
+      return "Re Verified";
+    case "submitted":
+      return "Menunggu Approve";
+    case "approved":
+      return "Terverifikasi";
+    case "rejected":
+      return "Ditolak";
+    default:
+      return "Belum Dikirim";
+  }
+}
+
+function verificationColor(status?: string | null) {
+  switch (status) {
+    case "pending":
+      return "warning";
+    case "re_verified":
+      return "secondary";
+    case "submitted":
+      return "primary";
+    case "approved":
+      return "success";
+    case "rejected":
+      return "danger";
+    default:
+      return "default";
+  }
+}
+
 export default function MemberDetail() {
   const [modal, setModal] = useState(false);
   const { detail: user } = useAppSelector((state) => state.user);
@@ -40,10 +81,16 @@ export default function MemberDetail() {
   const [loading, setLoading] = useState(false);
   const [isSendMail, setIsSendMail] = useState(false);
   const [nia, setNia] = useState("");
+  const [verificationNote, setVerificationNote] = useState("");
+  const [verifying, setVerifying] = useState(false);
 
   useEffect(() => {
     dispatch(getUserDetail({ id: id as any }));
   }, []);
+
+  useEffect(() => {
+    setVerificationNote(user?.verification_note || "");
+  }, [user?.verification_note]);
 
   async function downloadKta() {
     setLoading(true);
@@ -53,7 +100,7 @@ export default function MemberDetail() {
       });
 
       const contentDisposition = response.headers["content-disposition"];
-      let filename = `kta-${user?.name}.pdf`; // fallback
+      let filename = `kta-${user?.name}.pdf`;
 
       if (contentDisposition) {
         const match = contentDisposition.match(/filename="?(.+)"?/);
@@ -65,7 +112,6 @@ export default function MemberDetail() {
       saveAs(response.data, filename);
     } catch (error) {
       console.error("Gagal mengunduh file:", error);
-
       notify("Gagal mengunduh file", "error");
     } finally {
       setLoading(false);
@@ -81,6 +127,69 @@ export default function MemberDetail() {
       })
       .catch((err) => notifyError(err))
       .finally(() => setIsSendMail(false));
+  }
+
+  function resendVerification() {
+    if (!verificationNote.trim()) {
+      notify("Catatan verifikasi wajib diisi", "error");
+
+      return;
+    }
+
+    confirmSweet(
+      () => {
+        setVerifying(true);
+        http
+          .post(`/users/send-email-verification`, {
+            ids: [Number(user?.id)],
+            note: verificationNote,
+            resend: true,
+          })
+          .then(({ data }) => {
+            notify(data.message);
+            dispatch(getUserDetail({ id: id as any }));
+          })
+          .catch((err) => notifyError(err))
+          .finally(() => setVerifying(false));
+      },
+      {
+        text: "Kirim ulang email verifikasi ke anggota ini?",
+        confirmButtonText: "Ya, kirim",
+        confirmButtonColor: "#15980d",
+      },
+    );
+  }
+
+  function handleApproveVerification(approved: boolean) {
+    if (!approved && !verificationNote.trim()) {
+      notify("Catatan penolakan wajib diisi", "error");
+
+      return;
+    }
+
+    confirmSweet(
+      () => {
+        setVerifying(true);
+        http
+          .patch(`/users/${user?.id}/approve-verification`, {
+            approved,
+            note: verificationNote || undefined,
+          })
+          .then(({ data }) => {
+            notify(data.message);
+            dispatch(getUserDetail({ id: id as any }));
+          })
+          .catch((err) => notifyError(err))
+          .finally(() => setVerifying(false));
+      },
+      {
+        text: approved
+          ? "Setujui verifikasi anggota ini?"
+          : "Tolak verifikasi anggota ini?",
+        confirmButtonText: approved ? "Ya, setujui" : "Ya, tolak",
+        confirmButtonColor: approved ? "#15980d" : "#f31260",
+      },
+    );
   }
 
   return (
@@ -160,6 +269,72 @@ export default function MemberDetail() {
               </Chip>
             </CardFooter>
           </Card>
+
+          <Card>
+            <CardHeader className="flex items-center justify-between">
+              <p className="font-bold text-gray-600">Status Verifikasi</p>
+              <Chip
+                color={verificationColor(user?.verification_status) as any}
+                size="sm"
+                variant="flat"
+              >
+                {verificationLabel(user?.verification_status)}
+              </Chip>
+            </CardHeader>
+            <CardBody className="flex flex-col gap-3">
+              {user?.verification_note && (
+                <Alert
+                  color={
+                    user?.verification_status === "rejected"
+                      ? "danger"
+                      : "primary"
+                  }
+                  description={user.verification_note}
+                  title="Catatan Verifikasi"
+                />
+              )}
+              <Textarea
+                label="Catatan Verifikasi"
+                minRows={3}
+                placeholder="Tulis catatan untuk verify, reject, atau ulangi verifikasi"
+                value={verificationNote}
+                onChange={(e) => setVerificationNote(e.target.value)}
+              />
+              <Button
+                fullWidth
+                color="warning"
+                isLoading={verifying}
+                startContent={<RefreshCwIcon size={16} />}
+                variant="shadow"
+                onPress={resendVerification}
+              >
+                Ulangi Verifikasi
+              </Button>
+              <div className="flex gap-2">
+                <Button
+                  fullWidth
+                  color="danger"
+                  isLoading={verifying}
+                  radius="full"
+                  size="sm"
+                  onPress={() => handleApproveVerification(false)}
+                >
+                  Reject
+                </Button>
+                <Button
+                  fullWidth
+                  color="success"
+                  isLoading={verifying}
+                  radius="full"
+                  size="sm"
+                  onPress={() => handleApproveVerification(true)}
+                >
+                  Verify
+                </Button>
+              </div>
+            </CardBody>
+          </Card>
+
           {user?.status == "rejected" && user?.rejected_note && (
             <Card>
               <CardBody>
@@ -288,14 +463,12 @@ export default function MemberDetail() {
                 val={user?.profile?.workplace!}
                 width={150}
               />
-
               <TextHeader
                 fontSize="13px"
                 title="Kontribusi"
                 val={user?.profile?.contribution || ""}
                 width={150}
               />
-
               <TextHeader
                 fontSize="13px"
                 title="Provinsi"
@@ -314,7 +487,6 @@ export default function MemberDetail() {
                 val={user?.profile?.district?.name!}
                 width={150}
               />
-
               <TextHeader
                 fontSize="13px"
                 horizontal={true}
@@ -331,14 +503,12 @@ export default function MemberDetail() {
                 width={150}
               />
               <Divider />
-
               <TextHeader
                 fontSize="13px"
                 title="Bersedia membayar"
                 val={user?.profile?.is_member_payment ? "Bersedia" : "Tidak"}
                 width={150}
               />
-
               <TextHeader
                 fontSize="13px"
                 horizontal={true}

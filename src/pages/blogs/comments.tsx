@@ -5,7 +5,7 @@ import FormComment from "./form-comment";
 import CardComment from "./card-comment";
 
 import { IBlog } from "@/interface/IBlogs";
-import { socket } from "@/utils/helpers/socket.io";
+import { pusher } from "@/utils/helpers/pusher";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { getBlogComment } from "@/stores/features/blogs/actions";
 
@@ -20,14 +20,17 @@ export default function Comment({ blog }: Props) {
 
   useEffect(() => {
     dispatch(getBlogComment({ id: blog.id }));
-    socket.on(`comment-${blog.slug}`, (msg) => {
+
+    const channel = pusher.subscribe(`comment-${blog.slug}`);
+    channel.bind("refresh", (msg: { action?: string }) => {
       if (msg.action === "refresh") {
         dispatch(getBlogComment({ id: blog.id }));
       }
     });
 
     return () => {
-      socket.off("comment");
+      channel.unbind_all();
+      pusher.unsubscribe(`comment-${blog.slug}`);
     };
   }, []);
 

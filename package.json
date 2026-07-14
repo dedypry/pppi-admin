@@ -32,6 +32,7 @@
     "framer-motion": "11.18.2",
     "keen-slider": "^6.8.6",
     "lucide-react": "^0.536.0",
+    "pusher-js": "^8.5.0",
     "react": "18.3.1",
     "react-apexcharts": "^1.7.0",
     "react-date-range": "^2.0.1",
@@ -44,7 +45,6 @@
     "react-router-dom": "6.23.0",
     "react-spinners": "^0.17.0",
     "redux-persist": "^6.0.0",
-    "socket.io-client": "^4.8.1",
     "sweetalert2": "^11.22.2",
     "tailwind-variants": "2.0.1",
     "tailwindcss": "4.1.11"
