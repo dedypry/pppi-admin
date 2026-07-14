@@ -82,6 +82,7 @@ export interface IUser {
   back_title?: string;
   nia: string;
   job_title?: string;
+  job_titles?: string[];
   email: string;
   last_login: string;
   is_active: boolean;
@@ -108,6 +109,7 @@ export interface ICreateMember {
   join_year: string;
   front_title: string;
   back_title: string;
+  job_titles: string[];
   sort: string;
   nik: string;
   name: string;

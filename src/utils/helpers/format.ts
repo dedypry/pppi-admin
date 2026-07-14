@@ -68,3 +68,20 @@ export function capitalizeStatus(str: string) {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
+
+/** Parse job_title from API (JSON array string or legacy plain string). */
+export function parseJobTitles(value?: string | null): string[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) {
+      return parsed.map(String).map((t) => t.trim()).filter(Boolean);
+    }
+  } catch {
+    // legacy plain string
+  }
+  return value
+    .split(",")
+    .map((t) => t.trim())
+    .filter(Boolean);
+}

@@ -21,7 +21,7 @@ export default function InputTags({
       const trimmed = tags.trim();
 
       if (trimmed && !items.includes(trimmed)) {
-        onTags([...items, tags]);
+        onTags([...items, trimmed]);
         setTags("");
       }
     }

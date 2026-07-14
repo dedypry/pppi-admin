@@ -35,6 +35,7 @@ import { getUserDetail, handleApprove } from "@/stores/features/user/action";
 import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
 import { chipColor } from "@/utils/helpers/global";
+import { parseJobTitles } from "@/utils/helpers/format";
 import { confirmSweet } from "@/utils/helpers/confirm";
 import CustomInput from "@/components/forms/custom-input";
 import RegisterMember from "@/components/auth/register";
@@ -249,6 +250,18 @@ export default function MemberDetail() {
                 val={user?.name!}
               />
               <TextHeader title="Email" val={user?.email!} />
+              {parseJobTitles(user?.job_title).length > 0 && (
+                <div className="flex flex-wrap items-start gap-2 py-1">
+                  <p className="min-w-[80px] text-sm text-gray-500">Job Title</p>
+                  <div className="flex flex-wrap gap-1">
+                    {parseJobTitles(user?.job_title).map((title) => (
+                      <Chip key={title} color="secondary" size="sm" variant="flat">
+                        {title}
+                      </Chip>
+                    ))}
+                  </div>
+                </div>
+              )}
               <TextHeader
                 title="Lahir"
                 val={`${user?.profile?.place_birth}, ${dateFormat(user?.profile?.date_birth! as string)}`}

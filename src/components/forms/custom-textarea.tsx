@@ -5,6 +5,8 @@ function CustomTextArea(
   { ...props }: TextAreaProps,
   ref: React.Ref<HTMLTextAreaElement>,
 ) {
+  const value = props.value == null ? "" : props.value;
+
   return (
     <Textarea
       ref={ref}
@@ -16,6 +18,7 @@ function CustomTextArea(
       labelPlacement="outside"
       variant="bordered"
       {...props}
+      value={value}
     />
   );
 }

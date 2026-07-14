@@ -46,6 +46,7 @@ import EmptyContent from "@/components/empty-content";
 import PageSize from "@/components/page-size";
 import CustomSelect from "@/components/forms/custom-select";
 import { chipColor, handleDownloadExcel } from "@/utils/helpers/global";
+import { parseJobTitles } from "@/utils/helpers/format";
 
 export default function MemberPage() {
   const { search } = useLocation();
@@ -334,6 +335,15 @@ export default function MemberPage() {
                         </p>
                       </div>
                       <p className="pl-5">{user?.email}</p>
+                      {parseJobTitles(user?.job_title).length > 0 && (
+                        <div className="mt-1 flex flex-wrap justify-center gap-1">
+                          {parseJobTitles(user?.job_title).map((title) => (
+                            <Chip key={title} color="secondary" size="sm" variant="flat">
+                              {title}
+                            </Chip>
+                          ))}
+                        </div>
+                      )}
                       <Button
                         className="mt-1"
                         color="primary"

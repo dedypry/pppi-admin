@@ -2,12 +2,15 @@ import { Avatar, Card, CardBody } from "@heroui/react";
 import { PlusCircleIcon } from "lucide-react";
 
 import { IOrganizations } from "@/interface/IOrganization";
+import { parseJobTitles } from "@/utils/helpers/format";
 
 interface Props {
   item?: IOrganizations;
   title?: string;
 }
 export default function CardItemOrg({ item, title }: Props) {
+  const jobTitles = parseJobTitles(item?.user?.job_title).join(", ");
+
   return (
     <div className="inline-block relative">
       {item?.title || title ? (
@@ -18,7 +21,7 @@ export default function CardItemOrg({ item, title }: Props) {
               {item?.user && (
                 <>
                   <div className="text-center">
-                    <p className="m-0 p-0 text-xs">{item?.user?.job_title}</p>
+                    <p className="m-0 p-0 text-xs">{jobTitles}</p>
                     <p className="m-0 p-0 text-[10px] text-gray-500">
                       {item?.user?.name}
                     </p>

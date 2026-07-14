@@ -2,6 +2,8 @@ import { Input, InputProps } from "@heroui/react";
 import { forwardRef } from "react";
 
 function CustomInput(props: InputProps, ref: React.Ref<HTMLInputElement>) {
+  const value = props.value == null ? "" : props.value;
+
   return (
     <Input
       ref={ref}
@@ -12,6 +14,7 @@ function CustomInput(props: InputProps, ref: React.Ref<HTMLInputElement>) {
       labelPlacement="outside"
       variant="bordered"
       {...props}
+      value={value}
     />
   );
 }

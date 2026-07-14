@@ -24,7 +24,9 @@ import CustomTextArea from "@/components/forms/custom-textarea";
 import { educations } from "@/config/app";
 import AttachmentSingleFile from "@/components/forms/attacment-singgle-file";
 import InputPhotoProfile from "@/components/forms/input-photo-profile";
+import InputTags from "@/components/forms/input-tags";
 import debounce from "@/utils/helpers/debounce";
+import { parseJobTitles } from "@/utils/helpers/format";
 import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
 interface Props {
@@ -60,6 +62,7 @@ export default function RegisterMember({
       join_year: dayjs().format("YY"),
       front_title: "",
       back_title: "",
+      job_titles: [] as string[],
       sort: "",
       nik: "",
       name: "",
@@ -89,40 +92,44 @@ export default function RegisterMember({
     if (user) {
       setValue("id", user.id);
       setValue("profile_id", user?.profile?.id);
-      setValue("join_year", user?.join_year as any);
-      setValue("front_title", user?.front_title as string);
-      setValue("back_title", user?.back_title as string);
-      setValue("sort", user?.sort as any);
-      setValue("nik", user?.profile.nik);
-      setValue("name", user?.name);
-      setValue("email", user?.email);
-      setValue("place_birth", user?.profile.place_birth);
+      setValue("join_year", (user?.join_year ?? "") as any);
+      setValue("front_title", user?.front_title ?? "");
+      setValue("back_title", user?.back_title ?? "");
+      setValue("job_titles", parseJobTitles(user?.job_title));
+      setValue("sort", (user?.sort ?? "") as any);
+      setValue("nik", user?.profile?.nik ?? "");
+      setValue("name", user?.name ?? "");
+      setValue("email", user?.email ?? "");
+      setValue("place_birth", user?.profile?.place_birth ?? "");
       setValue(
         "date_birth",
         dayjs(user?.profile.date_birth).format("DD MMMM YYYY").trim(),
       );
-      setValue("gender", user?.profile.gender);
-      setValue("citizenship", user?.profile.citizenship);
-      setValue("address", user?.profile.address);
+      setValue("gender", user?.profile?.gender ?? "");
+      setValue("citizenship", user?.profile?.citizenship ?? "");
+      setValue("address", user?.profile?.address ?? "");
       setValue("province_id", user?.profile.province_id);
       setValue("city_id", user?.profile.city_id);
       setValue("district_id", user?.profile.district_id);
-      setValue("phone", user?.profile.phone);
+      setValue("phone", user?.profile?.phone ?? "");
       setValue(
         "last_education_nursing",
-        user?.profile?.last_education_nursing.toUpperCase(),
+        user?.profile?.last_education_nursing?.toUpperCase() ?? "",
       );
-      setValue("last_education", user?.profile?.last_education);
-      setValue("workplace", user?.profile?.workplace);
-      setValue("hope_in", user?.profile?.hope_in);
-      setValue("contribution", user?.profile?.contribution);
+      setValue("last_education", user?.profile?.last_education ?? "");
+      setValue("workplace", user?.profile?.workplace ?? "");
+      setValue("hope_in", user?.profile?.hope_in ?? "");
+      setValue("contribution", user?.profile?.contribution ?? "");
       setValue(
         "is_member_payment",
         user?.profile.is_member_payment ? "yes" : "no",
       );
-      setValue("reason_reject", user?.profile.reason_reject);
-      setValue("photo", user?.profile.photo);
-      setValue("member_payment_file", user?.profile.member_payment_file);
+      setValue("reason_reject", user?.profile?.reason_reject ?? "");
+      setValue("photo", user?.profile?.photo ?? "");
+      setValue(
+        "member_payment_file",
+        user?.profile?.member_payment_file ?? "",
+      );
     } else {
       reset();
     }
@@ -203,7 +210,7 @@ export default function RegisterMember({
                 labelPlacement="outside-left"
                 size="sm"
                 type="number"
-                value={watch("sort")}
+                value={watch("sort") ?? ""}
                 onChange={(e) => setValue("sort", e.target.value)}
               />
             </div>
@@ -277,6 +284,21 @@ export default function RegisterMember({
                     isInvalid={!!errors.back_title}
                     label="Gelar Belakang"
                     placeholder="contoh S.Kep, Ners ..."
+                  />
+                )}
+              />
+            </div>
+            <div className="col-span-12">
+              <Controller
+                control={control}
+                name="job_titles"
+                render={({ field }) => (
+                  <InputTags
+                    description="Tekan Enter untuk menambah job title. Satu anggota bisa punya beberapa job title."
+                    items={field.value || []}
+                    label="Job Title"
+                    placeholder="Contoh: Ketua, Sekretaris, Bendahara"
+                    onTags={(tags: string[]) => field.onChange(tags)}
                   />
                 )}
               />
