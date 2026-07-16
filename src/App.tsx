@@ -20,6 +20,7 @@ import CityPage from "./pages/settings/regions/city";
 import DistrictPage from "./pages/settings/regions/district";
 import DepartmentPage from "./pages/settings/department";
 import OrganizationPage from "./pages/organization";
+import KepengurusanPage from "./pages/kepengurusan";
 import RolePage from "./pages/settings/roles";
 import AppsPage from "./pages/settings/apps";
 import PackagePage from "./pages/patners/packages";
@@ -56,6 +57,7 @@ function App() {
 
         <Route element={<AgendaPage />} path="/agenda" />
         <Route element={<OrganizationPage />} path="/organization" />
+        <Route element={<KepengurusanPage />} path="/kepengurusan" />
 
         <Route path="/blogs">
           <Route element={<BlogPage />} path="" />

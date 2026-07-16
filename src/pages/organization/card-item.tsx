@@ -1,5 +1,6 @@
 import { Avatar, Card, CardBody } from "@heroui/react";
 import { PlusCircleIcon, UserRoundIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 import { IOrganizations } from "@/interface/IOrganization";
 import { formatNia } from "@/utils/helpers/format";
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function CardItemOrg({ item, title, onPickUser }: Props) {
+  const navigate = useNavigate();
   const fullName = [item?.user?.front_title, item?.user?.name, item?.user?.back_title]
     .filter(Boolean)
     .join(" ");
@@ -39,9 +41,17 @@ export default function CardItemOrg({ item, title, onPickUser }: Props) {
                   {fullName}
                 </p>
                 {item.user.nia && (
-                  <p className="m-0 p-0 text-[10px] text-cyan-700">
+                  <button
+                    className="m-0 cursor-pointer border-0 bg-transparent p-0 text-[10px] text-cyan-700 underline-offset-2 hover:underline"
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/member/${item.user!.id}`);
+                    }}
+                    onPointerDown={(e) => e.stopPropagation()}
+                  >
                     {formatNia(item.user.nia)}
-                  </p>
+                  </button>
                 )}
               </div>
             ) : (

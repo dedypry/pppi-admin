@@ -31,6 +31,11 @@ export const navigate = [
     href: "/organization",
   },
   {
+    title: "Kepengurusan",
+    icon: ShieldEllipsis,
+    href: "/kepengurusan",
+  },
+  {
     title: "Agenda",
     icon: CalendarRangeIcon,
     href: "/agenda",
