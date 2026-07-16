@@ -1,7 +1,7 @@
 import { Avatar, Card, CardBody } from "@heroui/react";
 
 import { IUser } from "@/interface/IUser";
-import { parseJobTitles } from "@/utils/helpers/format";
+import { formatNia, parseJobTitles } from "@/utils/helpers/format";
 interface Props {
   user: IUser;
 }
@@ -16,7 +16,9 @@ export default function OrganizationCard({ user }: Props) {
           <div className="text-center">
             <p className="m-0 p-0 text-xs">{jobTitles}</p>
             <p className="m-0 p-0 text-[10px] text-gray-500">{user.name}</p>
-            <p className="m-0 p-0 text-[10px] text-gray-500">{user.nia}</p>
+            <p className="m-0 p-0 text-[10px] text-gray-500">
+              {formatNia(user.nia)}
+            </p>
           </div>
         </CardBody>
       </Card>

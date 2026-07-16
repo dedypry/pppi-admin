@@ -34,6 +34,7 @@ import { IRole, IUser } from "@/interface/IUser";
 import { IPagination } from "@/interface/IPagination";
 import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
+import { formatNia } from "@/utils/helpers/format";
 
 interface IForm {
   roleId: string[];
@@ -264,7 +265,9 @@ export default function UserManagementPage() {
                   <TableCell>{item.name}</TableCell>
                   <TableCell>
                     <p>{item.email}</p>
-                    <p className="text-xs text-gray-500">{item.nia || "-"}</p>
+                    <p className="text-xs text-gray-500">
+                      {item.nia ? formatNia(item.nia) : "-"}
+                    </p>
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">

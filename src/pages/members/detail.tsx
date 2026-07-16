@@ -3,7 +3,6 @@ import {
   CardBody,
   Avatar,
   Chip,
-  CardFooter,
   Button,
   CardHeader,
   Image,
@@ -20,22 +19,28 @@ import {
   EditIcon,
   MailCheckIcon,
   RefreshCwIcon,
+  PhoneIcon,
+  MapPinIcon,
+  GraduationCapIcon,
+  BriefcaseIcon,
+  HashIcon,
+  CalendarIcon,
+  RotateCcwIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { saveAs } from "file-saver";
 
 import FormSetting from "./form-setting";
 
 import Gender from "@/components/gender";
-import TextHeader from "@/components/text-header";
 import { dateFormat } from "@/utils/helpers/formater";
 import { useAppDispatch, useAppSelector } from "@/stores/hooks";
 import { getUserDetail, handleApprove } from "@/stores/features/user/action";
 import { http } from "@/config/axios";
 import { notify, notifyError } from "@/utils/helpers/notify";
 import { chipColor } from "@/utils/helpers/global";
-import { parseJobTitles } from "@/utils/helpers/format";
+import { formatNia, parseJobTitles } from "@/utils/helpers/format";
 import { confirmSweet } from "@/utils/helpers/confirm";
 import CustomInput from "@/components/forms/custom-input";
 import RegisterMember from "@/components/auth/register";
@@ -74,6 +79,34 @@ function verificationColor(status?: string | null) {
   }
 }
 
+function InfoRow({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value?: string | null;
+  icon?: ReactNode;
+}) {
+  return (
+    <div className="flex gap-3 border-b border-default-100 py-3 last:border-b-0">
+      {icon && (
+        <div className="mt-0.5 text-gray-400 [&_svg]:h-4 [&_svg]:w-4">
+          {icon}
+        </div>
+      )}
+      <div className="min-w-0 flex-1">
+        <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+          {label}
+        </p>
+        <p className="mt-0.5 text-sm text-gray-700 break-words">
+          {value || "-"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function MemberDetail() {
   const [modal, setModal] = useState(false);
   const { detail: user } = useAppSelector((state) => state.user);
@@ -84,6 +117,12 @@ export default function MemberDetail() {
   const [nia, setNia] = useState("");
   const [verificationNote, setVerificationNote] = useState("");
   const [verifying, setVerifying] = useState(false);
+  const [renewingNia, setRenewingNia] = useState(false);
+
+  const fullName = [user?.front_title, user?.name, user?.back_title]
+    .filter(Boolean)
+    .join(" ");
+  const jobTitles = parseJobTitles(user?.job_title);
 
   useEffect(() => {
     dispatch(getUserDetail({ id: id as any }));
@@ -128,6 +167,27 @@ export default function MemberDetail() {
       })
       .catch((err) => notifyError(err))
       .finally(() => setIsSendMail(false));
+  }
+
+  function renewNia() {
+    confirmSweet(
+      () => {
+        setRenewingNia(true);
+        http
+          .patch(`/members/${user?.id}/renew-nia`)
+          .then(({ data }) => {
+            notify(data.message || "NIA berhasil diperbaharui");
+            dispatch(getUserDetail({ id: id as any }));
+          })
+          .catch((err) => notifyError(err))
+          .finally(() => setRenewingNia(false));
+      },
+      {
+        text: "NIA akan diganti dengan nomor urut terbaru. Lanjutkan?",
+        confirmButtonText: "Ya, perbaharui",
+        confirmButtonColor: "#15980d",
+      },
+    );
   }
 
   function resendVerification() {
@@ -194,7 +254,7 @@ export default function MemberDetail() {
   }
 
   return (
-    <div className="grid grid-cols-12 gap-5">
+    <div className="flex flex-col gap-5">
       <Modal
         isOpen={modal}
         scrollBehavior="outside"
@@ -226,66 +286,155 @@ export default function MemberDetail() {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <div className="col-span-12 md:col-span-4">
-        <div className="flex flex-col gap-4">
-          <Card>
-            <CardBody className="flex flex-col items-center gap-4">
-              <Avatar
-                isBordered
-                className="h-28 w-28"
-                color={user?.profile?.gender == "female" ? "danger" : "success"}
-                src={user?.profile?.photo}
-              />
-              {user?.nia && (
-                <Chip className="text-white" color="success">
-                  {user?.nia}
+
+      {/* Hero */}
+      <Card className="overflow-hidden border-none shadow-md">
+        <div className="relative bg-gradient-to-br from-primary-700 via-primary-600 to-secondary-600 px-6 pb-16 pt-6">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.12),transparent_50%)]" />
+          <div className="relative flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-white">
+                Detail Anggota
+              </p>
+              <h1 className="mt-1 text-2xl font-semibold !text-white sm:text-3xl">
+                {fullName || "-"}
+              </h1>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <Chip
+                  className="bg-white/15 text-white"
+                  size="sm"
+                  variant="flat"
+                >
+                  {user?.email || "-"}
                 </Chip>
-              )}
-            </CardBody>
-            <CardBody className="flex flex-col gap-1">
-              <TextHeader title="NIK" val={user?.profile?.nik!} />
-              <TextHeader
-                rightIcon={<Gender gender={user?.profile?.gender!} />}
-                title="Nama"
-                val={user?.name!}
-              />
-              <TextHeader title="Email" val={user?.email!} />
-              {parseJobTitles(user?.job_title).length > 0 && (
-                <div className="flex flex-wrap items-start gap-2 py-1">
-                  <p className="min-w-[80px] text-sm text-gray-500">Job Title</p>
-                  <div className="flex flex-wrap gap-1">
-                    {parseJobTitles(user?.job_title).map((title) => (
-                      <Chip key={title} color="secondary" size="sm" variant="flat">
-                        {title}
-                      </Chip>
-                    ))}
-                  </div>
+                <Chip
+                  color={chipColor(user?.status!) as any}
+                  size="sm"
+                  variant="solid"
+                >
+                  {user?.status || "-"}
+                </Chip>
+                <Chip
+                  color={verificationColor(user?.verification_status) as any}
+                  size="sm"
+                  variant="solid"
+                >
+                  {verificationLabel(user?.verification_status)}
+                </Chip>
+              </div>
+            </div>
+            <Button
+              className="bg-white/15 text-white backdrop-blur-sm"
+              radius="full"
+              startContent={<EditIcon size={16} />}
+              variant="flat"
+              onPress={() => setModal(true)}
+            >
+              Edit Data
+            </Button>
+          </div>
+        </div>
+        <CardBody className="relative -mt-10 px-6 pb-6">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-end">
+            <Avatar
+              isBordered
+              className="h-28 w-28 ring-4 ring-white"
+              color={user?.profile?.gender == "female" ? "danger" : "success"}
+              src={user?.profile?.photo}
+            />
+            <div className="flex flex-1 flex-col gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <Gender gender={user?.profile?.gender!} />
+                {jobTitles.map((title) => (
+                  <Chip key={title} color="secondary" size="sm" variant="flat">
+                    {title}
+                  </Chip>
+                ))}
+              </div>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="rounded-xl bg-default-50 px-4 py-3">
+                  <p className="text-[11px] uppercase tracking-wide text-gray-400">
+                    NIK
+                  </p>
+                  <p className="mt-1 font-medium text-gray-700">
+                    {user?.profile?.nik || "-"}
+                  </p>
                 </div>
-              )}
-              <TextHeader
-                title="Lahir"
-                val={`${user?.profile?.place_birth}, ${dateFormat(user?.profile?.date_birth! as string)}`}
-              />
-              <TextHeader title="Telp" val={user?.profile?.phone!} />
-            </CardBody>
-            <CardFooter className="flex justify-between">
-              <p className="text-[12px] text-gray-500">
-                Join Year : {user?.join_year}
-              </p>
-              <p className="text-[12px] text-gray-500">
-                Created At : {dateFormat(user?.created_at)}
-              </p>
-            </CardFooter>
-            <CardFooter className="flex justify-between">
-              <Chip color={chipColor(user?.status!) as any} variant="dot">
-                {user?.status}
+                <div className="rounded-xl bg-default-50 px-4 py-3">
+                  <p className="text-[11px] uppercase tracking-wide text-gray-400">
+                    Telepon
+                  </p>
+                  <p className="mt-1 font-medium text-gray-700">
+                    {user?.profile?.phone || "-"}
+                  </p>
+                </div>
+                <div className="rounded-xl bg-default-50 px-4 py-3">
+                  <p className="text-[11px] uppercase tracking-wide text-gray-400">
+                    Bergabung
+                  </p>
+                  <p className="mt-1 font-medium text-gray-700">
+                    {user?.join_year || "-"} · {dateFormat(user?.created_at)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
+
+      <div className="grid grid-cols-12 gap-5">
+        <div className="col-span-12 flex flex-col gap-4 lg:col-span-4">
+          {/* NIA Card */}
+          <Card className="border border-success-100 shadow-sm">
+            <CardHeader className="flex items-center justify-between pb-0">
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-success-50 text-success-600">
+                  <HashIcon size={18} />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-700">NIA</p>
+                  <p className="text-xs text-gray-400">
+                    Nomor Induk Anggota
+                  </p>
+                </div>
+              </div>
+              <Chip color="warning" size="sm" variant="flat">
+                Diperbaharui {user?.nia_renew_count || 0}x
               </Chip>
-            </CardFooter>
+            </CardHeader>
+            <CardBody className="gap-3">
+              {user?.nia ? (
+                <p className="rounded-xl bg-success-50 px-4 py-3 text-center text-xl font-semibold tracking-wide text-success-700">
+                  {formatNia(user.nia)}
+                </p>
+              ) : (
+                <p className="rounded-xl bg-default-50 px-4 py-3 text-center text-sm text-gray-400">
+                  Belum memiliki NIA
+                </p>
+              )}
+              {user?.status === "approved" && (
+                <Button
+                  fullWidth
+                  color="success"
+                  isLoading={renewingNia}
+                  startContent={
+                    !renewingNia ? <RotateCcwIcon size={16} /> : null
+                  }
+                  variant="flat"
+                  onPress={renewNia}
+                >
+                  Perbaharui NIA
+                </Button>
+              )}
+            </CardBody>
           </Card>
 
-          <Card>
+          {/* Verification */}
+          <Card className="shadow-sm">
             <CardHeader className="flex items-center justify-between">
-              <p className="font-bold text-gray-600">Status Verifikasi</p>
+              <p className="font-semibold text-gray-700">
+                Status Verifikasi
+              </p>
               <Chip
                 color={verificationColor(user?.verification_status) as any}
                 size="sm"
@@ -311,6 +460,7 @@ export default function MemberDetail() {
                 minRows={3}
                 placeholder="Tulis catatan untuk verify, reject, atau ulangi verifikasi"
                 value={verificationNote}
+                variant="bordered"
                 onChange={(e) => setVerificationNote(e.target.value)}
               />
               <Button
@@ -323,224 +473,260 @@ export default function MemberDetail() {
               >
                 Ulangi Verifikasi
               </Button>
-              <div className="flex gap-2">
-                <Button
-                  fullWidth
-                  color="danger"
-                  isLoading={verifying}
-                  radius="full"
-                  size="sm"
-                  onPress={() => handleApproveVerification(false)}
-                >
-                  Reject
-                </Button>
-                <Button
-                  fullWidth
-                  color="success"
-                  isLoading={verifying}
-                  radius="full"
-                  size="sm"
-                  onPress={() => handleApproveVerification(true)}
-                >
-                  Verify
-                </Button>
-              </div>
+              {user?.verification_status !== "approved" && (
+                <div className="flex gap-2">
+                  <Button
+                    fullWidth
+                    color="danger"
+                    isLoading={verifying}
+                    radius="full"
+                    size="sm"
+                    onPress={() => handleApproveVerification(false)}
+                  >
+                    Reject
+                  </Button>
+                  <Button
+                    fullWidth
+                    color="success"
+                    isLoading={verifying}
+                    radius="full"
+                    size="sm"
+                    onPress={() => handleApproveVerification(true)}
+                  >
+                    Verify
+                  </Button>
+                </div>
+              )}
             </CardBody>
           </Card>
 
           {user?.status == "rejected" && user?.rejected_note && (
-            <Card>
-              <CardBody>
-                <p>{user?.rejected_note}</p>
+            <Alert
+              color="danger"
+              description={user.rejected_note}
+              title="Catatan Penolakan"
+            />
+          )}
+
+          {user?.status == "approved" && (
+            <Card className="shadow-sm">
+              <CardHeader>
+                <p className="font-semibold text-gray-700">E-KTA</p>
+              </CardHeader>
+              <CardBody className="gap-2">
+                <Button
+                  fullWidth
+                  color="primary"
+                  isLoading={loading}
+                  startContent={<DownloadIcon size={16} />}
+                  variant="shadow"
+                  onPress={downloadKta}
+                >
+                  Download E-KTA
+                </Button>
+                <Button
+                  fullWidth
+                  color="warning"
+                  isLoading={isSendMail}
+                  startContent={<MailCheckIcon size={16} />}
+                  variant="flat"
+                  onPress={sendEmail}
+                >
+                  Kirim E-KTA via Email
+                </Button>
               </CardBody>
             </Card>
           )}
-          {user?.status == "approved" && (
-            <>
-              <Button
-                fullWidth
-                color="primary"
-                isLoading={loading}
-                startContent={<DownloadIcon />}
-                variant="shadow"
-                onPress={downloadKta}
-              >
-                Download E-KTA
-              </Button>
-              <Button
-                fullWidth
-                color="warning"
-                isLoading={isSendMail}
-                startContent={<MailCheckIcon />}
-                variant="shadow"
-                onPress={sendEmail}
-              >
-                Kirm E-KTA via email
-              </Button>
-              <FormSetting />
-            </>
-          )}
+
+          {user?.status == "approved" && <FormSetting />}
+
           {user?.status == "submission" && (
-            <Card>
-              <CardBody>
-                <div className="mt-2 flex flex-col gap-2">
-                  <CustomInput
-                    description="Kosongkan jika NIA di generate oleh system"
-                    placeholder="Masukan NIA Secara manual"
-                    value={nia}
-                    onChange={(e) => setNia(e.target.value)}
-                  />
-                  <div className="mt-2 flex justify-center gap-1">
-                    <Button
-                      fullWidth
-                      color="danger"
-                      radius="full"
-                      size="sm"
-                      onPress={() =>
-                        confirmSweet(
-                          () =>
-                            dispatch(
-                              handleApprove(
-                                {
-                                  user_id: user?.id as number,
-                                  approve: false,
-                                },
-                                () => getUserDetail({ id: id as any }),
-                              ),
+            <Card className="shadow-sm">
+              <CardHeader>
+                <p className="font-semibold text-gray-700">
+                  Persetujuan Anggota
+                </p>
+              </CardHeader>
+              <CardBody className="gap-3">
+                <CustomInput
+                  description="Kosongkan jika NIA di generate oleh system"
+                  placeholder="Masukan NIA Secara manual"
+                  value={nia}
+                  onChange={(e) => setNia(e.target.value)}
+                />
+                <div className="flex gap-2">
+                  <Button
+                    fullWidth
+                    color="danger"
+                    radius="full"
+                    size="sm"
+                    onPress={() =>
+                      confirmSweet(
+                        () =>
+                          dispatch(
+                            handleApprove(
+                              {
+                                user_id: user?.id as number,
+                                approve: false,
+                              },
+                              () => getUserDetail({ id: id as any }),
                             ),
-                          {
-                            confirmButtonText: "Ya, Tolak",
-                          },
-                        )
-                      }
-                    >
-                      Tolak
-                    </Button>
-                    <Button
-                      fullWidth
-                      color="primary"
-                      radius="full"
-                      size="sm"
-                      onPress={() =>
-                        dispatch(
-                          handleApprove(
-                            {
-                              user_id: user?.id as number,
-                              approve: true,
-                              nia: nia,
-                            },
-                            () => getUserDetail({ id: id as any }),
                           ),
-                        )
-                      }
-                    >
-                      Setujui
-                    </Button>
-                  </div>
+                        {
+                          confirmButtonText: "Ya, Tolak",
+                        },
+                      )
+                    }
+                  >
+                    Tolak
+                  </Button>
+                  <Button
+                    fullWidth
+                    color="primary"
+                    radius="full"
+                    size="sm"
+                    onPress={() =>
+                      dispatch(
+                        handleApprove(
+                          {
+                            user_id: user?.id as number,
+                            approve: true,
+                            nia: nia,
+                          },
+                          () => getUserDetail({ id: id as any }),
+                        ),
+                      )
+                    }
+                  >
+                    Setujui
+                  </Button>
                 </div>
               </CardBody>
             </Card>
           )}
         </div>
-      </div>
-      <div className="col-span-12 md:col-span-8">
-        <div className="flex flex-col gap-3">
-          <Card>
-            <CardHeader className="flex justify-between">
-              <p className="text-gray-600 font-bold">Deskripsi</p>
-              <Button
-                isIconOnly
-                radius="full"
-                variant="light"
-                onPress={() => setModal(true)}
-              >
-                <EditIcon className="text-warning" />
-              </Button>
+
+        <div className="col-span-12 flex flex-col gap-4 lg:col-span-8">
+          <Card className="shadow-sm">
+            <CardHeader>
+              <p className="font-semibold text-gray-700">
+                Informasi Pribadi
+              </p>
             </CardHeader>
-            <CardBody className="flex flex-col gap-1">
-              <TextHeader
-                fontSize="13px"
-                title="Pendidikan"
-                val={`${user?.profile?.last_education_nursing} Keperawatan`}
-                width={150}
+            <CardBody className="pt-0">
+              <InfoRow
+                icon={<CalendarIcon />}
+                label="Tempat & Tanggal Lahir"
+                value={`${user?.profile?.place_birth || "-"}, ${dateFormat(user?.profile?.date_birth as string)}`}
               />
-              <TextHeader
-                fontSize="13px"
-                title="Pendidikan Formal"
-                val={user?.profile?.last_education!}
-                width={150}
+              <InfoRow
+                icon={<PhoneIcon />}
+                label="Telepon"
+                value={user?.profile?.phone}
               />
-              <TextHeader
-                fontSize="13px"
-                title="Tempat Kerja"
-                val={user?.profile?.workplace!}
-                width={150}
+              <InfoRow
+                icon={<GraduationCapIcon />}
+                label="Pendidikan Keperawatan"
+                value={
+                  user?.profile?.last_education_nursing
+                    ? `${user.profile.last_education_nursing} Keperawatan`
+                    : "-"
+                }
               />
-              <TextHeader
-                fontSize="13px"
-                title="Kontribusi"
-                val={user?.profile?.contribution || ""}
-                width={150}
+              <InfoRow
+                icon={<GraduationCapIcon />}
+                label="Pendidikan Formal"
+                value={user?.profile?.last_education}
               />
-              <TextHeader
-                fontSize="13px"
-                title="Provinsi"
-                val={user?.profile?.province?.name!}
-                width={150}
-              />
-              <TextHeader
-                fontSize="13px"
-                title="Kota"
-                val={user?.profile?.city?.name!}
-                width={150}
-              />
-              <TextHeader
-                fontSize="13px"
-                title="Kabupaten"
-                val={user?.profile?.district?.name!}
-                width={150}
-              />
-              <TextHeader
-                fontSize="13px"
-                horizontal={true}
-                title="Alamat"
-                val={user?.profile?.address!}
-                width={150}
-              />
-              <Divider />
-              <TextHeader
-                fontSize="13px"
-                horizontal={true}
-                title="Harapan"
-                val={user?.profile?.hope_in || ""}
-                width={150}
-              />
-              <Divider />
-              <TextHeader
-                fontSize="13px"
-                title="Bersedia membayar"
-                val={user?.profile?.is_member_payment ? "Bersedia" : "Tidak"}
-                width={150}
-              />
-              <TextHeader
-                fontSize="13px"
-                horizontal={true}
-                title="Alasa Tidak bersedia"
-                val={user?.profile?.reason_reject || ""}
-                width={150}
+              <InfoRow
+                icon={<BriefcaseIcon />}
+                label="Tempat Kerja"
+                value={user?.profile?.workplace}
               />
             </CardBody>
           </Card>
 
-          <Card>
-            <CardHeader className="text-gray-600 font-bold">
-              File Attachment
+          <Card className="shadow-sm">
+            <CardHeader>
+              <p className="font-semibold text-gray-700">Alamat & Wilayah</p>
+            </CardHeader>
+            <CardBody className="pt-0">
+              <InfoRow
+                icon={<MapPinIcon />}
+                label="Provinsi"
+                value={user?.profile?.province?.name}
+              />
+              <InfoRow
+                icon={<MapPinIcon />}
+                label="Kota"
+                value={user?.profile?.city?.name}
+              />
+              <InfoRow
+                icon={<MapPinIcon />}
+                label="Kabupaten / Kecamatan"
+                value={user?.profile?.district?.name}
+              />
+              <InfoRow
+                icon={<MapPinIcon />}
+                label="Alamat Lengkap"
+                value={user?.profile?.address}
+              />
+            </CardBody>
+          </Card>
+
+          <Card className="shadow-sm">
+            <CardHeader>
+              <p className="font-semibold text-gray-700">
+                Kontribusi & Keanggotaan
+              </p>
+            </CardHeader>
+            <CardBody className="gap-4 pt-0">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+                  Kontribusi
+                </p>
+                <p className="mt-1 text-sm text-gray-700 whitespace-pre-wrap">
+                  {user?.profile?.contribution || "-"}
+                </p>
+              </div>
+              <Divider />
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+                  Harapan
+                </p>
+                <p className="mt-1 text-sm text-gray-700 whitespace-pre-wrap">
+                  {user?.profile?.hope_in || "-"}
+                </p>
+              </div>
+              <Divider />
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div className="rounded-xl bg-default-50 px-4 py-3">
+                  <p className="text-xs text-gray-400">Bersedia membayar</p>
+                  <p className="mt-1 font-medium text-gray-700">
+                    {user?.profile?.is_member_payment ? "Bersedia" : "Tidak"}
+                  </p>
+                </div>
+                <div className="rounded-xl bg-default-50 px-4 py-3">
+                  <p className="text-xs text-gray-400">
+                    Alasan tidak bersedia
+                  </p>
+                  <p className="mt-1 font-medium text-gray-700">
+                    {user?.profile?.reason_reject || "-"}
+                  </p>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+
+          <Card className="shadow-sm">
+            <CardHeader>
+              <p className="font-semibold text-gray-700">File Attachment</p>
             </CardHeader>
             <CardBody>
               <Image
-                alt="foto"
-                className="max-w-1/2"
-                src={user?.profile?.member_payment_file! || "/no-data.jpeg"}
+                alt="bukti pembayaran"
+                className="max-h-80 w-auto rounded-xl object-contain"
+                src={user?.profile?.member_payment_file || "/no-data.jpeg"}
               />
             </CardBody>
           </Card>

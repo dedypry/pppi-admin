@@ -15,11 +15,24 @@ export const getUser = createAsyncThunk(
     status = "",
     verification_status = "",
     is_need_verify = "",
+    administrator_role = "all",
+    region = "all",
+    jabatan = "all",
   }: IQueryPagination) => {
     try {
-      const { data } = await http.get(
-        `/members?page=${page}&pageSize=${pageSize}&q=${q}&status=${status}&verification_status=${verification_status}&is_need_verify=${is_need_verify}`,
-      );
+      const { data } = await http.get(`/members`, {
+        params: {
+          page,
+          pageSize,
+          q,
+          status,
+          verification_status,
+          is_need_verify,
+          administrator_role,
+          region,
+          jabatan,
+        },
+      });
 
       return data;
     } catch (error) {

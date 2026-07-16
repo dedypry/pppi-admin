@@ -13,4 +13,7 @@ export interface IQueryPagination {
   status?: string;
   verification_status?: string;
   is_need_verify?: string;
+  administrator_role?: string;
+  region?: string;
+  jabatan?: string;
 }

@@ -81,8 +81,11 @@ export interface IUser {
   name: string;
   back_title?: string;
   nia: string;
+  nia_renew_count?: number;
   job_title?: string;
   job_titles?: string[];
+  region?: string | null;
+  administrator_role?: string | null;
   email: string;
   last_login: string;
   is_active: boolean;

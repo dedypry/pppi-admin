@@ -5,13 +5,14 @@ import CustomSelect from "./forms/custom-select";
 interface Props {
   size: string;
   setSize: (val: string) => void;
+  className?: string;
 }
-export default function PageSize({ size, setSize }: Props) {
+export default function PageSize({ size, setSize, className }: Props) {
   const pages = ["5", "10", "25", "50", "100"];
 
   return (
     <CustomSelect
-      className="w-32"
+      className={className || "w-32"}
       label="Page Size"
       labelPlacement="inside"
       placeholder="select size"

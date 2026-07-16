@@ -69,6 +69,21 @@ export function capitalizeStatus(str: string) {
     .join(" ");
 }
 
+/** Format stored NIA (261616260190) for display (26.16.16.26.0190). */
+export function formatNia(nia?: string | null): string {
+  if (nia === null || nia === undefined || nia === "") return "";
+  const raw = String(nia).replace(/\./g, "").trim();
+  if (!raw) return "";
+  if (raw.length >= 12) {
+    return `${raw.slice(0, 2)}.${raw.slice(2, 4)}.${raw.slice(4, 6)}.${raw.slice(6, 8)}.${raw.slice(8, 12)}`;
+  }
+  if (raw.length >= 10) {
+    return `${raw.slice(0, 2)}.${raw.slice(2, 4)}.${raw.slice(4, 6)}.${raw.slice(6)}`;
+  }
+  if (String(nia).includes(".")) return String(nia).trim();
+  return raw;
+}
+
 /** Parse job_title from API (JSON array string or legacy plain string). */
 export function parseJobTitles(value?: string | null): string[] {
   if (!value) return [];
