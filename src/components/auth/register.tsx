@@ -103,7 +103,9 @@ export default function RegisterMember({
       setValue("place_birth", user?.profile?.place_birth ?? "");
       setValue(
         "date_birth",
-        dayjs(user?.profile.date_birth).format("DD MMMM YYYY").trim(),
+        user?.profile?.date_birth
+          ? dayjs(user.profile.date_birth).format("YYYY-MM-DD")
+          : "",
       );
       setValue("gender", user?.profile?.gender ?? "");
       setValue("citizenship", user?.profile?.citizenship ?? "");
@@ -172,7 +174,7 @@ export default function RegisterMember({
       method: "POST",
       data: {
         ...data,
-        date_birth: dayjs(data.date_birth).add(1, "d").toDate(),
+        date_birth: dayjs(data.date_birth).toDate(),
         is_member_payment: data.is_member_payment === "yes",
       },
     })
