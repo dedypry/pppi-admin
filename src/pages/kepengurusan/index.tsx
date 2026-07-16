@@ -1,12 +1,20 @@
 import { Button, Card, CardBody, CardHeader, Spinner } from "@heroui/react";
-import { FileDownIcon, FileSpreadsheetIcon } from "lucide-react";
+import { FileDownIcon, FileSpreadsheetIcon, PlusIcon } from "lucide-react";
 import { saveAs } from "file-saver";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Tree } from "react-organizational-chart";
 
+import CreateKepengurusanModal from "./create-modal";
+import KepengurusanFilter from "./filter";
 import KepengurusanItem from "./item";
-import SelectUserModal from "@/pages/organization/select-user-modal";
+import KepengurusanSummary from "./summary";
+import {
+  defaultKepengurusanFilters,
+  filterKepengurusanTree,
+  KepengurusanFilters,
+} from "./utils";
 
+import SelectUserModal from "@/pages/organization/select-user-modal";
 import { IKepengurusanNode } from "@/interface/IKepengurusan";
 import { IUser } from "@/interface/IUser";
 import { http } from "@/config/axios";
@@ -21,11 +29,20 @@ export default function KepengurusanPage() {
   const [exportingExcel, setExportingExcel] = useState(false);
   const [exportingPdf, setExportingPdf] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
   const [editingNode, setEditingNode] = useState<IKepengurusanNode | null>(
     null,
   );
+  const [filters, setFilters] = useState<KepengurusanFilters>(
+    defaultKepengurusanFilters,
+  );
 
   const canEdit = hasRoles(["admin", "super-admin"]);
+
+  const filteredData = useMemo(
+    () => filterKepengurusanTree(data, filters),
+    [data, filters],
+  );
 
   const loadData = useCallback(() => {
     setLoading(true);
@@ -41,6 +58,13 @@ export default function KepengurusanPage() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  function handleFilterChange(key: keyof KepengurusanFilters, value: string) {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: key === "q" ? value : value || "all",
+    }));
+  }
 
   function handleExportExcel() {
     handleDownloadExcel(
@@ -137,6 +161,21 @@ export default function KepengurusanPage() {
         onSelect={handleSelectUser}
       />
 
+      <CreateKepengurusanModal
+        isOpen={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onSuccess={loadData}
+      />
+
+      <KepengurusanFilter
+        data={data}
+        filters={filters}
+        onChange={handleFilterChange}
+        onReset={() => setFilters(defaultKepengurusanFilters)}
+      />
+
+      <KepengurusanSummary data={filteredData} loading={loading} />
+
       <Card>
         <CardHeader className="flex flex-row flex-wrap items-start justify-between gap-3">
           <div className="flex flex-col items-start gap-1">
@@ -146,6 +185,16 @@ export default function KepengurusanPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
+            {canEdit && (
+              <Button
+                color="primary"
+                size="sm"
+                startContent={<PlusIcon size={16} />}
+                onPress={() => setCreateOpen(true)}
+              >
+                Tambah
+              </Button>
+            )}
             <Button
               color="success"
               isLoading={exportingExcel}
@@ -178,6 +227,10 @@ export default function KepengurusanPage() {
               Belum ada data kepengurusan. Pastikan user sudah punya wilayah &
               pengurus.
             </p>
+          ) : filteredData.length === 0 ? (
+            <p className="py-12 text-center text-sm text-gray-500">
+              Tidak ada data yang cocok dengan filter.
+            </p>
           ) : (
             <Tree
               label={
@@ -192,7 +245,7 @@ export default function KepengurusanPage() {
               lineColor="#15980d"
               lineWidth="1px"
             >
-              {data.map((node) => (
+              {filteredData.map((node) => (
                 <KepengurusanItem
                   key={node.id}
                   canEdit={canEdit}

@@ -7,6 +7,7 @@ import { http } from "@/config/axios";
 interface Props {
   value: number | undefined;
   setValue: (val: any) => void;
+  onSelectItem?: (item: { id: number; name: string } | null) => void;
   isRequired?: boolean;
   isInvalid?: boolean;
   errorMessage?: string;
@@ -14,6 +15,7 @@ interface Props {
 export default function AllDistrictList({
   value,
   setValue,
+  onSelectItem,
   isRequired,
   isInvalid,
   errorMessage,
@@ -54,13 +56,23 @@ export default function AllDistrictList({
       label="Regional"
       labelPlacement="outside"
       placeholder="Pilih Regional"
-      selectedKey={value}
+      selectedKey={value != null ? String(value) : null}
       variant="bordered"
       onInputChange={setInputValue}
-      onSelectionChange={setValue}
+      onSelectionChange={(key) => {
+        setValue(key);
+        const item = list.find((e: any) => String(e.id) === String(key)) as
+          | { id: number; name: string }
+          | undefined;
+        onSelectItem?.(item ? { id: item.id, name: item.name } : null);
+      }}
     >
       {(item: any) => (
-        <AutocompleteItem key={item.id} className="capitalize">
+        <AutocompleteItem
+          key={String(item.id)}
+          className="capitalize"
+          textValue={item.name}
+        >
           {item.name}
         </AutocompleteItem>
       )}
