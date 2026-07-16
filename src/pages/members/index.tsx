@@ -54,6 +54,7 @@ import { formatNia, parseJobTitles } from "@/utils/helpers/format";
 
 export default function MemberPage() {
   const { search } = useLocation();
+  const [q, setQ] = useState("");
   const queryParams = new URLSearchParams(search);
   const [selectedRows, setSelectedRows] = useState<Selection>(new Set([]));
   const [exporting, setExporting] = useState(false);
@@ -119,6 +120,9 @@ export default function MemberPage() {
   }
 
   function setQueryParams(key: string, value: any) {
+    if (key === "q") {
+      setQ(value);
+    }
     setQuery((val) => ({
       ...val,
       [key]: value,
@@ -144,12 +148,11 @@ export default function MemberPage() {
   }
 
   const selectedCount =
-    selectedRows === "all"
-      ? list.data?.length || 0
-      : selectedRows.size;
+    selectedRows === "all" ? list.data?.length || 0 : selectedRows.size;
 
   function handleSendEmailVerification() {
     const ids = getSelectedIds();
+
     http
       .post(`/users/send-email-verification`, { ids })
       .then(({ data }) => {
@@ -162,6 +165,7 @@ export default function MemberPage() {
 
   function handleBulkRenewNia() {
     const ids = getSelectedIds();
+
     if (!ids.length) {
       notify("Pilih minimal 1 anggota", "error");
 
@@ -391,10 +395,11 @@ export default function MemberPage() {
         <CardHeader className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-end sm:justify-between">
           <CustomInput
             className="w-full sm:max-w-xs"
-            defaultValue={query.q || ""}
             endContent={<SearchIcon className="text-gray-500" />}
             placeholder="Search"
+            value={q}
             onChange={(e) => {
+              setQ(e.target.value);
               debounceSearch(e.target.value);
             }}
           />
@@ -432,7 +437,9 @@ export default function MemberPage() {
                   color="success"
                   isLoading={renewingNia}
                   size="sm"
-                  startContent={!renewingNia ? <RotateCcwIcon size={15} /> : null}
+                  startContent={
+                    !renewingNia ? <RotateCcwIcon size={15} /> : null
+                  }
                   variant="flat"
                   onPress={handleBulkRenewNia}
                 >

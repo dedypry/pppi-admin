@@ -26,6 +26,7 @@ import {
   HashIcon,
   CalendarIcon,
   RotateCcwIcon,
+  ShieldIcon,
 } from "lucide-react";
 import { ReactNode, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -123,6 +124,24 @@ export default function MemberDetail() {
     .filter(Boolean)
     .join(" ");
   const jobTitles = parseJobTitles(user?.job_title);
+  const isPengurus = !!(user?.administrator_role || user?.region);
+  const wilayahLabel = user?.region
+    ? String(user.region).split(" - ")[0]?.trim() || user.region
+    : null;
+  const pengurusCode = user?.administrator_role
+    ? String(user.administrator_role).split(" ")[0]?.replace(/[()]/g, "") ||
+      user.administrator_role
+    : null;
+  const jabatanLabel = jobTitles.length > 0 ? jobTitles.join(", ") : null;
+  const kepengurusanParts = [
+    wilayahLabel ? `wilayah ${wilayahLabel}` : null,
+    pengurusCode ? `tingkat ${pengurusCode}` : null,
+    jabatanLabel ? `sebagai ${jabatanLabel}` : null,
+  ].filter(Boolean) as string[];
+  const kepengurusanSummary =
+    isPengurus && kepengurusanParts.length > 0
+      ? `Anggota ini merupakan bagian dari kepengurusan ${kepengurusanParts.join(", ")}.`
+      : null;
 
   useEffect(() => {
     dispatch(getUserDetail({ id: id as any }));
@@ -346,10 +365,20 @@ export default function MemberDetail() {
               <div className="flex flex-wrap items-center gap-2">
                 <Gender gender={user?.profile?.gender!} />
                 {jobTitles.map((title) => (
-                  <Chip key={title} color="secondary" size="sm" variant="flat">
+                  <Chip key={title} color="secondary" size="sm">
                     {title}
                   </Chip>
                 ))}
+                {pengurusCode && (
+                  <Chip color="warning" size="sm">
+                    {pengurusCode}
+                  </Chip>
+                )}
+                {wilayahLabel && (
+                  <Chip color="success" size="sm">
+                    {wilayahLabel}
+                  </Chip>
+                )}
               </div>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div className="rounded-xl bg-default-50 px-4 py-3">
@@ -393,9 +422,7 @@ export default function MemberDetail() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-gray-700">NIA</p>
-                  <p className="text-xs text-gray-400">
-                    Nomor Induk Anggota
-                  </p>
+                  <p className="text-xs text-gray-400">Nomor Induk Anggota</p>
                 </div>
               </div>
               <Chip color="warning" size="sm" variant="flat">
@@ -429,12 +456,70 @@ export default function MemberDetail() {
             </CardBody>
           </Card>
 
+          {/* Kepengurusan */}
+          <Card className="border border-primary/20 shadow-sm">
+            <CardHeader className="pb-0">
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <ShieldIcon size={18} />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-700">
+                    Kepengurusan
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    Status struktural anggota
+                  </p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardBody className="gap-3">
+              {kepengurusanSummary ? (
+                <>
+                  <Alert
+                    color="primary"
+                    description={kepengurusanSummary}
+                    title="Keterangan"
+                  />
+                  <div className="grid grid-cols-1 gap-2">
+                    <div className="rounded-xl bg-primary/5 px-3 py-2">
+                      <p className="text-[11px] uppercase tracking-wide text-gray-400">
+                        Wilayah
+                      </p>
+                      <p className="mt-0.5 text-sm font-medium text-gray-700">
+                        {user?.region || "-"}
+                      </p>
+                    </div>
+                    <div className="rounded-xl bg-primary/5 px-3 py-2">
+                      <p className="text-[11px] uppercase tracking-wide text-gray-400">
+                        Tingkat Pengurus
+                      </p>
+                      <p className="mt-0.5 text-sm font-medium text-gray-700">
+                        {user?.administrator_role || "-"}
+                      </p>
+                    </div>
+                    <div className="rounded-xl bg-primary/5 px-3 py-2">
+                      <p className="text-[11px] uppercase tracking-wide text-gray-400">
+                        Jabatan
+                      </p>
+                      <p className="mt-0.5 text-sm font-medium text-gray-700">
+                        {jabatanLabel || "-"}
+                      </p>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <p className="rounded-xl bg-default-50 px-4 py-3 text-center text-sm text-gray-400">
+                  Anggota ini belum terdaftar dalam struktur kepengurusan.
+                </p>
+              )}
+            </CardBody>
+          </Card>
+
           {/* Verification */}
           <Card className="shadow-sm">
             <CardHeader className="flex items-center justify-between">
-              <p className="font-semibold text-gray-700">
-                Status Verifikasi
-              </p>
+              <p className="font-semibold text-gray-700">Status Verifikasi</p>
               <Chip
                 color={verificationColor(user?.verification_status) as any}
                 size="sm"
@@ -609,9 +694,7 @@ export default function MemberDetail() {
         <div className="col-span-12 flex flex-col gap-4 lg:col-span-8">
           <Card className="shadow-sm">
             <CardHeader>
-              <p className="font-semibold text-gray-700">
-                Informasi Pribadi
-              </p>
+              <p className="font-semibold text-gray-700">Informasi Pribadi</p>
             </CardHeader>
             <CardBody className="pt-0">
               <InfoRow
@@ -707,9 +790,7 @@ export default function MemberDetail() {
                   </p>
                 </div>
                 <div className="rounded-xl bg-default-50 px-4 py-3">
-                  <p className="text-xs text-gray-400">
-                    Alasan tidak bersedia
-                  </p>
+                  <p className="text-xs text-gray-400">Alasan tidak bersedia</p>
                   <p className="mt-1 font-medium text-gray-700">
                     {user?.profile?.reason_reject || "-"}
                   </p>
