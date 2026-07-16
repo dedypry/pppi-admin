@@ -1,7 +1,14 @@
 import { Avatar, Button, Card, CardBody, Chip } from "@heroui/react";
-import { MapPinIcon, PencilIcon, ShieldIcon } from "lucide-react";
+import {
+  MapPinIcon,
+  PencilIcon,
+  PlusIcon,
+  ShieldIcon,
+  Trash2Icon,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+import { getMissingJabatanOptions, getMissingPengurusOptions } from "./utils";
 import { IKepengurusanNode } from "@/interface/IKepengurusan";
 import { formatNia } from "@/utils/helpers/format";
 
@@ -9,6 +16,9 @@ interface Props {
   node: IKepengurusanNode;
   canEdit?: boolean;
   onEditUser?: (node: IKepengurusanNode) => void;
+  onDeleteUser?: (node: IKepengurusanNode) => void;
+  onAddPengurus?: (node: IKepengurusanNode) => void;
+  onAddUser?: (node: IKepengurusanNode) => void;
 }
 
 function pengurusCode(title: string) {
@@ -53,6 +63,9 @@ export default function KepengurusanCard({
   node,
   canEdit,
   onEditUser,
+  onDeleteUser,
+  onAddPengurus,
+  onAddUser,
 }: Props) {
   const navigate = useNavigate();
 
@@ -68,20 +81,7 @@ export default function KepengurusanCard({
     return (
       <Card className="min-w-[150px] border border-primary text-center shadow-sm">
         <CardBody className="flex flex-col items-center gap-2 px-3 py-3">
-          <div className="relative">
-            <Avatar isBordered size="lg" src={node.user.profile?.photo} />
-            {canEdit && (
-              <Button
-                isIconOnly
-                className="absolute -bottom-1 -right-1 min-w-0 bg-warning text-white"
-                radius="full"
-                size="sm"
-                onPress={() => onEditUser?.(node)}
-              >
-                <PencilIcon size={12} />
-              </Button>
-            )}
-          </div>
+          <Avatar isBordered size="lg" src={node.user.profile?.photo} />
           <div className="text-center">
             <p className="m-0 max-w-[160px] p-0 text-xs font-semibold leading-snug text-gray-800">
               {fullName}
@@ -109,6 +109,28 @@ export default function KepengurusanCard({
           >
             {verificationLabel(node.user.verification_status)}
           </Chip>
+          {canEdit && (
+            <div className="mt-1 flex gap-2">
+              <Button
+                isIconOnly
+                className="min-w-0 bg-warning text-white"
+                radius="full"
+                size="sm"
+                onPress={() => onEditUser?.(node)}
+              >
+                <PencilIcon size={14} />
+              </Button>
+              <Button
+                isIconOnly
+                className="min-w-0 bg-danger text-white"
+                radius="full"
+                size="sm"
+                onPress={() => onDeleteUser?.(node)}
+              >
+                <Trash2Icon size={14} />
+              </Button>
+            </div>
+          )}
         </CardBody>
       </Card>
     );
@@ -127,10 +149,24 @@ export default function KepengurusanCard({
           <p className="m-0 max-w-[160px] p-0 text-[11px] leading-snug text-gray-700">
             {node.title}
           </p>
+          {canEdit && getMissingJabatanOptions(node).length > 0 && (
+            <Button
+              color="secondary"
+              size="sm"
+              startContent={<PlusIcon size={14} />}
+              variant="flat"
+              onPress={() => onAddUser?.(node)}
+            >
+              Tambah User
+            </Button>
+          )}
         </CardBody>
       </Card>
     );
   }
+
+  const missingPengurus =
+    node.type === "wilayah" ? getMissingPengurusOptions(node) : [];
 
   return (
     <Card className="min-w-[160px] border border-primary bg-primary-50 text-center shadow-sm">
@@ -141,6 +177,17 @@ export default function KepengurusanCard({
         <p className="m-0 max-w-[180px] p-0 text-sm font-semibold leading-snug text-primary">
           {node.title}
         </p>
+        {canEdit && missingPengurus.length > 0 && (
+          <Button
+            color="primary"
+            size="sm"
+            startContent={<PlusIcon size={14} />}
+            variant="flat"
+            onPress={() => onAddPengurus?.(node)}
+          >
+            Tambah Pengurus
+          </Button>
+        )}
       </CardBody>
     </Card>
   );

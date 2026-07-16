@@ -1,3 +1,4 @@
+import { JABATAN_OPTIONS, PENGURUS_OPTIONS } from "./constants";
 import { IKepengurusanNode } from "@/interface/IKepengurusan";
 
 export type KepengurusanFilters = {
@@ -43,6 +44,43 @@ export function pengurusCode(role?: string | null) {
 export function normalizePengurusCode(code: string) {
   if (code === "DC") return "DPC";
   return code;
+}
+
+export function getMissingPengurusOptions(wilayahNode: IKepengurusanNode) {
+  const existing = new Set(
+    (wilayahNode.children || []).map((child) =>
+      normalizePengurusCode(pengurusCode(child.title)),
+    ),
+  );
+
+  return PENGURUS_OPTIONS.filter(
+    (option) => !existing.has(normalizePengurusCode(pengurusCode(option))),
+  );
+}
+
+export function getMissingJabatanOptions(pengurusNode: IKepengurusanNode) {
+  const existing = new Set(
+    (pengurusNode.children || [])
+      .filter((child) => child.type === "user")
+      .map((child) => String(child.title || "").trim().toLowerCase())
+      .filter(Boolean),
+  );
+
+  return JABATAN_OPTIONS.filter(
+    (option) => !existing.has(option.trim().toLowerCase()),
+  );
+}
+
+export function getSampleRegion(node: IKepengurusanNode): string {
+  const users = collectUserNodes(
+    node.type === "user" ? [node] : node.children || [],
+  );
+  for (const userNode of users) {
+    const region = userNode.region || userNode.user?.region;
+    if (region) return region;
+  }
+  if (node.type === "wilayah" && node.title) return node.title;
+  return "";
 }
 
 export function parseCity(region?: string | null) {

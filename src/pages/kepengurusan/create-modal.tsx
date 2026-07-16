@@ -10,7 +10,9 @@ import {
   ModalHeader,
   SelectItem,
 } from "@heroui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+import { JABATAN_OPTIONS, PENGURUS_OPTIONS } from "./constants";
 
 import CustomSelect from "@/components/forms/custom-select";
 import AllDistrictList from "@/components/regions/all-district";
@@ -20,31 +22,30 @@ import debounce from "@/utils/helpers/debounce";
 import { formatNia } from "@/utils/helpers/format";
 import { notify, notifyError } from "@/utils/helpers/notify";
 
-const PENGURUS_OPTIONS = [
-  "DPN (Dewan Pengurus Nasional)",
-  "DPD (Dewan Pengurus Daerah Provinsi)",
-  "DC (Dewan Pengurus Cabang Kota/kab)",
-  "DPR (Dewan Pengurus Rantingg)",
-];
-
-const JABATAN_OPTIONS = [
-  "Ketua",
-  "Wakil",
-  "Sekertaris",
-  "Bendahara",
-  "Anggota",
-];
+export type CreateKepengurusanPreset = {
+  mode?: "create" | "add-pengurus" | "add-user";
+  region?: string;
+  administrator_role?: string;
+  availablePengurus?: string[];
+  availableJabatan?: string[];
+  lockRegion?: boolean;
+  lockPengurus?: boolean;
+  title?: string;
+  subtitle?: string;
+};
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  preset?: CreateKepengurusanPreset | null;
 }
 
 export default function CreateKepengurusanModal({
   isOpen,
   onClose,
   onSuccess,
+  preset,
 }: Props) {
   const [users, setUsers] = useState<IUser[]>([]);
   const [userInput, setUserInput] = useState("");
@@ -56,6 +57,20 @@ export default function CreateKepengurusanModal({
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [touched, setTouched] = useState(false);
+
+  const pengurusOptions = useMemo(() => {
+    if (preset?.availablePengurus?.length) return preset.availablePengurus;
+    if (preset?.administrator_role) return [preset.administrator_role];
+    return PENGURUS_OPTIONS;
+  }, [preset]);
+
+  const jabatanOptions = useMemo(() => {
+    if (preset?.availableJabatan) return preset.availableJabatan;
+    return JABATAN_OPTIONS;
+  }, [preset]);
+
+  const lockRegion = !!preset?.lockRegion && !!preset?.region;
+  const lockPengurus = !!preset?.lockPengurus && !!preset?.administrator_role;
 
   function fetchUsers(search = "") {
     setLoadingUsers(true);
@@ -85,13 +100,22 @@ export default function CreateKepengurusanModal({
       setUserInput("");
       setUserId("");
       setDistrictId(undefined);
-      setRegion("");
-      setAdministratorRole("");
-      setJabatan("");
+      setRegion(preset?.region || "");
+      setAdministratorRole(
+        preset?.administrator_role ||
+          (preset?.availablePengurus?.length === 1
+            ? preset.availablePengurus[0]
+            : ""),
+      );
+      setJabatan(
+        preset?.availableJabatan?.length === 1
+          ? preset.availableJabatan[0]
+          : "",
+      );
       setTouched(false);
       fetchUsers("");
     }
-  }, [isOpen]);
+  }, [isOpen, preset]);
 
   function handleSubmit() {
     setTouched(true);
@@ -126,20 +150,21 @@ export default function CreateKepengurusanModal({
       <ModalContent>
         <ModalHeader className="flex flex-col gap-1">
           <p className="text-lg font-semibold text-gray-800">
-            Tambah Kepengurusan
+            {preset?.title || "Tambah Kepengurusan"}
           </p>
           <p className="text-sm font-normal text-gray-500">
-            Tetapkan wilayah, pengurus, jabatan, dan anggota
+            {preset?.subtitle ||
+              "Tetapkan wilayah, pengurus, jabatan, dan anggota"}
           </p>
         </ModalHeader>
         <ModalBody className="flex flex-col gap-4 pb-2">
           <Autocomplete
             defaultItems={users}
+            errorMessage="Anggota wajib dipilih"
             inputValue={userInput}
             isInvalid={touched && !userId}
             isLoading={loadingUsers}
             isRequired
-            errorMessage="Anggota wajib dipilih"
             label="Anggota"
             labelPlacement="outside"
             placeholder="Cari nama, email, atau NIA..."
@@ -171,10 +196,7 @@ export default function CreateKepengurusanModal({
                 .join(" ");
 
               return (
-                <AutocompleteItem
-                  key={String(user.id)}
-                  textValue={fullName}
-                >
+                <AutocompleteItem key={String(user.id)} textValue={fullName}>
                   <div className="flex items-center gap-3">
                     <Avatar size="sm" src={user.profile?.photo} />
                     <div className="min-w-0 flex-1">
@@ -190,39 +212,64 @@ export default function CreateKepengurusanModal({
             }}
           </Autocomplete>
 
-          <AllDistrictList
-            errorMessage="Wilayah wajib dipilih"
-            isInvalid={touched && !region}
-            isRequired
-            setValue={setDistrictId}
-            value={districtId}
-            onSelectItem={(item) => setRegion(item?.name || "")}
-          />
+          {lockRegion ? (
+            <div className="rounded-lg border border-default-200 bg-default-50 px-3 py-2">
+              <p className="m-0 text-xs text-gray-500">Wilayah / Regional</p>
+              <p className="m-0 text-sm font-medium text-gray-800">{region}</p>
+            </div>
+          ) : (
+            <AllDistrictList
+              errorMessage="Wilayah wajib dipilih"
+              isInvalid={touched && !region}
+              isRequired
+              setValue={setDistrictId}
+              value={districtId}
+              onSelectItem={(item) => setRegion(item?.name || "")}
+            />
+          )}
+
+          {lockPengurus ? (
+            <div className="rounded-lg border border-default-200 bg-default-50 px-3 py-2">
+              <p className="m-0 text-xs text-gray-500">Pengurus</p>
+              <p className="m-0 text-sm font-medium text-gray-800">
+                {administratorRole}
+              </p>
+            </div>
+          ) : (
+            <CustomSelect
+              errorMessage="Pengurus wajib dipilih"
+              isInvalid={touched && !administratorRole}
+              isRequired
+              label="Pengurus"
+              placeholder="Pilih tingkat kepengurusan"
+              selectedKeys={administratorRole ? [administratorRole] : []}
+              onChange={(e) => setAdministratorRole(e.target.value)}
+            >
+              {pengurusOptions.map((item) => (
+                <SelectItem key={item}>{item}</SelectItem>
+              ))}
+            </CustomSelect>
+          )}
 
           <CustomSelect
-            errorMessage="Pengurus wajib dipilih"
-            isInvalid={touched && !administratorRole}
-            isRequired
-            label="Pengurus"
-            placeholder="Pilih tingkat kepengurusan"
-            selectedKeys={administratorRole ? [administratorRole] : []}
-            onChange={(e) => setAdministratorRole(e.target.value)}
-          >
-            {PENGURUS_OPTIONS.map((item) => (
-              <SelectItem key={item}>{item}</SelectItem>
-            ))}
-          </CustomSelect>
-
-          <CustomSelect
-            errorMessage="Jabatan wajib dipilih"
+            errorMessage={
+              jabatanOptions.length === 0
+                ? "Semua jabatan sudah terisi"
+                : "Jabatan wajib dipilih"
+            }
+            isDisabled={jabatanOptions.length === 0}
             isInvalid={touched && !jabatan}
             isRequired
             label="Jabatan"
-            placeholder="Pilih jabatan"
+            placeholder={
+              jabatanOptions.length === 0
+                ? "Semua jabatan sudah terisi"
+                : "Pilih jabatan"
+            }
             selectedKeys={jabatan ? [jabatan] : []}
             onChange={(e) => setJabatan(e.target.value)}
           >
-            {JABATAN_OPTIONS.map((item) => (
+            {jabatanOptions.map((item) => (
               <SelectItem key={item}>{item}</SelectItem>
             ))}
           </CustomSelect>

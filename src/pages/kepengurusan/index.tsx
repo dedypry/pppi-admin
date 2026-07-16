@@ -4,13 +4,18 @@ import { saveAs } from "file-saver";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Tree } from "react-organizational-chart";
 
-import CreateKepengurusanModal from "./create-modal";
+import CreateKepengurusanModal, {
+  CreateKepengurusanPreset,
+} from "./create-modal";
 import KepengurusanFilter from "./filter";
 import KepengurusanItem from "./item";
 import KepengurusanSummary from "./summary";
 import {
   defaultKepengurusanFilters,
   filterKepengurusanTree,
+  getMissingJabatanOptions,
+  getMissingPengurusOptions,
+  getSampleRegion,
   KepengurusanFilters,
 } from "./utils";
 
@@ -30,6 +35,8 @@ export default function KepengurusanPage() {
   const [exportingPdf, setExportingPdf] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
+  const [createPreset, setCreatePreset] =
+    useState<CreateKepengurusanPreset | null>(null);
   const [editingNode, setEditingNode] = useState<IKepengurusanNode | null>(
     null,
   );
@@ -64,6 +71,11 @@ export default function KepengurusanPage() {
       ...prev,
       [key]: key === "q" ? value : value || "all",
     }));
+  }
+
+  function openCreate(preset?: CreateKepengurusanPreset | null) {
+    setCreatePreset(preset || null);
+    setCreateOpen(true);
   }
 
   function handleExportExcel() {
@@ -105,6 +117,73 @@ export default function KepengurusanPage() {
   function handleEditUser(node: IKepengurusanNode) {
     setEditingNode(node);
     setModalOpen(true);
+  }
+
+  function handleDeleteUser(node: IKepengurusanNode) {
+    if (!node.user?.id) return;
+
+    const fullName = [
+      node.user.front_title,
+      node.user.name,
+      node.user.back_title,
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    confirmSweet(
+      () => {
+        http
+          .delete(`/members/kepengurusan/${node.user!.id}`)
+          .then(({ data: res }) => {
+            notify(res?.message || res || "Kepengurusan berhasil dihapus");
+            loadData();
+          })
+          .catch((err) => notifyError(err));
+      },
+      {
+        text: `Hapus ${fullName} dari kepengurusan?`,
+        confirmButtonText: "Ya, hapus",
+        confirmButtonColor: "#dc2626",
+      },
+    );
+  }
+
+  function handleAddPengurus(node: IKepengurusanNode) {
+    const missing = getMissingPengurusOptions(node);
+    if (!missing.length) return;
+
+    const sampleRegion = getSampleRegion(node);
+
+    openCreate({
+      mode: "add-pengurus",
+      availablePengurus: missing,
+      availableJabatan: undefined,
+      region: sampleRegion,
+      lockRegion: !!sampleRegion,
+      title: `Tambah Pengurus — ${node.title}`,
+      subtitle: "Pilih tingkat pengurus yang belum ada, lalu tetapkan anggota",
+    });
+  }
+
+  function handleAddUser(node: IKepengurusanNode) {
+    const missingJabatan = getMissingJabatanOptions(node);
+    if (!missingJabatan.length) {
+      notify("Semua jabatan pada pengurus ini sudah terisi", "error");
+      return;
+    }
+
+    const sampleRegion = getSampleRegion(node) || node.region || "";
+
+    openCreate({
+      mode: "add-user",
+      administrator_role: node.title,
+      availableJabatan: missingJabatan,
+      region: sampleRegion,
+      lockPengurus: true,
+      lockRegion: !!sampleRegion,
+      title: `Tambah Anggota — ${node.title}`,
+      subtitle: "Tambahkan anggota ke tingkat kepengurusan ini",
+    });
   }
 
   function handleSelectUser(user: IUser) {
@@ -163,7 +242,11 @@ export default function KepengurusanPage() {
 
       <CreateKepengurusanModal
         isOpen={createOpen}
-        onClose={() => setCreateOpen(false)}
+        preset={createPreset}
+        onClose={() => {
+          setCreateOpen(false);
+          setCreatePreset(null);
+        }}
         onSuccess={loadData}
       />
 
@@ -190,7 +273,7 @@ export default function KepengurusanPage() {
                 color="primary"
                 size="sm"
                 startContent={<PlusIcon size={16} />}
-                onPress={() => setCreateOpen(true)}
+                onPress={() => openCreate(null)}
               >
                 Tambah
               </Button>
@@ -250,6 +333,9 @@ export default function KepengurusanPage() {
                   key={node.id}
                   canEdit={canEdit}
                   node={node}
+                  onAddPengurus={handleAddPengurus}
+                  onAddUser={handleAddUser}
+                  onDeleteUser={handleDeleteUser}
                   onEditUser={handleEditUser}
                 />
               ))}

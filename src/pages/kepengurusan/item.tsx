@@ -8,12 +8,18 @@ interface Props {
   node: IKepengurusanNode;
   canEdit?: boolean;
   onEditUser?: (node: IKepengurusanNode) => void;
+  onDeleteUser?: (node: IKepengurusanNode) => void;
+  onAddPengurus?: (node: IKepengurusanNode) => void;
+  onAddUser?: (node: IKepengurusanNode) => void;
 }
 
 export default function KepengurusanItem({
   node,
   canEdit,
   onEditUser,
+  onDeleteUser,
+  onAddPengurus,
+  onAddUser,
 }: Props) {
   return (
     <TreeNode
@@ -21,6 +27,9 @@ export default function KepengurusanItem({
         <KepengurusanCard
           canEdit={canEdit}
           node={node}
+          onAddPengurus={onAddPengurus}
+          onAddUser={onAddUser}
+          onDeleteUser={onDeleteUser}
           onEditUser={onEditUser}
         />
       }
@@ -30,6 +39,9 @@ export default function KepengurusanItem({
           key={child.id}
           canEdit={canEdit}
           node={child}
+          onAddPengurus={onAddPengurus}
+          onAddUser={onAddUser}
+          onDeleteUser={onDeleteUser}
           onEditUser={onEditUser}
         />
       ))}
