@@ -72,7 +72,7 @@ export default function MemberPage() {
     q: "",
     pageSize: "10",
     page: 1,
-    status: "submission",
+    status: "all",
     verification_status: "all",
     is_need_verify: "all",
     administrator_role: "all",
@@ -306,6 +306,7 @@ export default function MemberPage() {
               }
             >
               <SelectItem key="all">Semua Verifikasi</SelectItem>
+              <SelectItem key="not_sent">Belum Dikirim</SelectItem>
               <SelectItem key="pending">Email Terkirim</SelectItem>
               <SelectItem key="re_verified">Re Verified</SelectItem>
               <SelectItem key="submitted">Menunggu Approve</SelectItem>
