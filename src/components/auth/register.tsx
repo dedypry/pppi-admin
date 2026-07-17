@@ -1,4 +1,5 @@
 import {
+  AutocompleteItem,
   Avatar,
   Card,
   CardBody,
@@ -6,7 +7,6 @@ import {
   Divider,
   Radio,
   RadioGroup,
-  SelectItem,
 } from "@heroui/react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import dayjs from "dayjs";
@@ -17,7 +17,7 @@ import AllDistrictList from "../regions/all-district";
 
 import CustomInput from "@/components/forms/custom-input";
 import { ICreateMember, IUser } from "@/interface/IUser";
-import CustomSelect from "@/components/forms/custom-select";
+import CustomAutoComplete from "@/components/forms/custom-auto-complete";
 import Man from "@/assets/images/man.png";
 import Woman from "@/assets/images/woman.png";
 import CustomTextArea from "@/components/forms/custom-textarea";
@@ -412,8 +412,7 @@ export default function RegisterMember({
                 control={control}
                 name="gender"
                 render={({ field }) => (
-                  <CustomSelect
-                    {...field}
+                  <CustomAutoComplete
                     isRequired
                     errorMessage={
                       errors.gender?.message ||
@@ -422,21 +421,22 @@ export default function RegisterMember({
                     isInvalid={!!errors.gender}
                     label="Jenis Kelamin"
                     placeholder="Masukan Jenis Kelamin"
-                    selectedKeys={[field.value]}
+                    selectedKey={field.value as any}
+                    onSelectionChange={(val) => field.onChange(val)}
                   >
-                    <SelectItem
+                    <AutocompleteItem
                       key="male"
                       startContent={<Avatar isBordered size="sm" src={Man} />}
                     >
                       Laki-laki
-                    </SelectItem>
-                    <SelectItem
+                    </AutocompleteItem>
+                    <AutocompleteItem
                       key="female"
                       startContent={<Avatar isBordered size="sm" src={Woman} />}
                     >
                       Perempuan
-                    </SelectItem>
-                  </CustomSelect>
+                    </AutocompleteItem>
+                  </CustomAutoComplete>
                 )}
                 rules={{ required: true }}
               />
@@ -446,8 +446,7 @@ export default function RegisterMember({
                 control={control}
                 name="citizenship"
                 render={({ field }) => (
-                  <CustomSelect
-                    {...field}
+                  <CustomAutoComplete
                     isRequired
                     errorMessage={
                       errors.citizenship?.message ||
@@ -456,13 +455,16 @@ export default function RegisterMember({
                     isInvalid={!!errors.citizenship}
                     label="Kewarganegaraan"
                     placeholder="Masukan Kewarganegaraan"
-                    selectedKeys={[field.value]}
+                    selectedKey={field.value as any}
+                    onSelectionChange={(val) => field.onChange(val)}
                   >
-                    <SelectItem key="wni">
+                    <AutocompleteItem key="wni">
                       WNI (Warga Negara Indonesia)
-                    </SelectItem>
-                    <SelectItem key="wna">WNA (Warga Negara Asing) </SelectItem>
-                  </CustomSelect>
+                    </AutocompleteItem>
+                    <AutocompleteItem key="wna">
+                      WNA (Warga Negara Asing)
+                    </AutocompleteItem>
+                  </CustomAutoComplete>
                 )}
                 rules={{ required: true }}
               />
@@ -520,8 +522,7 @@ export default function RegisterMember({
                 control={control}
                 name="last_education_nursing"
                 render={({ field }) => (
-                  <CustomSelect
-                    {...field}
+                  <CustomAutoComplete
                     isRequired
                     errorMessage={
                       errors.last_education_nursing?.message ||
@@ -530,12 +531,13 @@ export default function RegisterMember({
                     isInvalid={!!errors.last_education_nursing}
                     label="Pendidikan Terakhir Keperawatan"
                     placeholder="Pilih Pendidikan Terakhir"
-                    selectedKeys={[field.value]}
+                    selectedKey={field.value as any}
+                    onSelectionChange={(val) => field.onChange(val)}
                   >
                     {educations.map((item) => (
-                      <SelectItem key={item}>{item}</SelectItem>
+                      <AutocompleteItem key={item}>{item}</AutocompleteItem>
                     ))}
-                  </CustomSelect>
+                  </CustomAutoComplete>
                 )}
                 rules={{ required: true }}
               />
